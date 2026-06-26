@@ -41,7 +41,7 @@ func (m *MemoryUserStore) FindByID(id int) (*User, error) {
 
 	user, ok := m.users[id]
 	if !ok {
-		return nil, fmt.Errorf("user not found: %d", id)
+		return nil, fmt.Errorf("%w: id=%d", ErrUserNotFound, id)
 	}
 	return user, nil
 }
@@ -56,7 +56,7 @@ func (m *MemoryUserStore) FindByEmail(email string) (*User, error) {
 			return user, nil
 		}
 	}
-	return nil, fmt.Errorf("user not found: %s", email)
+	return nil, fmt.Errorf("%w: email=%s", ErrUserNotFound, email)
 }
 
 // Delete 删除用户
@@ -65,7 +65,7 @@ func (m *MemoryUserStore) Delete(id int) error {
 	defer m.mu.Unlock()
 
 	if _, ok := m.users[id]; !ok {
-		return fmt.Errorf("user not found: %d", id)
+		return fmt.Errorf("%w: id=%d", ErrUserNotFound, id)
 	}
 	delete(m.users, id)
 	return nil

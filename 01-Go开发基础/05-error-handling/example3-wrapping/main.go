@@ -110,7 +110,7 @@ func checkWithAs(input string) {
 // ========================================
 
 func compareWrapping() {
-	fmt.Println("\n=== %w vs %v ===")
+	fmt.Printf("\n=== %%w vs %%v ===\n")
 
 	// 使用 %w（可解包）
 	err1 := fmt.Errorf("layer1: %w", ErrNotFound)

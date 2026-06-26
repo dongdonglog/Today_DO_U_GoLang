@@ -55,6 +55,17 @@ func TestCreateUserSaveError(t *testing.T) {
 	}
 }
 
+func TestCreateUserFindError(t *testing.T) {
+	store := NewMockUserStore()
+	store.SetFindError(fmt.Errorf("database error"))
+	service := NewUserService(store)
+
+	_, err := service.CreateUser("Alice", "alice@example.com")
+	if err == nil {
+		t.Error("Expected error when email lookup fails")
+	}
+}
+
 func TestGetUser(t *testing.T) {
 	store := NewMockUserStore()
 	service := NewUserService(store)

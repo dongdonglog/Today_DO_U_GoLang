@@ -1,6 +1,9 @@
 package service
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // UserService 用户服务
 type UserService struct {
@@ -15,8 +18,11 @@ func NewUserService(store UserStore) *UserService {
 // CreateUser 创建用户
 func (s *UserService) CreateUser(name, email string) (*User, error) {
 	// 检查邮箱是否已存在
-	existing, _ := s.store.FindByEmail(email)
-	if existing != nil {
+	existing, err := s.store.FindByEmail(email)
+	if err != nil && !errors.Is(err, ErrUserNotFound) {
+		return nil, fmt.Errorf("failed to check user email: %w", err)
+	}
+	if err == nil && existing != nil {
 		return nil, fmt.Errorf("email already exists: %s", email)
 	}
 

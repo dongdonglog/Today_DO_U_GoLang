@@ -15,6 +15,7 @@ import (
 
 const (
 	CodeSuccess      = 0
+	CodeInternal     = 10000
 	CodeInvalidParam = 10001
 	CodeUnauthorized = 10002
 	CodeNotFound     = 10004
@@ -142,7 +143,7 @@ func handleGetUser(w http.ResponseWriter, r *http.Request) {
 			writeJSON(w, status, appErr.ToResponse())
 			return
 		}
-		writeJSON(w, http.StatusInternalServerError, ErrorResp(CodeSuccess, "internal error"))
+		writeJSON(w, http.StatusInternalServerError, ErrorResp(CodeInternal, "internal error"))
 		return
 	}
 
@@ -178,7 +179,7 @@ func handleCreateUser(w http.ResponseWriter, r *http.Request) {
 			writeJSON(w, http.StatusBadRequest, appErr.ToResponse())
 			return
 		}
-		writeJSON(w, http.StatusInternalServerError, ErrorResp(CodeSuccess, "internal error"))
+		writeJSON(w, http.StatusInternalServerError, ErrorResp(CodeInternal, "internal error"))
 		return
 	}
 
@@ -191,7 +192,7 @@ func handlePanic(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Printf("panic recovered: %v", r)
-			writeJSON(w, http.StatusInternalServerError, ErrorResp(CodeSuccess, "internal server error"))
+			writeJSON(w, http.StatusInternalServerError, ErrorResp(CodeInternal, "internal server error"))
 		}
 	}()
 
@@ -205,7 +206,7 @@ func recoveryMiddleware(next http.Handler) http.Handler {
 		defer func() {
 			if err := recover(); err != nil {
 				log.Printf("panic recovered: %v, stack: %s", err, debug.Stack())
-				writeJSON(w, http.StatusInternalServerError, ErrorResp(CodeSuccess, "internal server error"))
+				writeJSON(w, http.StatusInternalServerError, ErrorResp(CodeInternal, "internal server error"))
 			}
 		}()
 		next.ServeHTTP(w, r)

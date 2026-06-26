@@ -2,7 +2,11 @@
 
 ## 场景
 
-Leader 对你说："半天内出一个 HTTP 接口，明天联调。"
+前面我们已经完成了 Go 开发环境和语法基础，现在用户管理服务要开始对外提供接口。
+
+Leader 对你说：
+
+> “先不用 Gin，也不用数据库。用标准库做一版用户管理 API，能创建用户、查询用户、更新用户、删除用户，明天给前端联调。”
 
 你打开 Go，发现 `net/http` 标准库只有 3 个核心概念：
 
@@ -14,7 +18,7 @@ Leader 对你说："半天内出一个 HTTP 接口，明天联调。"
 
 你可能会问：**为什么 Go 的 HTTP 标准库这么简单？这 3 个概念背后藏着什么设计哲学？**
 
-本章不只教你"怎么写"，更要讲清楚"为什么这样设计"。每个知识点从三层递进：
+本章不只教你"怎么写"，更要讲清楚"为什么这样设计"。最后我们会把这些知识落到第一阶段项目的雏形：**用户管理 API**。
 
 1. **怎么做** — 代码示例
 2. **为什么这样做** — 设计决策
@@ -275,7 +279,7 @@ http.ListenAndServe(":8080", mux)
 
 1. **全局状态 = 隐式耦合**：依赖的包可能在 `init()` 中注册路由，导致冲突
 2. **无法多实例**：同一进程无法运行两个独立 HTTP 服务
-3. **安全隐患**：`import _ "net/http/pprof"` 会暴露 `/debug/pprof/` 在生产环境
+3. **安全隐患**：如果业务服务使用 `DefaultServeMux`，`import _ "net/http/pprof"` 会把 `/debug/pprof/` 注册到同一个全局路由上，容易被误暴露
 
 > **最佳实践：** 生产环境永远用独立 ServeMux。
 
@@ -606,7 +610,7 @@ func (s *Server) Shutdown(ctx context.Context) error {
 
 > 代码：`example6-user-api/`
 
-这是一个完整的分层架构项目：
+这是第一阶段项目的第一版：只使用 `net/http` 和内存存储，不引入 Gin、MySQL、Redis。这样做的目的不是“拒绝框架”，而是先看清 HTTP 服务最小闭环：路由、请求解析、响应编码、中间件、优雅关闭和测试。
 
 ```
 example6-user-api/
@@ -703,13 +707,13 @@ handler := ChainMiddleware(mux,
 
 | 设计决策 | 核心原则 | 性能影响 |
 |----------|----------|----------|
-| Handler 只有一方法 | 最小接口 + 组合 | 零开销抽象 |
+| Handler 只有一方法 | 最小接口 + 组合 | 接口调用开销极小，通常不是 HTTP 服务瓶颈 |
 | ResponseWriter 是接口 | 多态 + 可选能力 | 一次间接跳转 |
-| goroutine per conn | CSP 并发模型 | 2KB/连接，用户态切换 |
+| goroutine per conn | CSP 并发模型 | 初始栈约 2KB，阻塞 I/O 由运行时调度 |
 | 决策树路由 | O(k) 匹配 | 与路由总数无关 |
 | 中间件无特殊支持 | 简单即正义 | N 次接口调用 |
 | DefaultServeMux | 零配置 | 无运行时开销 |
-| Shutdown 轮询 | 不中断活跃请求 | 指数退避，微秒级开销 |
+| Shutdown 轮询 | 不中断活跃请求 | 依赖超时控制，避免无限等待 |
 
 ---
 
@@ -729,21 +733,30 @@ handler := ChainMiddleware(mux,
    srv.Shutdown(ctx)
    ```
 
-4. **永远不要 `import _ "net/http/pprof"` 到生产代码**
+4. **生产环境谨慎暴露 pprof**
    ```go
-   // 错误：pprof 暴露在生产环境
-   import _ "net/http/pprof"
+   import "net/http/pprof"
 
-   // 正确：只在开发环境启用
-   // go build -tags pprof
+   // 推荐：把 pprof 放到独立管理端口，并限制内网访问或加鉴权。
+   go func() {
+       mux := http.NewServeMux()
+       mux.HandleFunc("/debug/pprof/", pprof.Index)
+       mux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+       mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
+       mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+       mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
+       _ = http.ListenAndServe("127.0.0.1:6060", mux)
+   }()
    ```
+   `net/http/pprof` 不是不能上生产，而是不能无保护地挂在公网业务端口上。线上排查 CPU、内存、goroutine 泄漏时，受控的 pprof 入口非常有价值。
 
 5. **设置超时防止慢连接攻击**
    ```go
    srv := &http.Server{
-       ReadTimeout:  15 * time.Second,
-       WriteTimeout: 15 * time.Second,
-       IdleTimeout:  60 * time.Second,
+       ReadHeaderTimeout: 5 * time.Second,
+       ReadTimeout:       15 * time.Second,
+       WriteTimeout:      15 * time.Second,
+       IdleTimeout:       60 * time.Second,
    }
    ```
 
@@ -757,19 +770,23 @@ handler := ChainMiddleware(mux,
 # 查找占用端口的进程
 lsof -i :8080
 
-# 杀掉进程
-kill -9 <PID>
+# 先确认进程归属，再优先发送 SIGTERM，让服务走优雅关闭
+kill -TERM <PID>
+
+# 如果进程无响应，确认没有正在处理的重要请求后再使用 SIGKILL
+kill -KILL <PID>
 ```
 
 ### 请求超时但连接不释放
 
-原因：没有设置 `ReadTimeout` / `WriteTimeout`
+原因：没有设置 `ReadHeaderTimeout` / `ReadTimeout` / `WriteTimeout`
 
 解决：
 ```go
 srv := &http.Server{
-    ReadTimeout:  15 * time.Second,
-    WriteTimeout: 15 * time.Second,
+    ReadHeaderTimeout: 5 * time.Second,
+    ReadTimeout:       15 * time.Second,
+    WriteTimeout:      15 * time.Second,
 }
 ```
 
@@ -843,7 +860,7 @@ A：
 A：
 - 全局状态 = 隐式耦合，依赖包的 `init()` 可能注册冲突路由
 - 无法多实例，同一进程无法运行两个独立 HTTP 服务
-- 安全隐患，`import _ "net/http/pprof"` 会暴露调试接口
+- 安全隐患，使用 `DefaultServeMux` 时，`import _ "net/http/pprof"` 会把调试接口注册到全局路由
 
 **Q4：Shutdown 和 Close 的区别？**
 
@@ -873,4 +890,4 @@ A：
 
 > **核心思想：** Go 的 HTTP 标准库追求"简单但不简陋"。3 个核心概念（Handler、ServeMux、ResponseWriter）通过组合可以构建任意复杂的 HTTP 服务。
 
-下一章我们将学习 Go 的核心语法，为后续章节打下基础。
+下一章我们会在这版用户管理 API 上继续补强错误处理：让参数错误、用户不存在、内部错误和 panic 都有清晰的错误码、HTTP 状态码和日志上下文。
