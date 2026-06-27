@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="title desc">
+  <title id="title">测试金字塔</title>
+  <desc id="desc">从下到上展示单元测试、集成测试、端到端测试的数量和速度关系。</desc>
+  <defs>
+    <linearGradient id="unit" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#1f8a70"/>
+      <stop offset="1" stop-color="#54b689"/>
+    </linearGradient>
+    <linearGradient id="integration" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#60a5fa"/>
+    </linearGradient>
+    <linearGradient id="e2e" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="560" fill="#f8fafc"/>
+  <rect x="32" y="28" width="896" height="504" rx="18" fill="#ffffff" stroke="#dbe3ef"/>
+
+  <text x="480" y="78" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="30" font-weight="700" fill="#0f172a">测试金字塔</text>
+  <text x="480" y="113" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="16" fill="#64748b">越靠下数量越多、速度越快；越靠上越接近真实用户流程</text>
+
+  <g filter="url(#shadow)">
+    <polygon points="210,424 750,424 824,490 136,490" fill="url(#unit)"/>
+    <polygon points="292,320 668,320 742,394 218,394" fill="url(#integration)"/>
+    <polygon points="392,205 568,205 648,290 312,290" fill="url(#e2e)"/>
+  </g>
+
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif" fill="#ffffff" text-anchor="middle">
+    <text x="480" y="456" font-size="30" font-weight="700">单元测试</text>
+    <text x="480" y="480" font-size="15">函数 / 方法级别，毫秒级，数量最多</text>
+
+    <text x="480" y="356" font-size="27" font-weight="700">集成测试</text>
+    <text x="480" y="379" font-size="15">验证模块协作，秒级，数量中等</text>
+
+    <text x="480" y="244" font-size="25" font-weight="700">端到端测试</text>
+    <text x="480" y="267" font-size="14">完整链路，分钟级，数量最少</text>
+  </g>
+
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="15" fill="#334155">
+    <path d="M118 205 L118 490" stroke="#94a3b8" stroke-width="2"/>
+    <path d="M108 215 L118 205 L128 215" fill="none" stroke="#94a3b8" stroke-width="2"/>
+    <text x="76" y="355" text-anchor="middle" transform="rotate(-90 76 355)">执行成本增加</text>
+
+    <path d="M842 490 L842 205" stroke="#94a3b8" stroke-width="2"/>
+    <path d="M832 480 L842 490 L852 480" fill="none" stroke="#94a3b8" stroke-width="2"/>
+    <text x="884" y="355" text-anchor="middle" transform="rotate(90 884 355)">反馈速度变慢</text>
+  </g>
+</svg>

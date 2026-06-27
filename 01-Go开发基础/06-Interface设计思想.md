@@ -154,6 +154,8 @@ fmt.Println(animal == nil) // false！
 
 ### 深入：接口的底层结构
 
+![Interface 底层结构](./images/ch06-interface-structure.svg)
+
 Go 有两种接口：
 
 **空接口 `interface{}`（eface）**：
@@ -533,6 +535,8 @@ func NewUserService(store UserStore) *UserService {
 3. **可测试**：容易 Mock
 
 ### 6.4.4 方法集决定谁实现接口
+
+![接口方法集规则](./images/ch06-method-set.svg)
 
 **方法集规则**：
 
@@ -1287,6 +1291,8 @@ var h http.Handler = handler
 ```
 
 ### 一张图：Handler 调用链
+
+![Handler 依赖链](./images/ch06-handler-chain.svg)
 
 ```
 HTTP Request

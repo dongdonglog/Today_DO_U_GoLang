@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="620" viewBox="0 0 1080 620" role="img" aria-labelledby="title desc">
+  <title id="title">语言特性对比</title>
+  <desc id="desc">从性能和开发效率两个维度对比 C/C++、Java、Python 和 Go。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#64748b"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="1080" height="620" fill="#f8fafc"/>
+  <rect x="34" y="30" width="1012" height="560" rx="18" fill="#ffffff" stroke="#dbe3ef"/>
+  <text x="540" y="78" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="30" font-weight="700" fill="#0f172a">性能与开发效率的平衡</text>
+  <text x="540" y="112" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="16" fill="#64748b">Go 的定位不是单项第一，而是在服务器开发中取得稳定平衡</text>
+
+  <g transform="translate(150 160)" font-family="Arial, 'Microsoft YaHei', sans-serif">
+    <path d="M0 340 H780" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M0 340 V20" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="390" y="382" text-anchor="middle" font-size="16" fill="#475569">开发效率</text>
+    <text x="-72" y="180" text-anchor="middle" transform="rotate(-90 -72 180)" font-size="16" fill="#475569">运行性能</text>
+
+    <g filter="url(#shadow)">
+      <circle cx="145" cy="70" r="48" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+      <text x="145" y="66" text-anchor="middle" font-size="18" font-weight="700" fill="#b45309">C/C++</text>
+      <text x="145" y="91" text-anchor="middle" font-size="13" fill="#92400e">性能极高</text>
+
+      <circle cx="420" cy="120" r="48" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+      <text x="420" y="116" text-anchor="middle" font-size="18" font-weight="700" fill="#1d4ed8">Java</text>
+      <text x="420" y="141" text-anchor="middle" font-size="13" fill="#1e40af">企业生态</text>
+
+      <circle cx="650" cy="280" r="48" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+      <text x="650" y="276" text-anchor="middle" font-size="18" font-weight="700" fill="#6d28d9">Python</text>
+      <text x="650" y="301" text-anchor="middle" font-size="13" fill="#5b21b6">效率高</text>
+
+      <circle cx="560" cy="105" r="58" fill="#ecfeff" stroke="#0891b2" stroke-width="3"/>
+      <text x="560" y="101" text-anchor="middle" font-size="22" font-weight="700" fill="#155e75">Go</text>
+      <text x="560" y="128" text-anchor="middle" font-size="14" fill="#0e7490">高性能 + 高效率</text>
+    </g>
+  </g>
+
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="15" fill="#334155">
+    <rect x="190" y="535" width="700" height="34" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="540" y="557" text-anchor="middle">Go 特别适合云原生、微服务、高并发 API 和 AI 应用工程</text>
+  </g>
+</svg>

@@ -67,7 +67,7 @@ curl http://localhost:8080/hello
 
 调用 `http.ListenAndServe(":8080", nil)` 后，内部发生了什么？
 
-![请求处理生命周期](./images/ch04-request-lifecycle.png)
+![请求处理生命周期](./images/ch04-request-lifecycle.svg)
 
 ```
 ListenAndServe(":8080", nil)
@@ -564,7 +564,7 @@ curl http://localhost:8080/slow
 
 ### 深入：Shutdown 源码
 
-![优雅关闭流程](./images/ch04-graceful-shutdown.png)
+![优雅关闭流程](./images/ch04-graceful-shutdown.svg)
 
 ```go
 func (s *Server) Shutdown(ctx context.Context) error {
@@ -694,7 +694,7 @@ handler := ChainMiddleware(mux,
 
 **顺序很重要：**
 
-![中间件链式调用](./images/ch04-middleware-chain.png)
+![中间件链式调用](./images/ch04-middleware-chain.svg)
 
 1. **Recovery 最外层**：确保任何 panic 都能被捕获
 2. **Logging 第二层**：记录所有请求，包括被后续中间件拒绝的
