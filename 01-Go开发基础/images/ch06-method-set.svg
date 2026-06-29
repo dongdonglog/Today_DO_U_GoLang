@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="650" viewBox="0 0 1080 650" role="img" aria-labelledby="title desc">
+  <title id="title">接口方法集规则</title>
+  <desc id="desc">接口实现由方法集决定，接收者类型会影响赋值兼容性</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M2 2 L10 6 L2 10 Z" fill="#64748b"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.12"/></filter>
+  </defs>
+  <rect width="1080" height="650" fill="#f8fafc"/>
+  <rect x="34" y="30" width="1012" height="590" rx="18" fill="#ffffff" stroke="#dbe3ef"/>
+  <text x="540" y="78" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="30" font-weight="700" fill="#0f172a">方法集规则</text>
+  <text x="540" y="112" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="16" fill="#64748b">值接收者和指针接收者决定类型能实现哪些接口</text>
+  <g filter="url(#shadow)" font-family="Arial, 'Microsoft YaHei', sans-serif">
+    <rect x="120" y="175" width="360" height="265" rx="14" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="300" y="218" text-anchor="middle" font-size="23" font-weight="700" fill="#1d4ed8">T 的方法集</text>
+    <text x="170" y="275" font-size="17" fill="#334155">包含：func (T) M()</text>
+    <text x="170" y="318" font-size="17" fill="#334155">不包含：func (*T) M()</text>
+    <text x="170" y="375" font-size="15" fill="#64748b">值只能保证不修改原对象</text>
+    <rect x="600" y="175" width="360" height="265" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+    <text x="780" y="218" text-anchor="middle" font-size="23" font-weight="700" fill="#15803d">*T 的方法集</text>
+    <text x="650" y="275" font-size="17" fill="#334155">包含：func (T) M()</text>
+    <text x="650" y="318" font-size="17" fill="#334155">包含：func (*T) M()</text>
+    <text x="650" y="375" font-size="15" fill="#64748b">指针可以调用全部方法</text>
+  </g>
+  <text x="540" y="520" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="15" fill="#334155">接口实现看方法集，不看能否通过语法自动取地址调用</text>
+</svg>

@@ -79,7 +79,7 @@ func main() {
 
 ### 7.1.2 问题根因
 
-![没有取消机制的请求处理](./images/ch07-no-cancel.png)
+![没有取消机制的请求处理](./images/ch07-no-cancel.svg)
 
 客户端断开连接后，服务端不知道，还在傻等数据库返回。
 
@@ -185,7 +185,7 @@ func handleRequest(ctx context.Context, userID int) {
 [4s] goroutine 数量: 3  // 3 秒后全部取消
 ```
 
-![WithTimeout 取消流程](./images/ch07-cancel-flow.png)
+![WithTimeout 取消流程](./images/ch07-cancel-flow.svg)
 
 **关键**：`defer cancel()` 必须调用。即使超时最终会释放资源，请求提前完成时主动调用 `cancel`，可以更早停止 timer，并解除父子 Context 之间的引用。
 
@@ -199,7 +199,7 @@ func handleRequest(ctx context.Context, userID int) {
 
 Context 之间是父子关系，父节点取消，子节点全部取消。
 
-![Context 树结构](./images/ch07-context-tree.png)
+![Context 树结构](./images/ch07-context-tree.svg)
 
 ```go
 // 创建 Context 树
@@ -282,7 +282,7 @@ func main() {
 }
 ```
 
-![errgroup 并发取消](./images/ch07-errgroup.png)
+![errgroup 并发取消](./images/ch07-errgroup.svg)
 
 **结果**：权限查询返回错误，`errgroup` 会取消派生出来的 `ctx`。已经完成的任务不会被“撤销”，仍在执行且监听 `ctx.Done()` 的任务会尽快退出。
 
@@ -381,7 +381,7 @@ func (c *valueCtx) Value(key any) any {
 }
 ```
 
-![Context Value 查找链](./images/ch07-value-chain.png)
+![Context Value 查找链](./images/ch07-value-chain.svg)
 
 `Value` 沿着 Context 链向上查找，找到第一个匹配的 key 就返回。
 
