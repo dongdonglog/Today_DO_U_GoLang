@@ -1,0 +1,14 @@
+app:
+  env: dev
+
+server:
+  port: 8080
+
+database:
+  host: 127.0.0.1
+  user: root
+  password: ""
+  name: myapp_dev
+
+log:
+  level: debug
