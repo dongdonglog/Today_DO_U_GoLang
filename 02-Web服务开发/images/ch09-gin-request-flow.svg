@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <title>Gin 请求处理流程</title>
+  <desc>展示 Gin 框架处理 HTTP 请求的完整流程：从客户端请求到 Engine 接收，经过 Router 路由匹配，执行中间件链，最终到达 Handler 处理业务逻辑，返回响应给客户端。</desc>
+  
+  <!-- 背景 -->
+  <rect width="800" height="400" fill="#f8f9fa"/>
+  
+  <!-- 标题 -->
+  <text x="400" y="30" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#333">Gin 请求处理流程</text>
+  
+  <!-- Client -->
+  <rect x="50" y="150" width="100" height="60" rx="8" fill="#00ADD8" stroke="#007D9C" stroke-width="2"/>
+  <text x="100" y="185" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white">Client</text>
+  
+  <!-- Engine -->
+  <rect x="200" y="150" width="100" height="60" rx="8" fill="#4CAF50" stroke="#388E3C" stroke-width="2"/>
+  <text x="250" y="185" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white">Engine</text>
+  
+  <!-- Router -->
+  <rect x="350" y="150" width="100" height="60" rx="8" fill="#FF9800" stroke="#F57C00" stroke-width="2"/>
+  <text x="400" y="185" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white">Router</text>
+  
+  <!-- Middleware -->
+  <rect x="500" y="120" width="120" height="120" rx="8" fill="#9C27B0" stroke="#7B1FA2" stroke-width="2"/>
+  <text x="560" y="145" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white">Middleware</text>
+  <text x="560" y="170" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Recovery</text>
+  <text x="560" y="190" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Logger</text>
+  <text x="560" y="210" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Auth</text>
+  
+  <!-- Handler -->
+  <rect x="670" y="150" width="100" height="60" rx="8" fill="#2196F3" stroke="#1976D2" stroke-width="2"/>
+  <text x="720" y="185" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white">Handler</text>
+  
+  <!-- Arrows -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#666"/>
+    </marker>
+  </defs>
+  
+  <line x1="150" y1="180" x2="195" y2="180" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="300" y1="180" x2="345" y2="180" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="450" y1="180" x2="495" y2="180" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="620" y1="180" x2="665" y2="180" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Response arrow -->
+  <line x1="670" y1="200" x2="150" y2="200" stroke="#999" stroke-width="1" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+  <text x="400" y="290" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#666">Response</text>
+  
+  <!-- Labels -->
+  <text x="100" y="240" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#666">HTTP Request</text>
+  <text x="250" y="240" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#666">接收请求</text>
+  <text x="400" y="240" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#666">路由匹配</text>
+  <text x="560" y="260" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#666">中间件链</text>
+  <text x="720" y="240" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#666">业务处理</text>
+</svg>
