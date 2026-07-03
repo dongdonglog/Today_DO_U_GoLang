@@ -1,0 +1,26 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#007d9c', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph TB
+    subgraph Level 0 - RPC Style
+        L0["POST /api/getUsers<br/>POST /api/deleteUser<br/>POST /api/updateUser"]
+    end
+
+    subgraph Level 1 - Resources
+        L1["GET /api/users<br/>POST /api/users<br/>GET /api/users/1"]
+    end
+
+    subgraph Level 2 - HTTP Methods
+        L2["GET /api/users<br/>POST /api/users<br/>PUT /api/users/1<br/>DELETE /api/users/1"]
+    end
+
+    subgraph Level 3 - HATEOAS
+        L3["GET /api/users/1<br/>{<br/>  id: 1,<br/>  links: [<br/>    {rel: 'self', href: '/api/users/1'},<br/>    {rel: 'orders', href: '/api/users/1/orders'}<br/>  ]<br/>}"]
+    end
+
+    L0 --> L1
+    L1 --> L2
+    L2 --> L3
+
+    style L0 fill:#FFE0E0,stroke:#FF6B6B
+    style L1 fill:#FFF4E0,stroke:#FFA500
+    style L2 fill:#E0FFE0,stroke:#4CAF50
+    style L3 fill:#E0F0FF,stroke:#2196F3
