@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <title>JWT 结构</title>
+  <desc>展示 JWT 的三部分结构：Header、Payload、Signature</desc>
+  
+  <!-- Header -->
+  <rect x="50" y="50" width="200" height="100" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" rx="8"/>
+  <text x="150" y="80" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#1976d2">Header</text>
+  <text x="150" y="105" font-family="monospace" font-size="12" text-anchor="middle" fill="#666">{</text>
+  <text x="150" y="120" font-family="monospace" font-size="12" text-anchor="middle" fill="#666">"alg": "HS256",</text>
+  <text x="150" y="135" font-family="monospace" font-size="12" text-anchor="middle" fill="#666">"typ": "JWT"</text>
+  <text x="150" y="150" font-family="monospace" font-size="12" text-anchor="middle" fill="#666">}</text>
+  
+  <!-- Payload -->
+  <rect x="300" y="50" width="200" height="100" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="8"/>
+  <text x="400" y="80" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#7b1fa2">Payload</text>
+  <text x="400" y="105" font-family="monospace" font-size="12" text-anchor="middle" fill="#666">{</text>
+  <text x="400" y="120" font-family="monospace" font-size="12" text-anchor="middle" fill="#666">"user_id": 1,</text>
+  <text x="400" y="135" font-family="monospace" font-size="12" text-anchor="middle" fill="#666">"role": "admin",</text>
+  <text x="400" y="150" font-family="monospace" font-size="12" text-anchor="middle" fill="#666">"exp": 1705321600</text>
+  <text x="400" y="165" font-family="monospace" font-size="12" text-anchor="middle" fill="#666">}</text>
+  
+  <!-- Signature -->
+  <rect x="550" y="50" width="200" height="100" fill="#e8f5e9" stroke="#388e3c" stroke-width="2" rx="8"/>
+  <text x="650" y="80" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#388e3c">Signature</text>
+  <text x="650" y="110" font-family="monospace" font-size="11" text-anchor="middle" fill="#666">HMACSHA256(</text>
+  <text x="650" y="125" font-family="monospace" font-size="11" text-anchor="middle" fill="#666">base64(header) + "." +</text>
+  <text x="650" y="140" font-family="monospace" font-size="11" text-anchor="middle" fill="#666">base64(payload),</text>
+  <text x="650" y="155" font-family="monospace" font-size="11" text-anchor="middle" fill="#666">secret)</text>
+  
+  <!-- Arrows -->
+  <path d="M 250 100 L 300 100" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M 500 100 L 550 100" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- JWT Token Example -->
+  <rect x="50" y="200" width="700" height="150" fill="#fafafa" stroke="#ddd" stroke-width="1" rx="8"/>
+  <text x="400" y="230" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">JWT Token 示例</text>
+  
+  <text x="150" y="260" font-family="monospace" font-size="11" text-anchor="middle" fill="#1976d2">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</text>
+  <text x="400" y="260" font-family="monospace" font-size="11" text-anchor="middle" fill="#7b1fa2">eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3MDUzMjE2MDB9</text>
+  <text x="650" y="260" font-family="monospace" font-size="11" text-anchor="middle" fill="#388e3c">SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</text>
+  
+  <text x="150" y="285" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#1976d2">Header</text>
+  <text x="400" y="285" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#7b1fa2">Payload</text>
+  <text x="650" y="285" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#388e3c">Signature</text>
+  
+  <!-- Separator dots -->
+  <circle cx="275" cy="260" r="4" fill="#666"/>
+  <circle cx="525" cy="260" r="4" fill="#666"/>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#666"/>
+    </marker>
+  </defs>
+</svg>
