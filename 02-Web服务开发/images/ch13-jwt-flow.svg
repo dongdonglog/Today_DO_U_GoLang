@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <title>JWT 认证流程</title>
+  <desc>展示 JWT 认证的完整流程：登录、获取Token、访问资源</desc>
+  
+  <!-- Client -->
+  <rect x="50" y="50" width="150" height="80" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" rx="8"/>
+  <text x="125" y="80" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#1976d2">Client</text>
+  <text x="125" y="105" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#666">浏览器/App</text>
+  
+  <!-- Server -->
+  <rect x="600" y="50" width="150" height="80" fill="#e8f5e9" stroke="#388e3c" stroke-width="2" rx="8"/>
+  <text x="675" y="80" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#388e3c">Server</text>
+  <text x="675" y="105" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#666">API 服务</text>
+  
+  <!-- Step 1: Login -->
+  <text x="400" y="170" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">Step 1: 登录</text>
+  <path d="M 200 190 L 600 190" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="400" y="210" font-family="monospace" font-size="11" text-anchor="middle" fill="#666">POST /login {username, password}</text>
+  
+  <!-- Step 2: Verify -->
+  <rect x="600" y="230" width="150" height="60" fill="#fff3e0" stroke="#f57c00" stroke-width="2" rx="8"/>
+  <text x="675" y="255" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#f57c00">验证用户名密码</text>
+  <text x="675" y="275" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#f57c00">生成 JWT Token</text>
+  
+  <!-- Step 3: Return Token -->
+  <path d="M 600 310 L 200 310" stroke="#388e3c" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="400" y="330" font-family="monospace" font-size="11" text-anchor="middle" fill="#666">200 OK {access_token, refresh_token}</text>
+  
+  <!-- Step 4: Access Resource -->
+  <text x="400" y="380" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">Step 2: 访问受保护资源</text>
+  <path d="M 200 400 L 600 400" stroke="#1976d2" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="400" y="420" font-family="monospace" font-size="11" text-anchor="middle" fill="#666">GET /users Authorization: Bearer &lt;token&gt;</text>
+  
+  <!-- Step 5: Verify Token -->
+  <rect x="600" y="440" width="150" height="60" fill="#fff3e0" stroke="#f57c00" stroke-width="2" rx="8"/>
+  <text x="675" y="465" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#f57c00">验证 Token 签名</text>
+  <text x="675" y="485" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#f57c00">检查过期时间</text>
+  
+  <!-- Step 6: Return Data -->
+  <path d="M 600 520 L 200 520" stroke="#388e3c" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="400" y="540" font-family="monospace" font-size="11" text-anchor="middle" fill="#666">200 OK {users: [...]}</text>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#666"/>
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,21 @@
+server:
+  host: 0.0.0.0
+  port: 8080
+
+jwt:
+  access_secret: ""
+  refresh_secret: ""
+  access_token_expire: 15m
+  refresh_token_expire: 168h
+
+upload:
+  max_size: 10485760  # 10 MB
+  allowed_types:
+    - image/jpeg
+    - image/png
+    - image/gif
+    - application/pdf
+  storage_path: ./uploads
+
+log:
+  level: info

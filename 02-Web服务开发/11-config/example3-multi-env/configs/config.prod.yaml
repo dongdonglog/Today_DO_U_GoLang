@@ -1,0 +1,14 @@
+app:
+  env: prod
+
+server:
+  port: 80
+
+database:
+  host: prod-db.example.com
+  user: prod_user
+  password: ${DB_PASSWORD}
+  name: myapp_prod
+
+log:
+  level: warn

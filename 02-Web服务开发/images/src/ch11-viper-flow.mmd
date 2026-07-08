@@ -1,0 +1,53 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#007d9c', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph TB
+    subgraph 1. 搜索配置文件
+        S1["."]
+        S2["./config"]
+        S3["/etc/myapp/"]
+    end
+
+    subgraph 2. 解析文件
+        P["YAML/JSON/TOML Parser"]
+    end
+
+    subgraph 3. 合并配置
+        M1["配置文件"]
+        M2["环境变量"]
+        M3["命令行参数"]
+    end
+
+    subgraph 4. 优先级
+        PR["命令行参数 > 环境变量 > 配置文件 > 默认值"]
+    end
+
+    subgraph 5. 返回
+        R["map[string]interface{}"]
+    end
+
+    subgraph 6. 转换
+        MS["mapstructure"]
+        CFG["Config 结构体"]
+    end
+
+    S1 --> P
+    S2 --> P
+    S3 --> P
+    P --> M1
+    M2 --> M1
+    M3 --> M1
+    M1 --> PR
+    PR --> R
+    R --> MS
+    MS --> CFG
+
+    style S1 fill:#E0EBF5,stroke:#00ADD8
+    style S2 fill:#E0EBF5,stroke:#00ADD8
+    style S3 fill:#E0EBF5,stroke:#00ADD8
+    style P fill:#00ADD8,stroke:#007d9c,color:#fff
+    style M1 fill:#FFF4E0,stroke:#FFA500
+    style M2 fill:#FFF4E0,stroke:#FFA500
+    style M3 fill:#FFF4E0,stroke:#FFA500
+    style PR fill:#FFE0E0,stroke:#FF6B6B
+    style R fill:#E0FFE0,stroke:#4CAF50
+    style MS fill:#E0F0FF,stroke:#2196F3
+    style CFG fill:#E0F0FF,stroke:#2196F3

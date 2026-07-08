@@ -1,0 +1,14 @@
+app:
+  env: test
+
+server:
+  port: 8080
+
+database:
+  host: test-db.example.com
+  user: test_user
+  password: ${DB_PASSWORD}
+  name: myapp_test
+
+log:
+  level: info

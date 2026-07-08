@@ -1,0 +1,54 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#007d9c', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph LR
+    subgraph 应用层
+        APP["Go 应用<br/>Zap Logger"]
+    end
+
+    subgraph 输出
+        STDOUT["stdout"]
+        STDERR["stderr"]
+        FILE["日志文件"]
+    end
+
+    subgraph 收集层
+        FB["Filebeat"]
+        PL["Promtail"]
+    end
+
+    subgraph 存储层
+        ES["Elasticsearch"]
+        LOKI["Loki"]
+    end
+
+    subgraph 展示层
+        KB["Kibana"]
+        GF["Grafana"]
+    end
+
+    APP --> STDOUT
+    APP --> STDERR
+    APP --> FILE
+
+    STDOUT --> FB
+    STDERR --> FB
+    FILE --> FB
+
+    STDOUT --> PL
+    STDERR --> PL
+
+    FB --> ES
+    PL --> LOKI
+
+    ES --> KB
+    LOKI --> GF
+
+    style APP fill:#00ADD8,stroke:#007d9c
+    style STDOUT fill:#E0EBF5,stroke:#5A6376
+    style STDERR fill:#E0EBF5,stroke:#5A6376
+    style FILE fill:#E0EBF5,stroke:#5A6376
+    style FB fill:#FFF4E0,stroke:#FFA500
+    style PL fill:#FFF4E0,stroke:#FFA500
+    style ES fill:#FFE0E0,stroke:#FF6B6B
+    style LOKI fill:#FFE0E0,stroke:#FF6B6B
+    style KB fill:#E0FFE0,stroke:#4CAF50
+    style GF fill:#E0FFE0,stroke:#4CAF50

@@ -1,0 +1,4 @@
+log:
+  level: info
+  format: json
+  development: false
