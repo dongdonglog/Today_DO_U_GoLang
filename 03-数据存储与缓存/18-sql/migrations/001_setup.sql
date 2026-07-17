@@ -1,0 +1,50 @@
+CREATE DATABASE IF NOT EXISTS go_book_sql DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;
+
+USE go_book_sql;
+
+DROP TABLE IF EXISTS orders;
+
+CREATE TABLE orders (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    order_no VARCHAR(64) NOT NULL DEFAULT '',
+    user_id BIGINT NOT NULL DEFAULT 0,
+    status TINYINT NOT NULL DEFAULT 0 COMMENT '0:待处理 1:已处理 2:已完成',
+    total_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 插入 50 万行测试数据
+DELIMITER $$
+CREATE PROCEDURE insert_test_orders()
+BEGIN
+    DECLARE i INT DEFAULT 0;
+    DECLARE batch_size INT DEFAULT 500;
+
+    WHILE i < 500000 DO
+        INSERT INTO orders (order_no, user_id, status, total_amount, created_at)
+        VALUES
+        (CONCAT('ORD', LPAD(i+1, 10, '0')), FLOOR(RAND()*1000)+1, FLOOR(RAND()*3), ROUND(RAND()*1000,2), '2025-01-01' + INTERVAL FLOOR(RAND()*365*24*60) MINUTE),
+        (CONCAT('ORD', LPAD(i+2, 10, '0')), FLOOR(RAND()*1000)+1, FLOOR(RAND()*3), ROUND(RAND()*1000,2), '2025-01-01' + INTERVAL FLOOR(RAND()*365*24*60) MINUTE),
+        (CONCAT('ORD', LPAD(i+3, 10, '0')), FLOOR(RAND()*1000)+1, FLOOR(RAND()*3), ROUND(RAND()*1000,2), '2025-01-01' + INTERVAL FLOOR(RAND()*365*24*60) MINUTE),
+        (CONCAT('ORD', LPAD(i+4, 10, '0')), FLOOR(RAND()*1000)+1, FLOOR(RAND()*3), ROUND(RAND()*1000,2), '2025-01-01' + INTERVAL FLOOR(RAND()*365*24*60) MINUTE),
+        (CONCAT('ORD', LPAD(i+5, 10, '0')), FLOOR(RAND()*1000)+1, FLOOR(RAND()*3), ROUND(RAND()*1000,2), '2025-01-01' + INTERVAL FLOOR(RAND()*365*24*60) MINUTE);
+        SET i = i + 5;
+    END WHILE;
+END$$
+DELIMITER ;
+
+CALL insert_test_orders();
+DROP PROCEDURE insert_test_orders;
+
+-- 加索引前先看看扫描行数
+EXPLAIN SELECT * FROM orders WHERE status = 0 AND created_at > '2025-01-01' ORDER BY created_at DESC LIMIT 20 OFFSET 1000;
+
+-- 加索引
+ALTER TABLE orders ADD INDEX idx_status_created (status, created_at);
+
+-- 加索引后再看
+EXPLAIN SELECT * FROM orders WHERE status = 0 AND created_at > '2025-01-01' ORDER BY created_at DESC LIMIT 20 OFFSET 1000;
+
+-- 验证数据量
+SELECT COUNT(*) AS total FROM orders;
