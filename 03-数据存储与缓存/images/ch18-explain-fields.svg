@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 550" font-family="system-ui, -apple-system, sans-serif">
+  <title>EXPLAIN 关键字段解读</title>
+  <desc>EXPLAIN 输出中 type、rows、Extra 三个字段的含义和判断标准</desc>
+  
+  <!-- Background -->
+  <rect width="900" height="550" fill="#fafbfc"/>
+  
+  <!-- Title -->
+  <text x="450" y="35" text-anchor="middle" font-size="24" font-weight="bold" fill="#1a1a1a">EXPLAIN 关键字段解读</text>
+  
+  <!-- type section -->
+  <rect x="30" y="60" width="280" height="470" rx="8" fill="#fff" stroke="#4a90e2" stroke-width="2"/>
+  <text x="170" y="90" text-anchor="middle" font-size="18" font-weight="bold" fill="#4a90e2">type：访问方式</text>
+  
+  <!-- type levels -->
+  <rect x="50" y="110" width="240" height="40" rx="4" fill="#e8f5e9" stroke="#27ae60" stroke-width="1"/>
+  <text x="170" y="135" text-anchor="middle" font-size="14" font-weight="bold" fill="#27ae60">const</text>
+  <text x="170" y="150" text-anchor="middle" font-size="11" fill="#666">主键/唯一索引等值</text>
+  
+  <rect x="50" y="160" width="240" height="40" rx="4" fill="#e8f5e9" stroke="#27ae60" stroke-width="1"/>
+  <text x="170" y="185" text-anchor="middle" font-size="14" font-weight="bold" fill="#27ae60">ref</text>
+  <text x="170" y="200" text-anchor="middle" font-size="11" fill="#666">普通索引等值</text>
+  
+  <rect x="50" y="210" width="240" height="40" rx="4" fill="#fff3cd" stroke="#ffc107" stroke-width="1"/>
+  <text x="170" y="235" text-anchor="middle" font-size="14" font-weight="bold" fill="#856404">range</text>
+  <text x="170" y="250" text-anchor="middle" font-size="11" fill="#666">索引范围扫描</text>
+  
+  <rect x="50" y="260" width="240" height="40" rx="4" fill="#fff3cd" stroke="#ffc107" stroke-width="1"/>
+  <text x="170" y="285" text-anchor="middle" font-size="14" font-weight="bold" fill="#856404">index</text>
+  <text x="170" y="300" text-anchor="middle" font-size="11" fill="#666">索引全扫描</text>
+  
+  <rect x="50" y="310" width="240" height="40" rx="4" fill="#fee" stroke="#e74c3c" stroke-width="1"/>
+  <text x="170" y="335" text-anchor="middle" font-size="14" font-weight="bold" fill="#c0392b">ALL</text>
+  <text x="170" y="350" text-anchor="middle" font-size="11" fill="#666">全表扫描</text>
+  
+  <!-- Arrow showing good to bad -->
+  <text x="170" y="380" text-anchor="middle" font-size="12" fill="#666">↑ 好 ← → 差 ↓</text>
+  
+  <!-- Tips -->
+  <rect x="50" y="400" width="240" height="110" rx="4" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text x="60" y="420" font-size="12" font-weight="bold" fill="#495057">目标：</text>
+  <text x="60" y="440" font-size="11" fill="#495057">• const/ref 最理想</text>
+  <text x="60" y="460" font-size="11" fill="#495057">• range 可接受</text>
+  <text x="60" y="480" font-size="11" fill="#e74c3c">• ALL 必须优化</text>
+  <text x="60" y="500" font-size="11" fill="#e74c3c">• index 尽量避免</text>
+  
+  <!-- rows section -->
+  <rect x="330" y="60" width="260" height="470" rx="8" fill="#fff" stroke="#9b59b6" stroke-width="2"/>
+  <text x="460" y="90" text-anchor="middle" font-size="18" font-weight="bold" fill="#9b59b6">rows：预估扫描行数</text>
+  
+  <!-- rows visualization -->
+  <rect x="350" y="110" width="220" height="60" rx="4" fill="#e8f5e9" stroke="#27ae60" stroke-width="1"/>
+  <text x="460" y="135" text-anchor="middle" font-size="14" font-weight="bold" fill="#27ae60">rows = 1</text>
+  <text x="460" y="155" text-anchor="middle" font-size="11" fill="#666">精准命中，最快</text>
+  
+  <rect x="350" y="180" width="220" height="60" rx="4" fill="#fff3cd" stroke="#ffc107" stroke-width="1"/>
+  <text x="460" y="205" text-anchor="middle" font-size="14" font-weight="bold" fill="#856404">rows = 1000</text>
+  <text x="460" y="225" text-anchor="middle" font-size="11" fill="#666">可接受范围</text>
+  
+  <rect x="350" y="250" width="220" height="60" rx="4" fill="#fee" stroke="#e74c3c" stroke-width="1"/>
+  <text x="460" y="275" text-anchor="middle" font-size="14" font-weight="bold" fill="#c0392b">rows = 100000</text>
+  <text x="460" y="295" text-anchor="middle" font-size="11" fill="#666">扫描太多，很慢</text>
+  
+  <!-- Key insight -->
+  <rect x="350" y="330" width="220" height="80" rx="4" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text x="460" y="355" text-anchor="middle" font-size="13" font-weight="bold" fill="#495057">关键规律：</text>
+  <text x="460" y="380" text-anchor="middle" font-size="12" fill="#495057">扫描行数 ≈ 查询时间</text>
+  <text x="460" y="400" text-anchor="middle" font-size="11" fill="#666">rows 越大，查询越慢</text>
+  
+  <!-- Optimization target -->
+  <rect x="350" y="430" width="220" height="80" rx="4" fill="#e8f5e9" stroke="#27ae60" stroke-width="1"/>
+  <text x="460" y="455" text-anchor="middle" font-size="13" font-weight="bold" fill="#27ae60">优化目标：</text>
+  <text x="460" y="480" text-anchor="middle" font-size="12" fill="#27ae60">把 rows 从 500000</text>
+  <text x="460" y="500" text-anchor="middle" font-size="12" fill="#27ae60">降到 15000</text>
+  
+  <!-- Extra section -->
+  <rect x="610" y="60" width="260" height="470" rx="8" fill="#fff" stroke="#e67e22" stroke-width="2"/>
+  <text x="740" y="90" text-anchor="middle" font-size="18" font-weight="bold" fill="#e67e22">Extra：辅助信息</text>
+  
+  <!-- Good signals -->
+  <text x="630" y="120" font-size="13" font-weight="bold" fill="#27ae60">好信号：</text>
+  
+  <rect x="630" y="130" width="220" height="40" rx="4" fill="#e8f5e9" stroke="#27ae60" stroke-width="1"/>
+  <text x="740" y="155" text-anchor="middle" font-size="13" font-weight="bold" fill="#27ae60">Using index</text>
+  <text x="740" y="170" text-anchor="middle" font-size="10" fill="#666">覆盖索引，不回表</text>
+  
+  <rect x="630" y="180" width="220" height="40" rx="4" fill="#e8f5e9" stroke="#27ae60" stroke-width="1"/>
+  <text x="740" y="205" text-anchor="middle" font-size="13" font-weight="bold" fill="#27ae60">Using index condition</text>
+  <text x="740" y="220" text-anchor="middle" font-size="10" fill="#666">索引下推（ICP）</text>
+  
+  <!-- Bad signals -->
+  <text x="630" y="250" font-size="13" font-weight="bold" fill="#e74c3c">危险信号：</text>
+  
+  <rect x="630" y="260" width="220" height="40" rx="4" fill="#fee" stroke="#e74c3c" stroke-width="1"/>
+  <text x="740" y="285" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">Using filesort</text>
+  <text x="740" y="300" text-anchor="middle" font-size="10" fill="#666">需要额外排序</text>
+  
+  <rect x="630" y="310" width="220" height="40" rx="4" fill="#fee" stroke="#e74c3c" stroke-width="1"/>
+  <text x="740" y="335" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">Using temporary</text>
+  <text x="740" y="350" text-anchor="middle" font-size="10" fill="#666">用了临时表</text>
+  
+  <!-- Tips -->
+  <rect x="630" y="370" width="220" height="140" rx="4" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text x="640" y="390" font-size="12" font-weight="bold" fill="#495057">排查要点：</text>
+  <text x="640" y="415" font-size="11" fill="#495057">• filesort 数据量大时慢</text>
+  <text x="640" y="435" font-size="11" fill="#495057">• temporary 通常伴随</text>
+  <text x="640" y="450" font-size="11" fill="#495057">  GROUP BY / DISTINCT</text>
+  <text x="640" y="475" font-size="11" fill="#495057">• Using index 最理想</text>
+  <text x="640" y="495" font-size="11" fill="#495057">• ICP 可以减少回表</text>
+</svg>
