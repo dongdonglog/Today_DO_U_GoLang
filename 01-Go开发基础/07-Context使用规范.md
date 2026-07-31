@@ -209,8 +209,8 @@ root := context.Background()
 ctx1, cancel1 := context.WithTimeout(root, 5*time.Second)
 defer cancel1()
 
-// 第二层：传递 requestID
-ctx2 := context.WithValue(ctx1, "requestID", "req-123")
+// 第二层：传递 requestID（用自定义类型的 key，避免裸 string，见 7.5）
+ctx2 := context.WithValue(ctx1, requestIDKey, "req-123")
 
 // 第三层：手动取消
 ctx3, cancel3 := context.WithCancel(ctx2)
@@ -222,16 +222,17 @@ defer cancel3()
 关键源码（简化版）：
 
 ```go
-// context.go
+// context.go（简化示意，省略了 removeFromParent、children 的真实类型等细节）
 func (c *cancelCtx) cancel(err error) {
     c.mu.Lock()
     defer c.mu.Unlock()
-    
+
     c.err = err
-    close(c.done)  // 关闭 done channel，通知所有等待者
-    
-    for _, d := range c.children {
-        d.cancel(false, err, true)  // 递归取消子节点
+    close(c.done) // 关闭 done channel，通知所有等待者
+
+    // 真实实现里 children 是 map[canceler]struct{}，这里只示意"逐个取消子节点"
+    for child := range c.children {
+        child.cancel(false, err)
     }
     c.children = nil
 }
@@ -695,3 +696,14 @@ A：
 > Context 是 Go 并发编程的基石，它让取消信号能够优雅地传播到整个调用链。
 
 下一章我们将学习单元测试基础，确保代码质量。
+
+---
+
+## 参考资料
+
+> 本章基于 **Go 1.23**（第8章为 Go 1.22）。语言行为随版本演进，以对应版本官方文档为准。
+
+- Go 博客：Go Concurrency Patterns: Context https://go.dev/blog/context
+- `context` 包文档：https://pkg.go.dev/context
+- `net/http` 包文档（`Request.Context`、`Server.Shutdown`）：https://pkg.go.dev/net/http
+- Go 语言规范（The Go Programming Language Specification）：https://go.dev/ref/spec

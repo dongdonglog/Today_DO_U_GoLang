@@ -580,3 +580,14 @@ A：
 > 正确的 API 文档不是写出来的，是从代码中生成出来的。
 
 下一章我们将学习接口版本管理，让 API 平滑升级。
+
+---
+
+## 参考资料
+
+> 本章基于 **Go 1.23**、Gin v1.9.1、swaggo/swag v1.16.3。API 与默认行为随版本变化，以对应版本官方文档为准。
+
+- OpenAPI 规范：https://spec.openapis.org/
+- OpenAPI 3.2.0 发布说明：https://github.com/OAI/OpenAPI-Specification/releases
+- swaggo/swag：https://github.com/swaggo/swag
+- Gin 官方文档：https://gin-gonic.com/docs/

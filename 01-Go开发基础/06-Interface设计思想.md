@@ -178,12 +178,13 @@ type iface struct {
 type itab struct {
     inter *interfacetype // 接口类型
     _type *_type         // 具体类型
-    link  *itab          // 链表
-    bad   int32
-    inhash int32
-    fun   [1]uintptr     // 方法表（可变长）
+    hash  uint32         // _type.hash 的拷贝，用于类型断言快速比较
+    _     [4]byte
+    fun   [1]uintptr     // 方法表（可变长，fun[0]==0 表示类型未实现该接口）
 }
 ```
+
+> 上面是当前 Go（runtime/runtime2.go）中的 itab 结构。早期版本还有 `link`、`bad`、`inhash` 等字段，后来随 itab 缓存实现调整已移除，不同版本略有差异，以对应版本源码为准。
 
 **为什么接口调用有性能开销？**
 
@@ -312,11 +313,11 @@ type ReadWriteCloser interface {
 }
 ```
 
-**组合爆炸问题**：
+**大接口的组合困境**：
 
-如果有一个大接口 `BigInterface`（20 个方法），要实现它的子集，需要定义 2^20 = 1,048,576 个接口。
+假设有一个 20 个方法的大接口 `BigInterface`。任何只想用其中几个方法的调用方，都被迫依赖全部 20 个方法——mock 测试要实现 20 个方法、实现类型也必须凑齐 20 个方法，哪怕业务上只关心其中两三个。
 
-但如果拆分成 20 个小接口，只需要定义 20 个接口，通过组合可以满足大部分需求。
+如果拆成 20 个（或若干个）小接口，调用方按需组合：只读的依赖 `Reader`，读写的依赖 `Reader + Writer`。既降低了实现和 mock 成本，也让依赖关系精确表达"我到底需要什么能力"。这就是"接口越小越灵活"的核心原因。
 
 ---
 
@@ -1510,3 +1511,14 @@ A：
 > 不要设计接口，发现接口。
 
 下一章我们将学习 Context 使用规范，掌握 Go 并发编程的核心工具。
+
+---
+
+## 参考资料
+
+> 本章基于 **Go 1.23**（第8章为 Go 1.22）。语言行为随版本演进，以对应版本官方文档为准。
+
+- Go 语言规范：接口类型 https://go.dev/ref/spec#Interface_types
+- Russ Cox：Go Data Structures: Interfaces（itab 内部实现）https://research.swtch.com/interfaces
+- Effective Go：https://go.dev/doc/effective_go
+- `net/http` 包文档（`http.Handler` 设计）：https://pkg.go.dev/net/http

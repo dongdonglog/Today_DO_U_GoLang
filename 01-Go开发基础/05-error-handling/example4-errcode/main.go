@@ -16,32 +16,32 @@ import (
 
 const (
 	// 通用错误 1xxxx
-	CodeSuccess       = 0
-	CodeUnknown       = 10000
-	CodeInvalidParam  = 10001
-	CodeUnauthorized  = 10002
-	CodeForbidden     = 10003
-	CodeNotFound      = 10004
-	CodeConflict      = 10005
-	CodeRateLimited   = 10006
+	CodeSuccess      = 0
+	CodeUnknown      = 10000
+	CodeInvalidParam = 10001
+	CodeUnauthorized = 10002
+	CodeForbidden    = 10003
+	CodeNotFound     = 10004
+	CodeConflict     = 10005
+	CodeRateLimited  = 10006
 
 	// 用户错误 2xxxx
-	CodeUserNotFound    = 20001
-	CodeUserExists      = 20002
-	CodePasswordWrong   = 20003
-	CodeTokenExpired    = 20004
-	CodeTokenInvalid    = 20005
+	CodeUserNotFound  = 20001
+	CodeUserExists    = 20002
+	CodePasswordWrong = 20003
+	CodeTokenExpired  = 20004
+	CodeTokenInvalid  = 20005
 
 	// 订单错误 3xxxx
-	CodeOrderNotFound   = 30001
-	CodeOrderPaid       = 30002
-	CodeOrderCancelled  = 30003
-	CodeStockNotEnough  = 30004
+	CodeOrderNotFound  = 30001
+	CodeOrderPaid      = 30002
+	CodeOrderCancelled = 30003
+	CodeStockNotEnough = 30004
 
 	// 支付错误 4xxxx
-	CodePayFailed       = 40001
-	CodePayTimeout      = 40002
-	CodePayAmountWrong  = 40003
+	CodePayFailed      = 40001
+	CodePayTimeout     = 40002
+	CodePayAmountWrong = 40003
 )
 
 // ========================================
@@ -49,20 +49,20 @@ const (
 // ========================================
 
 var codeMessages = map[int]string{
-	CodeSuccess:       "success",
-	CodeUnknown:       "unknown error",
-	CodeInvalidParam:  "invalid parameter",
-	CodeUnauthorized:  "unauthorized",
-	CodeForbidden:     "forbidden",
-	CodeNotFound:      "not found",
-	CodeConflict:      "conflict",
-	CodeRateLimited:   "rate limited",
+	CodeSuccess:      "success",
+	CodeUnknown:      "unknown error",
+	CodeInvalidParam: "invalid parameter",
+	CodeUnauthorized: "unauthorized",
+	CodeForbidden:    "forbidden",
+	CodeNotFound:     "not found",
+	CodeConflict:     "conflict",
+	CodeRateLimited:  "rate limited",
 
-	CodeUserNotFound:   "user not found",
-	CodeUserExists:     "user already exists",
-	CodePasswordWrong:  "wrong password",
-	CodeTokenExpired:   "token expired",
-	CodeTokenInvalid:   "token invalid",
+	CodeUserNotFound:  "user not found",
+	CodeUserExists:    "user already exists",
+	CodePasswordWrong: "wrong password",
+	CodeTokenExpired:  "token expired",
+	CodeTokenInvalid:  "token invalid",
 
 	CodeOrderNotFound:  "order not found",
 	CodeOrderPaid:      "order already paid",

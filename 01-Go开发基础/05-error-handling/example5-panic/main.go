@@ -24,7 +24,8 @@ func panicBasic() {
 	defer func() {
 		fmt.Println("defer 2 - 准备 panic")
 		panic("something terrible happened")
-		fmt.Println("这行不会执行")
+		// panic 之后的代码不会执行（这里写成注释，否则 go vet 会报 unreachable code）
+		// fmt.Println("这行不会执行")
 	}()
 
 	defer func() {
@@ -50,7 +51,8 @@ func recoverDemo() {
 
 	panic("something went wrong")
 
-	fmt.Println("这行不会执行")
+	// panic 之后的代码不会执行（写成注释避免 go vet 报 unreachable code）
+	// fmt.Println("这行不会执行")
 }
 
 // ========================================

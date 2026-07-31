@@ -64,11 +64,11 @@ func (m *mockStore) Delete(id int) error {
 
 func TestCreateUser(t *testing.T) {
 	tests := []struct {
-		name      string
-		inputName string
+		name       string
+		inputName  string
 		inputEmail string
-		setup     func(*mockStore)
-		wantErr   error
+		setup      func(*mockStore)
+		wantErr    error
 	}{
 		{"正常创建", "Alice", "alice@example.com", func(s *mockStore) {}, nil},
 		{"姓名为空", "", "alice@example.com", func(s *mockStore) {}, ErrNameEmpty},

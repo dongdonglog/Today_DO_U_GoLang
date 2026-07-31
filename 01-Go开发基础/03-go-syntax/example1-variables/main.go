@@ -12,11 +12,11 @@ func main() {
 	// ========================================
 	fmt.Println("=== 零值设计 ===")
 
-	var i int      // 零值: 0
-	var s string   // 零值: ""
-	var b bool     // 零值: false
-	var p *int     // 零值: nil
-	var slice []int // 零值: nil
+	var i int            // 零值: 0
+	var s string         // 零值: ""
+	var b bool           // 零值: false
+	var p *int           // 零值: nil
+	var slice []int      // 零值: nil
 	var m map[string]int // 零值: nil
 
 	fmt.Printf("int: %d\n", i)
