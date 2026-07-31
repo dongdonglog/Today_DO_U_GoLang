@@ -826,3 +826,15 @@ A：
 > 认证是安全的第一道防线，JWT 让认证变得简单、高效、可扩展。
 
 下一章我们将学习文件上传服务，让服务支持文件处理。
+
+---
+
+## 参考资料
+
+> 本章基于 **Go 1.23**、Gin v1.9.1、golang-jwt/jwt/v5 v5.2.0。API 与默认行为随版本变化，以对应版本官方文档为准。
+
+- JWT 规范 RFC 7519：https://www.rfc-editor.org/rfc/rfc7519
+- JWT 最佳实践 RFC 8725：https://www.rfc-editor.org/rfc/rfc8725
+- golang-jwt：https://pkg.go.dev/github.com/golang-jwt/jwt/v5
+- Gin 官方文档：https://gin-gonic.com/docs/
+- net/http：https://pkg.go.dev/net/http

@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" font-family="system-ui, -apple-system, sans-serif">
+  <title>MVCC 版本链与 ReadView</title>
+  <desc>MVCC 多版本并发控制的实现原理</desc>
+  
+  <!-- Background -->
+  <rect width="900" height="600" fill="#fafbfc"/>
+  
+  <!-- Title -->
+  <text x="450" y="35" text-anchor="middle" font-size="24" font-weight="bold" fill="#1a1a1a">MVCC 版本链与 ReadView</text>
+  
+  <!-- Version Chain Section -->
+  <rect x="30" y="60" width="400" height="520" rx="8" fill="#fff" stroke="#4a90e2" stroke-width="2"/>
+  <text x="230" y="90" text-anchor="middle" font-size="18" font-weight="bold" fill="#4a90e2">版本链（undo log）</text>
+  
+  <!-- Current version -->
+  <rect x="50" y="110" width="360" height="60" rx="4" fill="#e3f2fd" stroke="#4a90e2" stroke-width="2"/>
+  <text x="230" y="135" text-anchor="middle" font-size="14" font-weight="bold" fill="#1976d2">当前版本</text>
+  <text x="230" y="155" text-anchor="middle" font-size="12" fill="#666">balance = 300, trx_id = 3</text>
+  
+  <!-- Arrow -->
+  <path d="M 230 170 L 230 200" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="250" y="190" font-size="11" fill="#666">roll_pointer</text>
+  
+  <!-- Version 2 -->
+  <rect x="50" y="200" width="360" height="60" rx="4" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text x="230" y="225" text-anchor="middle" font-size="14" font-weight="bold" fill="#495057">历史版本 2</text>
+  <text x="230" y="245" text-anchor="middle" font-size="12" fill="#666">balance = 200, trx_id = 2</text>
+  
+  <!-- Arrow -->
+  <path d="M 230 260 L 230 290" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="250" y="280" font-size="11" fill="#666">roll_pointer</text>
+  
+  <!-- Version 1 -->
+  <rect x="50" y="290" width="360" height="60" rx="4" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text x="230" y="315" text-anchor="middle" font-size="14" font-weight="bold" fill="#495057">历史版本 1</text>
+  <text x="230" y="335" text-anchor="middle" font-size="12" fill="#666">balance = 100, trx_id = 1</text>
+  
+  <!-- Explanation -->
+  <rect x="50" y="370" width="360" height="190" rx="4" fill="#fff3cd" stroke="#ffc107" stroke-width="1"/>
+  <text x="70" y="395" font-size="13" font-weight="bold" fill="#856404">说明：</text>
+  <text x="70" y="420" font-size="12" fill="#856404">• 每次 UPDATE 都会把旧版本写入 undo log</text>
+  <text x="70" y="445" font-size="12" fill="#856404">• 每个版本都有事务 ID（trx_id）</text>
+  <text x="70" y="470" font-size="12" fill="#856404">• 通过 roll_pointer 形成版本链</text>
+  <text x="70" y="495" font-size="12" fill="#856404">• 读取时根据 ReadView 判断可见性</text>
+  <text x="70" y="520" font-size="12" fill="#856404">• 实现快照读，读不加锁</text>
+  
+  <!-- ReadView Section -->
+  <rect x="470" y="60" width="400" height="520" rx="8" fill="#fff" stroke="#9b59b6" stroke-width="2"/>
+  <text x="670" y="90" text-anchor="middle" font-size="18" font-weight="bold" fill="#9b59b6">ReadView（快照）</text>
+  
+  <!-- ReadView fields -->
+  <rect x="490" y="110" width="360" height="200" rx="4" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  
+  <text x="510" y="135" font-size="13" font-weight="bold" fill="#495057">m_ids：</text>
+  <text x="510" y="155" font-size="12" fill="#666">[2, 3]（当前活跃事务）</text>
+  
+  <text x="510" y="185" font-size="13" font-weight="bold" fill="#495057">min_trx_id：</text>
+  <text x="510" y="205" font-size="12" fill="#666">2（最小活跃事务 ID）</text>
+  
+  <text x="510" y="235" font-size="13" font-weight="bold" fill="#495057">max_trx_id：</text>
+  <text x="510" y="255" font-size="12" fill="#666">4（即将分配的最大 ID）</text>
+  
+  <text x="510" y="285" font-size="13" font-weight="bold" fill="#495057">creator_trx_id：</text>
+  <text x="510" y="305" font-size="12" fill="#666">1（创建 ReadView 的事务）</text>
+  
+  <!-- Visibility rules -->
+  <rect x="490" y="330" width="360" height="230" rx="4" fill="#e8f5e9" stroke="#27ae60" stroke-width="1"/>
+  <text x="510" y="355" font-size="13" font-weight="bold" fill="#27ae60">可见性判断：</text>
+  
+  <text x="510" y="385" font-size="12" fill="#495057">1. trx_id &lt; min_trx_id</text>
+  <text x="510" y="405" font-size="12" fill="#27ae60">   → 可见（已提交）</text>
+  
+  <text x="510" y="435" font-size="12" fill="#495057">2. trx_id &gt;= max_trx_id</text>
+  <text x="510" y="455" font-size="12" fill="#e74c3c">   → 不可见（未开始）</text>
+  
+  <text x="510" y="485" font-size="12" fill="#495057">3. min &lt;= trx_id &lt; max</text>
+  <text x="510" y="505" font-size="12" fill="#495057">   在 m_ids 中 → 不可见</text>
+  <text x="510" y="525" font-size="12" fill="#495057">   不在 m_ids 中 → 可见</text>
+  
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#4a90e2"/>
+    </marker>
+  </defs>
+</svg>

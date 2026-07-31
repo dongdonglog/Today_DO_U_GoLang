@@ -84,7 +84,7 @@ Leader 说："先把 API 规范化，不然前端没法统一封装。"
 | GET | 查询 | 是 | 是 | `GET /users/1` |
 | POST | 创建 | 否 | 否 | `POST /users` |
 | PUT | 全量更新 | 是 | 否 | `PUT /users/1` |
-| PATCH | 部分更新 | 是 | 否 | `PATCH /users/1` |
+| PATCH | 部分更新 | 否 | 否 | `PATCH /users/1` |
 | DELETE | 删除 | 是 | 否 | `DELETE /users/1` |
 
 ### 10.2.2 幂等性
@@ -321,7 +321,7 @@ Accept: application/vnd.myapp.v1+json
 2. **旧版本返回 `Deprecation` header**
    ```
    Deprecation: true
-   Sunset: Sat, 01 Jan 2025 00:00:00 GMT
+   Sunset: Wed, 01 Jan 2025 00:00:00 GMT
    ```
 3. **文档明确标注废弃时间**
 4. **监控旧版本调用量**
@@ -578,3 +578,16 @@ A：
 > REST API 的设计目标是：让客户端只看 URL 和 HTTP 方法，就知道这个接口是干什么的。
 
 下一章我们将学习配置管理，让服务支持多环境配置。
+
+---
+
+## 参考资料
+
+> 本章基于 **Go 1.23**、Gin v1.10.0。API 与默认行为随版本变化，以对应版本官方文档为准。
+
+- REST/HTTP 语义 RFC 9110：https://www.rfc-editor.org/rfc/rfc9110
+- PATCH 方法 RFC 5789：https://www.rfc-editor.org/rfc/rfc5789
+- Sunset header RFC 8594：https://www.rfc-editor.org/rfc/rfc8594
+- API 版本管理参考：https://cloud.google.com/apis/design/versioning
+- Gin 官方文档：https://gin-gonic.com/docs/
+- net/http：https://pkg.go.dev/net/http

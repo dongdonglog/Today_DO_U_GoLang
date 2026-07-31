@@ -852,3 +852,14 @@ A：
 > 好的表设计是性能的基础，索引是查询的加速器。
 
 下一章我们将学习 SQL 优化，让查询更快。
+
+---
+
+## 参考资料
+
+> 本章基于 **MySQL 8.0**、**Go 1.23**。索引/锁/优化器行为与部分语法（如降序索引、DATETIME 存储）在不同 MySQL 版本间有差异，以对应版本官方文档为准。
+
+- MySQL 8.0 参考手册首页：https://dev.mysql.com/doc/refman/8.0/en/
+- InnoDB 索引 / B+ 树：https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
+- 数据类型存储需求（DATETIME 等）：https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html
+- 降序索引：https://dev.mysql.com/doc/refman/8.0/en/descending-indexes.html

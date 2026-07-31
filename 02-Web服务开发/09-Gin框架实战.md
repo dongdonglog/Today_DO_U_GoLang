@@ -650,11 +650,14 @@ r.POST("/upload/multi", func(c *gin.Context) {
 })
 ```
 
-### 文件大小限制
+### 解析时的内存缓冲阈值
 
 ```go
-// 限制上传文件大小（默认 32MB）
+// MaxMultipartMemory 是解析 multipart 表单时用于内存缓冲的上限，
+// 超出部分写入临时文件。它不是"最大上传大小"，不会拒绝大文件。
 r.MaxMultipartMemory = 8 << 20 // 8 MB
+
+// 真正限制上传体积要靠 file.Size 判断，或用 http.MaxBytesReader 包裹请求体
 ```
 
 ### 安全建议
@@ -1205,3 +1208,15 @@ A：
 - **生态好**：社区活跃、插件丰富
 
 下一章我们将学习 REST API 设计规范，让 API 更规范、更易用。
+
+---
+
+## 参考资料
+
+> 本章基于 **Go 1.23**、Gin v1.10.0。API 与默认行为随版本变化，以对应版本官方文档为准。
+
+- Gin 官方文档：https://gin-gonic.com/docs/
+- Gin GitHub：https://github.com/gin-gonic/gin
+- net/http：https://pkg.go.dev/net/http
+- mime/multipart：https://pkg.go.dev/mime/multipart
+- REST/HTTP 语义 RFC 9110：https://www.rfc-editor.org/rfc/rfc9110

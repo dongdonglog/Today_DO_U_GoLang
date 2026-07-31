@@ -125,29 +125,39 @@ ALTER TABLE orders ADD INDEX idx_status_created (status, created_at);
 再跑一次 EXPLAIN：
 
 ```
-         type: ref
+         type: range
  possible_keys: idx_status_created
           key: idx_status_created
          rows: 15234
-        Extra: Using where; Using index
+        Extra: Using where; Backward index scan
 ```
 
-type 从 ALL 变成 ref，扫描行从 50 万降到 1.5 万。响应时间从 15 秒降到了 200ms 左右。
+type 从 `ALL` 变成 `range`（`status = 0` 等值 + `created_at > '...'` 范围，走复合索引的范围扫描），扫描行从 50 万降到 1.5 万。响应时间从 15 秒降到了 200ms 左右。
 
-### 18.2.2 联合索引最左前缀
+注意 Extra 里**没有** `Using filesort`——`ORDER BY created_at DESC` 直接用索引顺序满足了。原因见下一节。
 
-仔细看 Extra，还有 `Using filesort`。ORDER BY created_at 没有用到索引排序。
+> `SELECT *` 需要回表取全部列，所以 Extra 不会是 `Using index`（覆盖索引）。想看到 `Using index`，得让查询列全部落在索引里，见 18.2.3。
 
-联合索引 `(status, created_at)` 的顺序是 status 在前，created_at 在后。查询条件 `WHERE status = 0 AND created_at > '...'` 用到了索引，但排序发生在查询完成之后，因为：
+### 18.2.2 联合索引最左前缀与排序
 
-- status 是等值查询，精准命中索引前缀
-- created_at 是范围查询（`>`），范围后面的索引列不能用于排序
+为什么 `ORDER BY created_at DESC` 不需要 filesort？关键在联合索引 `(status, created_at)` 的物理顺序：先按 status 排，status 相同再按 created_at 排。
 
-如果要排序也走索引，得把 created_at 提到前面来？不行，业务查询条件 `status = ? AND created_at > ?` 是最左前缀，改成 `(created_at, status)` 后，`status = 0` 就用不上索引前缀了。
+查询里 `status = 0` 是**等值**条件，锁定 status=0 这一段后，这段内的记录天然就是按 created_at 有序的。所以：
 
-这里有个取舍：等值条件放前面，范围条件放后面。等值条件可以精准定位，范围条件会中断索引的后续列使用。
+- 排序方向和索引一致时（`ORDER BY created_at ASC`），正向扫描即可
+- 排序方向相反时（`ORDER BY created_at DESC`），MySQL 8.0 做**反向索引扫描**（Backward index scan），同样无需 filesort
 
-所以现在的索引已经是这种情况下的最优选择了。`Using filesort` 虽然还在，但排序的数据量从 50 万降到了 1.5 万，基本不痛了。
+这就是"等值列放前、排序/范围列放后"的价值：等值前缀不打断后续列的有序性，索引能同时服务过滤和排序。
+
+反过来，什么时候会触发 filesort？当排序列不是紧跟在等值前缀之后时。比如：
+
+```sql
+-- 索引 (status, created_at)，却按未进索引的 amount 排序
+SELECT * FROM orders WHERE status = 0 ORDER BY amount DESC;
+-- Extra: Using where; Using filesort  ← 索引管不到 amount 的顺序
+```
+
+所以现在的 `(status, created_at)` 对这条业务查询已是最优：既命中 `status = 0 AND created_at > ?` 的过滤，又满足了 `created_at` 的排序。
 
 ### 18.2.3 覆盖索引
 
@@ -332,9 +342,9 @@ LIMIT 20 OFFSET 1000\G
 输出：
 
 ```
-         type: ref
+         type: range
          rows: 15234
-        Extra: Using where; Using index
+        Extra: Using where; Backward index scan
 ```
 
 ### 18.4.2 Go 代码对比
@@ -557,3 +567,15 @@ A：MySQL 5.6 引入，在存储引擎层就过滤掉不符合条件的行，减
 > SQL 优化这件事，说白了就是减少扫描行数。用好 EXPLAIN，看懂 type、rows、Extra 三列，就已经解决了 80% 的问题。
 
 下一章我们将学习事务与锁，让并发操作更安全。
+
+---
+
+## 参考资料
+
+> 本章基于 **MySQL 8.0**、**Go 1.23**。索引/锁/优化器行为与部分语法（如降序索引、DATETIME 存储）在不同 MySQL 版本间有差异，以对应版本官方文档为准。
+
+- MySQL 8.0 参考手册首页：https://dev.mysql.com/doc/refman/8.0/en/
+- EXPLAIN 输出格式：https://dev.mysql.com/doc/refman/8.0/en/explain-output.html
+- ORDER BY 优化（filesort / backward index scan）：https://dev.mysql.com/doc/refman/8.0/en/order-by-optimization.html
+- 索引下推 ICP：https://dev.mysql.com/doc/refman/8.0/en/index-condition-pushdown-optimization.html
+- 慢查询日志：https://dev.mysql.com/doc/refman/8.0/en/slow-query-log.html

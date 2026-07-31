@@ -423,10 +423,16 @@ func authMiddleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         token := r.Header.Get("Authorization")
         if token != "Bearer secret-token" {
+            w.Header().Set("Content-Type", "application/json")
             w.WriteHeader(http.StatusUnauthorized)
+            json.NewEncoder(w).Encode(map[string]string{
+                "error": "missing authorization token",
+            })
             return
         }
-        next.ServeHTTP(w, r)
+        // 鉴权通过后把 userID 放进 context，供后续 handler 使用
+        ctx := context.WithValue(r.Context(), userIDKey, "user-123")
+        next.ServeHTTP(w, r.WithContext(ctx))
     })
 }
 
@@ -891,3 +897,14 @@ A：
 > **核心思想：** Go 的 HTTP 标准库追求"简单但不简陋"。3 个核心概念（Handler、ServeMux、ResponseWriter）通过组合可以构建任意复杂的 HTTP 服务。
 
 下一章我们会在这版用户管理 API 上继续补强错误处理：让参数错误、用户不存在、内部错误和 panic 都有清晰的错误码、HTTP 状态码和日志上下文。
+
+---
+
+## 参考资料
+
+> 本章基于 **Go 1.23**（第8章为 Go 1.22）。语言行为随版本演进，以对应版本官方文档为准。
+
+- `net/http` 包文档：https://pkg.go.dev/net/http
+- `context` 包文档（优雅关闭用到）：https://pkg.go.dev/context
+- Effective Go：https://go.dev/doc/effective_go
+- Go 语言规范（The Go Programming Language Specification）：https://go.dev/ref/spec

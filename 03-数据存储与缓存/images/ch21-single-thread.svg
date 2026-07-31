@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 450" font-family="system-ui, -apple-system, sans-serif">
+  <title>Redis 单线程模型</title>
+  <desc>Redis 单线程 + IO 多路复用工作原理</desc>
+  
+  <rect width="900" height="450" fill="#fafbfc"/>
+  <text x="450" y="35" text-anchor="middle" font-size="24" font-weight="bold" fill="#1a1a1a">Redis 单线程模型</text>
+
+  <!-- Clients -->
+  <text x="100" y="70" text-anchor="middle" font-size="15" font-weight="bold" fill="#666">客户端</text>
+  <rect x="40" y="80" width="120" height="40" rx="4" fill="#e3f2fd" stroke="#4a90e2" stroke-width="1.5"/>
+  <text x="100" y="105" text-anchor="middle" font-size="13" fill="#1976d2">Client 1</text>
+  <rect x="40" y="130" width="120" height="40" rx="4" fill="#e3f2fd" stroke="#4a90e2" stroke-width="1.5"/>
+  <text x="100" y="155" text-anchor="middle" font-size="13" fill="#1976d2">Client 2</text>
+  <rect x="40" y="180" width="120" height="40" rx="4" fill="#e3f2fd" stroke="#4a90e2" stroke-width="1.5"/>
+  <text x="100" y="205" text-anchor="middle" font-size="13" fill="#1976d2">Client 3</text>
+  <text x="100" y="240" text-anchor="middle" font-size="11" fill="#666">...</text>
+
+  <!-- Arrow -->
+  <path d="M 160 100 L 220 100" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 160 150 L 220 150" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 160 200 L 220 200" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- IO Multiplexing -->
+  <text x="370" y="70" text-anchor="middle" font-size="15" font-weight="bold" fill="#666">IO 多路复用（epoll）</text>
+  <rect x="220" y="80" width="300" height="170" rx="8" fill="#fff" stroke="#e67e22" stroke-width="2"/>
+  <text x="370" y="110" text-anchor="middle" font-size="14" font-weight="bold" fill="#e67e22">事件循环</text>
+  <text x="370" y="135" text-anchor="middle" font-size="12" fill="#666">监听所有连接的读写事件</text>
+
+  <rect x="235" y="150" width="270" height="40" rx="4" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text x="370" y="175" text-anchor="middle" font-size="12" font-family="monospace" fill="#495057">epoll_wait() → 就绪事件列表</text>
+  <text x="370" y="210" text-anchor="middle" font-size="12" fill="#666">有事件 → 处理，没事件 → 继续监听</text>
+
+  <!-- Arrow -->
+  <path d="M 520 120 L 580 120" stroke="#e67e22" stroke-width="2" fill="none" marker-end="url(#arrow-orange)"/>
+
+  <!-- Command Queue -->
+  <text x="650" y="70" text-anchor="middle" font-size="15" font-weight="bold" fill="#666">命令队列</text>
+  <rect x="580" y="80" width="140" height="170" rx="8" fill="#fff" stroke="#3498db" stroke-width="2"/>
+  <rect x="595" y="95" width="110" height="25" rx="3" fill="#e8f5e9" stroke="#27ae60" stroke-width="1"/>
+  <text x="650" y="113" text-anchor="middle" font-size="11" fill="#27ae60">SET key val</text>
+  <rect x="595" y="125" width="110" height="25" rx="3" fill="#e8f5e9" stroke="#27ae60" stroke-width="1"/>
+  <text x="650" y="143" text-anchor="middle" font-size="11" fill="#27ae60">GET key</text>
+  <rect x="595" y="155" width="110" height="25" rx="3" fill="#e8f5e9" stroke="#27ae60" stroke-width="1"/>
+  <text x="650" y="173" text-anchor="middle" font-size="11" fill="#27ae60">INCR counter</text>
+  <text x="650" y="210" text-anchor="middle" font-size="11" fill="#666">按到达顺序排队</text>
+
+  <!-- Arrow -->
+  <path d="M 720 120 L 780 120" stroke="#3498db" stroke-width="2" fill="none" marker-end="url(#arrow-blue)"/>
+
+  <!-- Single Thread -->
+  <text x="840" y="70" text-anchor="middle" font-size="15" font-weight="bold" fill="#666">单线程执行</text>
+  <rect x="780" y="80" width="120" height="170" rx="8" fill="#fff" stroke="#e74c3c" stroke-width="2"/>
+  <text x="840" y="110" text-anchor="middle" font-size="14" font-weight="bold" fill="#e74c3c">主线程</text>
+  <text x="840" y="135" text-anchor="middle" font-size="12" fill="#666">串行执行</text>
+  <text x="840" y="155" text-anchor="middle" font-size="12" fill="#666">无锁竞争</text>
+  <text x="840" y="175" text-anchor="middle" font-size="12" fill="#666">无上下文切换</text>
+  <text x="840" y="210" text-anchor="middle" font-size="12" fill="#666">一个命令接一个</text>
+
+  <!-- Bottom: Key insight -->
+  <rect x="40" y="300" width="820" height="120" rx="8" fill="#fff3cd" stroke="#ffc107" stroke-width="1.5"/>
+  <text x="450" y="330" text-anchor="middle" font-size="15" font-weight="bold" fill="#856404">为什么单线程还快？</text>
+  <text x="450" y="360" text-anchor="middle" font-size="13" fill="#856404">1. 所有操作在内存中完成，没有磁盘 IO 等待</text>
+  <text x="450" y="385" text-anchor="middle" font-size="13" fill="#856404">2. 单线程避免了锁竞争和上下文切换</text>
+  <text x="450" y="410" text-anchor="middle" font-size="13" fill="#856404">3. IO 多路复用（epoll）让一个线程管理上万个连接</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#4a90e2"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#e67e22"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#3498db"/>
+    </marker>
+  </defs>
+</svg>

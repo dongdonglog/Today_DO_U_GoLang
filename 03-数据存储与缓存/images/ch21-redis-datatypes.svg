@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" font-family="system-ui, -apple-system, sans-serif">
+  <title>Redis 五大数据类型</title>
+  <desc>String、Hash、List、Set、ZSet 五种数据类型及订单系统适用场景</desc>
+  
+  <rect width="900" height="420" fill="#fafbfc"/>
+  <text x="450" y="30" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a1a">Redis 五大数据类型</text>
+
+  <!-- String -->
+  <rect x="20" y="50" width="202" height="150" rx="8" fill="#fff" stroke="#e74c3c" stroke-width="2"/>
+  <text x="121" y="75" text-anchor="middle" font-size="16" font-weight="bold" fill="#e74c3c">String</text>
+  <rect x="30" y="85" width="182" height="25" rx="3" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text x="121" y="102" text-anchor="middle" font-size="10" fill="#495057">"product:1" → "{...}"</text>
+  <text x="121" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="#666">订单场景：</text>
+  <text x="121" y="140" text-anchor="middle" font-size="10" fill="#666">商品详情缓存、计数器</text>
+  <text x="121" y="155" text-anchor="middle" font-size="10" fill="#666">库存扣减、分布式锁</text>
+
+  <!-- Hash -->
+  <rect x="240" y="50" width="202" height="150" rx="8" fill="#fff" stroke="#e67e22" stroke-width="2"/>
+  <text x="341" y="75" text-anchor="middle" font-size="16" font-weight="bold" fill="#e67e22">Hash</text>
+  <rect x="250" y="85" width="182" height="25" rx="3" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text x="341" y="102" text-anchor="middle" font-size="10" fill="#495057">"cart:1001" → {p1:2, p2:1}</text>
+  <text x="341" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="#666">订单场景：</text>
+  <text x="341" y="140" text-anchor="middle" font-size="10" fill="#666">购物车、用户信息</text>
+  <text x="341" y="155" text-anchor="middle" font-size="10" fill="#666">商品属性</text>
+
+  <!-- List -->
+  <rect x="460" y="50" width="202" height="150" rx="8" fill="#fff" stroke="#27ae60" stroke-width="2"/>
+  <text x="561" y="75" text-anchor="middle" font-size="16" font-weight="bold" fill="#27ae60">List</text>
+  <rect x="470" y="85" width="182" height="25" rx="3" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text x="561" y="102" text-anchor="middle" font-size="10" fill="#495057">"recent_orders" → [...]</text>
+  <text x="561" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="#666">订单场景：</text>
+  <text x="561" y="140" text-anchor="middle" font-size="10" fill="#666">最新订单列表</text>
+  <text x="561" y="155" text-anchor="middle" font-size="10" fill="#666">消息队列</text>
+
+  <!-- Set -->
+  <rect x="680" y="50" width="202" height="150" rx="8" fill="#fff" stroke="#3498db" stroke-width="2"/>
+  <text x="781" y="75" text-anchor="middle" font-size="16" font-weight="bold" fill="#3498db">Set</text>
+  <rect x="690" y="85" width="182" height="25" rx="3" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text x="781" y="102" text-anchor="middle" font-size="10" fill="#495057">"read:1001" → {p1, p2, p3}</text>
+  <text x="781" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="#666">订单场景：</text>
+  <text x="781" y="140" text-anchor="middle" font-size="10" fill="#666">用户已读、共同关注</text>
+  <text x="781" y="155" text-anchor="middle" font-size="10" fill="#666">商品标签</text>
+
+  <!-- ZSet -->
+  <rect x="20" y="220" width="860" height="140" rx="8" fill="#fff" stroke="#9b59b6" stroke-width="2"/>
+  <text x="450" y="248" text-anchor="middle" font-size="16" font-weight="bold" fill="#9b59b6">ZSet（有序集合）</text>
+  <rect x="30" y="258" width="840" height="25" rx="3" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+  <text x="450" y="275" text-anchor="middle" font-size="10" fill="#495057">"hot_products" → {p3:20, p1:10, p2:5}</text>
+  <text x="450" y="298" text-anchor="middle" font-size="11" font-weight="bold" fill="#666">订单场景：</text>
+  <text x="450" y="315" text-anchor="middle" font-size="10" fill="#666">热销排行榜 (ZIncrBy/ZRevRange)、延时队列 (ZRangeByScore)</text>
+  <text x="450" y="335" text-anchor="middle" font-size="10" fill="#666">自动按销量排序，适合 Top N 查询</text>
+</svg>

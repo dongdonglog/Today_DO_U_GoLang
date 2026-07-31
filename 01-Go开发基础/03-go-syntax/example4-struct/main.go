@@ -11,7 +11,7 @@ import (
 
 // 基本结构体
 type User struct {
-	ID    int    `json:"id"`    // 字段标签
+	ID    int    `json:"id"` // 字段标签
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
@@ -25,8 +25,8 @@ type BaseModel struct {
 
 // Employee 嵌入 BaseModel
 type Employee struct {
-	BaseModel // 嵌入（匿名字段）
-	Name      string
+	BaseModel  // 嵌入（匿名字段）
+	Name       string
 	Department string
 }
 
@@ -228,10 +228,10 @@ func main() {
 	fmt.Println("\n=== 值接收者 vs 指针接收者 ===")
 
 	c1 := Counter{value: 0}
-	c1.Increment() // 值接收者，修改的是副本
+	c1.Increment()                                // 值接收者，修改的是副本
 	fmt.Printf("值接收者: c1.value = %d\n", c1.value) // 仍然是 0
 
 	c2 := &CounterPointer{value: 0}
-	c2.Increment() // 指针接收者，修改原始对象
+	c2.Increment()                                 // 指针接收者，修改原始对象
 	fmt.Printf("指针接收者: c2.value = %d\n", c2.value) // 变成 1
 }

@@ -49,9 +49,9 @@ func main() {
 	r := gin.New()
 
 	// 中间件顺序很重要
-	r.Use(middleware.RecoveryMiddleware(appLogger))  // 1. 错误恢复
-	r.Use(middleware.RequestIDMiddleware())           // 2. 请求 ID
-	r.Use(middleware.LoggerMiddleware(appLogger))     // 3. 请求日志
+	r.Use(middleware.RecoveryMiddleware(appLogger)) // 1. 错误恢复
+	r.Use(middleware.RequestIDMiddleware())         // 2. 请求 ID
+	r.Use(middleware.LoggerMiddleware(appLogger))   // 3. 请求日志
 
 	// 健康检查
 	r.GET("/health", func(c *gin.Context) {

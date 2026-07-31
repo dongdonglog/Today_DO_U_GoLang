@@ -124,7 +124,7 @@ func emptyInterfacePitfalls() {
 	// 陷阱 1：性能开销
 	// 每次使用空接口都会发生装箱/拆箱
 	var any interface{}
-	any = 42 // 装箱：int -> interface{}
+	any = 42         // 装箱：int -> interface{}
 	num := any.(int) // 拆箱：interface{} -> int
 	fmt.Printf("num: %d\n", num)
 

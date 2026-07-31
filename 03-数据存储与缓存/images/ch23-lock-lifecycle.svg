@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" font-family="system-ui, -apple-system, sans-serif">
+  <title>Redis 分布式锁加锁与释放流程</title>
+  <desc>原子加锁 SET NX PX、Lua 原子释放、看门狗自动续约的完整生命周期</desc>
+
+  <rect width="900" height="500" fill="#fafbfc"/>
+  <text x="450" y="34" text-anchor="middle" font-size="23" font-weight="bold" fill="#1a1a1a">Redis 分布式锁生命周期</text>
+
+  <!-- 1. Lock acquire -->
+  <text x="120" y="75" text-anchor="middle" font-size="15" font-weight="bold" fill="#4a90e2">加锁</text>
+  <rect x="30" y="90" width="180" height="80" rx="8" fill="#e3f2fd" stroke="#4a90e2" stroke-width="1.5"/>
+  <text x="120" y="117" text-anchor="middle" font-size="12" font-family="monospace" fill="#1976d2">SET key token NX PX ttl</text>
+  <text x="120" y="140" text-anchor="middle" font-size="11.5" fill="#555">原子：不存在才加 + 自动过期</text>
+  <text x="120" y="158" text-anchor="middle" font-size="11.5" fill="#555">一次网络往返</text>
+
+  <path d="M 210 130 L 250 130" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#a-blue)"/>
+
+  <!-- 2. Check result -->
+  <rect x="250" y="100" width="180" height="60" rx="8" fill="#fff" stroke="#4a90e2" stroke-width="1.5"/>
+  <text x="340" y="125" text-anchor="middle" font-size="13" fill="#333">返回 OK？</text>
+  <text x="340" y="146" text-anchor="middle" font-size="11.5" fill="#888">true=拿到 / false=已被持有</text>
+
+  <path d="M 430 115 L 490 115" stroke="#27ae60" stroke-width="2" fill="none" marker-end="url(#a-green)"/>
+  <text x="460" y="108" text-anchor="middle" font-size="11" fill="#27ae60">OK</text>
+  <path d="M 340 160 L 340 200 L 210 200 L 210 170" stroke="#e74c3c" stroke-width="2" fill="none" marker-end="url(#a-red)"/>
+  <text x="275" y="193" text-anchor="middle" font-size="11" fill="#e74c3c">失败：重试或放弃</text>
+
+  <!-- 3. In critical section with watchdog -->
+  <text x="610" y="75" text-anchor="middle" font-size="15" font-weight="bold" fill="#27ae60">持有</text>
+  <rect x="490" y="90" width="240" height="80" rx="8" fill="#e8f5e9" stroke="#27ae60" stroke-width="1.5"/>
+  <text x="610" y="115" text-anchor="middle" font-size="13" fill="#27ae60">进入临界区，执行业务</text>
+  <text x="610" y="137" text-anchor="middle" font-size="11.5" fill="#555">看门狗每 TTL/3 续约一次</text>
+  <text x="610" y="156" text-anchor="middle" font-size="11" font-family="monospace" fill="#27ae60">EVAL renewScript(token, ttl)</text>
+
+  <path d="M 730 130 L 780 130" stroke="#27ae60" stroke-width="2" fill="none" marker-end="url(#a-green)"/>
+
+  <!-- 4. Release with Lua -->
+  <text x="840" y="75" text-anchor="middle" font-size="15" font-weight="bold" fill="#e67e22">释放</text>
+  <rect x="780" y="90" width="110" height="80" rx="8" fill="#fff3e0" stroke="#e67e22" stroke-width="1.5"/>
+  <text x="835" y="117" text-anchor="middle" font-size="11.5" font-family="monospace" fill="#d35400">EVAL</text>
+  <text x="835" y="133" text-anchor="middle" font-size="11" font-family="monospace" fill="#d35400">if GET==token</text>
+  <text x="835" y="147" text-anchor="middle" font-size="11" font-family="monospace" fill="#d35400">then DEL</text>
+  <text x="835" y="163" text-anchor="middle" font-size="11" fill="#555">原子判断+删除</text>
+
+  <!-- pitfalls panel -->
+  <rect x="30" y="230" width="840" height="240" rx="8" fill="#fff" stroke="#dee2e6" stroke-width="1.5"/>
+  <text x="450" y="260" text-anchor="middle" font-size="15" font-weight="bold" fill="#c0392b">三把常见坑（example1/2 可复现）</text>
+
+  <rect x="50" y="280" width="250" height="170" rx="6" fill="#fde8e8" stroke="#e74c3c" stroke-width="1.5"/>
+  <text x="175" y="305" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">坑一：死锁</text>
+  <text x="175" y="330" text-anchor="middle" font-size="12" fill="#333">SETNX + EXPIRE 分两步</text>
+  <text x="175" y="350" text-anchor="middle" font-size="12" fill="#333">中间进程崩溃，锁永不过期</text>
+  <text x="175" y="378" text-anchor="middle" font-size="12" fill="#27ae60">→ 用 SET NX PX 一把梭</text>
+
+  <rect x="325" y="280" width="250" height="170" rx="6" fill="#fde8e8" stroke="#e74c3c" stroke-width="1.5"/>
+  <text x="450" y="305" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">坑二：误释放</text>
+  <text x="450" y="330" text-anchor="middle" font-size="12" fill="#333">A 超时→锁过期→B 拿到锁</text>
+  <text x="450" y="350" text-anchor="middle" font-size="12" fill="#333">A 回来直接 DEL，删了 B 的锁</text>
+  <text x="450" y="378" text-anchor="middle" font-size="12" fill="#27ae60">→ token + Lua 原子校验</text>
+
+  <rect x="600" y="280" width="250" height="170" rx="6" fill="#fde8e8" stroke="#e74c3c" stroke-width="1.5"/>
+  <text x="725" y="305" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">坑三：业务超时</text>
+  <text x="725" y="330" text-anchor="middle" font-size="12" fill="#333">业务比 TTL 长，锁自动过期</text>
+  <text x="725" y="350" text-anchor="middle" font-size="12" fill="#333">其他客户端并发进入临界区</text>
+  <text x="725" y="378" text-anchor="middle" font-size="12" fill="#27ae60">→ 看门狗自动续约</text>
+
+  <defs>
+    <marker id="a-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#4a90e2"/></marker>
+    <marker id="a-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#27ae60"/></marker>
+    <marker id="a-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#e74c3c"/></marker>
+  </defs>
+</svg>

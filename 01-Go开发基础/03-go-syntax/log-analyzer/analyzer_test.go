@@ -7,11 +7,11 @@ import (
 
 func TestParseLogLine(t *testing.T) {
 	tests := []struct {
-		name     string
-		line     string
-		wantNil  bool
-		wantLvl  string
-		wantMsg  string
+		name    string
+		line    string
+		wantNil bool
+		wantLvl string
+		wantMsg string
 	}{
 		{
 			name:    "ERROR 日志",

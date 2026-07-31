@@ -189,7 +189,7 @@ func main() {
 	fmt.Printf("c() = %d\n", c()) // 2
 	fmt.Printf("c() = %d\n", c()) // 3
 
-	c2 := counter() // 新的闭包实例
+	c2 := counter()                 // 新的闭包实例
 	fmt.Printf("c2() = %d\n", c2()) // 1
 
 	closureTrap()

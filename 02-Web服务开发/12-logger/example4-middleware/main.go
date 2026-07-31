@@ -131,10 +131,10 @@ func main() {
 	r := gin.New()
 
 	// 中间件顺序很重要
-	r.Use(RecoveryMiddleware(logger))  // 1. 错误恢复
-	r.Use(RequestIDMiddleware())       // 2. 请求 ID
-	r.Use(LoggerMiddleware(logger))    // 3. 请求日志
-	r.Use(MetricsMiddleware(logger))   // 4. 指标收集
+	r.Use(RecoveryMiddleware(logger)) // 1. 错误恢复
+	r.Use(RequestIDMiddleware())      // 2. 请求 ID
+	r.Use(LoggerMiddleware(logger))   // 3. 请求日志
+	r.Use(MetricsMiddleware(logger))  // 4. 指标收集
 
 	// 正常路由
 	r.GET("/health", func(c *gin.Context) {

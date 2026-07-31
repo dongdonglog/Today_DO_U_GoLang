@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" font-family="system-ui, -apple-system, sans-serif">
+  <title>缓存穿透、击穿、雪崩对比</title>
+  <desc>三类缓存问题的成因与典型解决方案对比：穿透查不存在数据、击穿热点 key 过期、雪崩大批 key 同时过期</desc>
+
+  <rect width="900" height="470" fill="#fafbfc"/>
+  <text x="450" y="34" text-anchor="middle" font-size="23" font-weight="bold" fill="#1a1a1a">缓存穿透 · 击穿 · 雪崩</text>
+
+  <!-- Column 1: 穿透 -->
+  <rect x="30" y="60" width="270" height="380" rx="8" fill="#fff" stroke="#e74c3c" stroke-width="2"/>
+  <rect x="30" y="60" width="270" height="46" rx="8" fill="#fde8e8"/>
+  <text x="165" y="90" text-anchor="middle" font-size="17" font-weight="bold" fill="#c0392b">缓存穿透</text>
+
+  <text x="50" y="132" font-size="13" font-weight="bold" fill="#333">现象</text>
+  <text x="50" y="156" font-size="12.5" fill="#555">查询根本不存在的数据</text>
+  <text x="50" y="176" font-size="12.5" fill="#555">缓存永远不命中</text>
+  <text x="50" y="196" font-size="12.5" fill="#555">每次都打到数据库</text>
+
+  <text x="50" y="232" font-size="13" font-weight="bold" fill="#333">典型场景</text>
+  <text x="50" y="256" font-size="12.5" fill="#555">恶意用 -1 / 随机 ID 刷接口</text>
+
+  <text x="50" y="292" font-size="13" font-weight="bold" fill="#27ae60">解决</text>
+  <text x="50" y="316" font-size="12.5" fill="#555">① 空值缓存（短 TTL）</text>
+  <text x="50" y="340" font-size="12.5" fill="#555">② 布隆过滤器前置拦截</text>
+  <text x="50" y="364" font-size="12.5" fill="#555">③ 参数校验</text>
+
+  <!-- Column 2: 击穿 -->
+  <rect x="315" y="60" width="270" height="380" rx="8" fill="#fff" stroke="#e67e22" stroke-width="2"/>
+  <rect x="315" y="60" width="270" height="46" rx="8" fill="#fff3e0"/>
+  <text x="450" y="90" text-anchor="middle" font-size="17" font-weight="bold" fill="#d35400">缓存击穿</text>
+
+  <text x="335" y="132" font-size="13" font-weight="bold" fill="#333">现象</text>
+  <text x="335" y="156" font-size="12.5" fill="#555">单个热点 key 过期瞬间</text>
+  <text x="335" y="176" font-size="12.5" fill="#555">大量并发同时未命中</text>
+  <text x="335" y="196" font-size="12.5" fill="#555">集中回源压垮数据库</text>
+
+  <text x="335" y="232" font-size="13" font-weight="bold" fill="#333">典型场景</text>
+  <text x="335" y="256" font-size="12.5" fill="#555">秒杀商品、首页热点</text>
+
+  <text x="335" y="292" font-size="13" font-weight="bold" fill="#27ae60">解决</text>
+  <text x="335" y="316" font-size="12.5" fill="#555">① singleflight 合并回源</text>
+  <text x="335" y="340" font-size="12.5" fill="#555">② 逻辑过期 + 异步重建</text>
+  <text x="335" y="364" font-size="12.5" fill="#555">③ 互斥锁重建（见第23章）</text>
+
+  <!-- Column 3: 雪崩 -->
+  <rect x="600" y="60" width="270" height="380" rx="8" fill="#fff" stroke="#8e44ad" stroke-width="2"/>
+  <rect x="600" y="60" width="270" height="46" rx="8" fill="#f3e8fb"/>
+  <text x="735" y="90" text-anchor="middle" font-size="17" font-weight="bold" fill="#8e44ad">缓存雪崩</text>
+
+  <text x="620" y="132" font-size="13" font-weight="bold" fill="#333">现象</text>
+  <text x="620" y="156" font-size="12.5" fill="#555">大批 key 同一时刻过期</text>
+  <text x="620" y="176" font-size="12.5" fill="#555">或 Redis 整体宕机</text>
+  <text x="620" y="196" font-size="12.5" fill="#555">数据库瞬时被打爆</text>
+
+  <text x="620" y="232" font-size="13" font-weight="bold" fill="#333">典型场景</text>
+  <text x="620" y="256" font-size="12.5" fill="#555">同批预热数据同时到期</text>
+
+  <text x="620" y="292" font-size="13" font-weight="bold" fill="#27ae60">解决</text>
+  <text x="620" y="316" font-size="12.5" fill="#555">① TTL 加随机抖动</text>
+  <text x="620" y="340" font-size="12.5" fill="#555">② 多级缓存 / 预热</text>
+  <text x="620" y="364" font-size="12.5" fill="#555">③ 限流降级 + 高可用</text>
+
+  <!-- bottom note -->
+  <text x="450" y="418" text-anchor="middle" font-size="12.5" fill="#666">区分要点：击穿是"一个热点 key"，雪崩是"大批 key 一起挂"；穿透的数据在数据库里压根不存在</text>
+</svg>
