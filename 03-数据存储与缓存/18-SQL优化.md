@@ -408,7 +408,7 @@ cd 18-sql/example2-pagination
 docker run --name go-book-mysql \
   -e MYSQL_ROOT_PASSWORD=root \
   -p 3306:3306 \
-  -d mysql:8.0
+  -d mysql:8.4
 
 # 等待 MySQL 就绪后初始化数据库
 mysql -u root -p < migrations/001_setup.sql
@@ -572,10 +572,10 @@ A：MySQL 5.6 引入，在存储引擎层就过滤掉不符合条件的行，减
 
 ## 参考资料
 
-> 本章基于 **MySQL 8.0**、**Go 1.23**。索引/锁/优化器行为与部分语法（如降序索引、DATETIME 存储）在不同 MySQL 版本间有差异，以对应版本官方文档为准。
+> 本章基于 **MySQL 8.4 LTS**、**Go 1.25**、go-sql-driver/mysql v1.10.0。索引/锁/优化器行为与部分语法（如降序索引、DATETIME 存储）在不同 MySQL 版本间有差异，以对应版本官方文档为准。
 
-- MySQL 8.0 参考手册首页：https://dev.mysql.com/doc/refman/8.0/en/
-- EXPLAIN 输出格式：https://dev.mysql.com/doc/refman/8.0/en/explain-output.html
-- ORDER BY 优化（filesort / backward index scan）：https://dev.mysql.com/doc/refman/8.0/en/order-by-optimization.html
-- 索引下推 ICP：https://dev.mysql.com/doc/refman/8.0/en/index-condition-pushdown-optimization.html
-- 慢查询日志：https://dev.mysql.com/doc/refman/8.0/en/slow-query-log.html
+- MySQL 8.4 参考手册首页：https://dev.mysql.com/doc/refman/8.4/en/
+- EXPLAIN 输出格式：https://dev.mysql.com/doc/refman/8.4/en/explain-output.html
+- ORDER BY 优化（filesort / backward index scan）：https://dev.mysql.com/doc/refman/8.4/en/order-by-optimization.html
+- 索引下推 ICP：https://dev.mysql.com/doc/refman/8.4/en/index-condition-pushdown-optimization.html
+- 慢查询日志：https://dev.mysql.com/doc/refman/8.4/en/slow-query-log.html

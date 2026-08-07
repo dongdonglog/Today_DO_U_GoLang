@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package inventory;
+
+option go_package = "github.com/go-book/grpc/proto/inventory;invpb";
+
+// Inventory 服务：演示超时/取消传播
+service InventoryService {
+  // GetStock 查询库存；slow=true 时服务端故意慢处理，用来触发客户端 deadline
+  rpc GetStock(GetStockReq) returns (Stock);
+}
+
+message GetStockReq {
+  int64 sku_id = 1;
+  bool slow = 2;
+}
+
+message Stock {
+  int64 sku_id = 1;
+  int32 available = 2;
+}

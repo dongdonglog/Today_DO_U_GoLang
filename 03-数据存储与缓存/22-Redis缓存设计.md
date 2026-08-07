@@ -32,7 +32,7 @@
 > 运行前先起一个 Redis:
 >
 > ```bash
-> docker run --name go-book-redis -p 6379:6379 -d redis:7-alpine
+> docker run --name go-book-redis -p 6379:6379 -d redis:8-alpine
 > ```
 
 ## 22.1 Cache-Aside 模式
@@ -586,7 +586,7 @@ redis-cli --hotkeys
 
 ## 参考资料
 
-> 本章基于 **Go 1.23**、go-redis v9.7.3、golang.org/x/sync v0.10.0。缓存模式为通用设计,与具体语言无关;API 签名以对应版本官方文档为准。
+> 本章基于 **Go 1.25**、go-redis v9.22.0、golang.org/x/sync v0.22.0。缓存模式为通用设计,与具体语言无关;API 签名以对应版本官方文档为准。
 
 - go-redis 官方文档：https://redis.uptrace.dev/
 - go-redis GitHub：https://github.com/redis/go-redis

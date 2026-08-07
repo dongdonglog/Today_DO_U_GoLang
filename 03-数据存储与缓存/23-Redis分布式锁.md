@@ -23,12 +23,12 @@
 
 ![Redis 分布式锁生命周期](./images/ch23-lock-lifecycle.svg)
 
-> 本章所有示例在 `03-数据存储与缓存/23-redis-lock/` 下,基于 go-redis v9.7.3。`mutex` 包是最终可复用的锁实现,example1~4 逐步演示坑与修复。
+> 本章所有示例在 `03-数据存储与缓存/23-redis-lock/` 下,基于 go-redis v9.22。`mutex` 包是最终可复用的锁实现,example1~4 逐步演示坑与修复。
 >
 > 运行前先起 Redis:
 >
 > ```bash
-> docker run --name go-book-redis -p 6379:6379 -d redis:7-alpine
+> docker run --name go-book-redis -p 6379:6379 -d redis:8-alpine
 > ```
 
 ## 23.1 朴素实现与死锁
@@ -399,7 +399,7 @@ Redlock 是 antirez 提出的多主 Redis 分布式锁算法,在 5 个独立主�
 
 ## 参考资料
 
-> 本章基于 **Go 1.23**、go-redis v9.7.3、Redis 7。锁实现遵循 Redis 官方 SET NX 语义与 Lua 原子性保证。
+> 本章基于 **Go 1.25**、go-redis v9.22.0、Redis 8。锁实现遵循 Redis 官方 SET NX 语义与 Lua 原子性保证。
 
 - go-redis 官方文档：https://redis.uptrace.dev/
 - Redis SET 命令（NX/XX/PX/EX 选项）：https://redis.io/docs/latest/commands/set/

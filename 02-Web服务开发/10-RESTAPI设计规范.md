@@ -583,7 +583,7 @@ A：
 
 ## 参考资料
 
-> 本章基于 **Go 1.23**、Gin v1.10.0。API 与默认行为随版本变化，以对应版本官方文档为准。
+> 本章基于 **Go 1.25**、Gin v1.12.0。API 与默认行为随版本变化，以对应版本官方文档为准。
 
 - REST/HTTP 语义 RFC 9110：https://www.rfc-editor.org/rfc/rfc9110
 - PATCH 方法 RFC 5789：https://www.rfc-editor.org/rfc/rfc5789

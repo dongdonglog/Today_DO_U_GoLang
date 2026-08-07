@@ -1213,7 +1213,7 @@ A：
 
 ## 参考资料
 
-> 本章基于 **Go 1.23**、Gin v1.10.0。API 与默认行为随版本变化，以对应版本官方文档为准。
+> 本章基于 **Go 1.25**、Gin v1.12.0。API 与默认行为随版本变化，以对应版本官方文档为准。
 
 - Gin 官方文档：https://gin-gonic.com/docs/
 - Gin GitHub：https://github.com/gin-gonic/gin

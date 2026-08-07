@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package order;
+
+option go_package = "github.com/go-book/grpc/proto/order;orderpb";
+
+// Order 服务：演示服务端流式 RPC
+service OrderService {
+  // ListOrders 按用户 ID 流式返回其全部订单（而不是一次性攒一个大数组）
+  rpc ListOrders(ListOrdersReq) returns (stream Order);
+}
+
+message ListOrdersReq {
+  int64 user_id = 1;
+}
+
+message Order {
+  int64 id = 1;
+  string order_no = 2;
+  int64 user_id = 3;
+  int64 amount = 4; // 单位：分
+  string status = 5;
+}

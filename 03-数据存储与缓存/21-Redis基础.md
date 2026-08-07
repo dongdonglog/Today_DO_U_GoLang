@@ -76,7 +76,7 @@ MySQL 数据存在磁盘上，查询需要从磁盘加载到内存，再返回�
 # 启动本地 Redis
 docker run --name go-book-redis \
   -p 6379:6379 \
-  -d redis:7-alpine
+  -d redis:8-alpine
 ```
 
 ### 21.2.2 初始化客户端
@@ -90,7 +90,7 @@ rdb := redis.NewClient(&redis.Options{
     Addr:     "localhost:6379",
     Password: "", // 没有密码
     DB:       0,  // 默认数据库
-    PoolSize: 10, // 连接池大小
+    PoolSize: 10, // 连接池大小；不显式设置时，go-redis v9 默认是 10 × GOMAXPROCS
 })
 
 // 测试连接
@@ -100,6 +100,8 @@ if err != nil {
 }
 fmt.Println(pong) // PONG
 ```
+
+> **协议版本**：go-redis v9 在较新版本中把 `Options.Protocol` 的默认值从 2（RESP2）改成了 3（RESP3）。绝大多数命令两者行为一致；只有用到客户端缓存（client-side caching）、push 通知等 RESP3 特性时才有区别。老服务端或需要完全对齐 RESP2 行为时显式设 `Protocol: 2`。
 
 ### 21.2.3 连接池配置
 
@@ -595,12 +597,14 @@ rdb.Set(ctx, "product:1", detail, 10*time.Minute)
 
 ```go
 rdb := redis.NewClient(&redis.Options{
-    PoolSize:     10,   // 根据并发量调整
+    PoolSize:     10,   // 根据并发量调整；不显式设置时默认 10 × GOMAXPROCS
     MinIdleConns: 5,    // 避免频繁创建连接
     ReadTimeout:  3 * time.Second,
     WriteTimeout: 3 * time.Second,
 })
 ```
+
+> go-redis v9 的默认 `PoolSize` 是 `10 × GOMAXPROCS`（不是早期版本的固定 10）。生产环境不要照搬这个默认值——Redis 单实例通常只需要几十个连接，连接过多反而增加服务端负担。按下游 Redis 容量和实际 QPS 显式设置，并监控 `PoolStats().Timeouts`。
 
 ---
 
@@ -716,7 +720,7 @@ A：
 
 ## 参考资料
 
-> 本章基于 **Redis 7.x** 与 **go-redis v9.7.3**。命令行为、编码方式和默认参数在不同版本间可能有差异，以对应版本官方文档为准。
+> 本章基于 **Redis 8**、**Go 1.25**、go-redis v9.22.0。命令行为、编码方式和默认参数在不同版本间可能有差异，以对应版本官方文档为准。
 
 - Redis 官方文档 · 数据类型总览：https://redis.io/docs/latest/develop/data-types/
 - Redis 官方文档 · Key 过期与删除机制：https://redis.io/docs/latest/develop/use/keyspace/
