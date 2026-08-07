@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS products (
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 插入测试数据
-INSERT INTO products (name, stock, version) VALUES 
+-- 插入测试数据（version 走默认值 0）
+INSERT INTO products (name, stock) VALUES
     ('iPhone 15', 10),
     ('MacBook Pro', 5),
     ('AirPods', 100);

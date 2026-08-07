@@ -1516,7 +1516,7 @@ A：
 
 ## 参考资料
 
-> 本章基于 **Go 1.23**（第8章为 Go 1.22）。语言行为随版本演进，以对应版本官方文档为准。
+> 本章基于 **Go 1.25**。语言行为随版本演进，以对应版本官方文档为准。
 
 - Go 语言规范：接口类型 https://go.dev/ref/spec#Interface_types
 - Russ Cox：Go Data Structures: Interfaces（itab 内部实现）https://research.swtch.com/interfaces

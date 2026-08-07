@@ -701,7 +701,7 @@ A：
 
 ## 参考资料
 
-> 本章基于 **Go 1.23**（第8章为 Go 1.22）。语言行为随版本演进，以对应版本官方文档为准。
+> 本章基于 **Go 1.25**。语言行为随版本演进，以对应版本官方文档为准。
 
 - Go 博客：Go Concurrency Patterns: Context https://go.dev/blog/context
 - `context` 包文档：https://pkg.go.dev/context

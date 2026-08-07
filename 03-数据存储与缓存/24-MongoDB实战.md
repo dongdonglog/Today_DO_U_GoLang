@@ -24,12 +24,12 @@
 
 ![文档模型 vs 关系模型](./images/ch24-doc-vs-relational.svg)
 
-> 本章所有示例在 `03-数据存储与缓存/24-mongodb/` 下,基于 MongoDB 7 和 Go 官方驱动 v2 (`go.mongodb.org/mongo-driver/v2`)。前 4 个 example 用普通单机 Mongo 即可运行;example5 事务需要副本集,启动命令见 example5 文件头。
+> 本章所有示例在 `03-数据存储与缓存/24-mongodb/` 下,基于 MongoDB 8.0 和 Go 官方驱动 v2 (`go.mongodb.org/mongo-driver/v2`)。前 4 个 example 用普通单机 Mongo 即可运行;example5 事务需要副本集,启动命令见 example5 文件头。
 >
 > 本地启动(前 4 个 example):
 >
 > ```bash
-> docker run --name go-book-mongo -p 27017:27017 -d mongo:7
+> docker run --name go-book-mongo -p 27017:27017 -d mongo:8.0
 > ```
 >
 > 事务演示需要副本集模式,见 example5。
@@ -406,7 +406,7 @@ db.system.profile.find().sort({ts:-1}).limit(5).pretty()
 
 **事务报错 "Transaction numbers are only allowed on a replica set member"**
 
-说明你连的是单机 `mongod`,没开副本集。要么启动时加 `--replSet rs0` 并 `rs.initiate()`,要么把事务相关代码改成非事务写法(用条件更新兜底)。开发环境用 `mongo:7 --replSet rs0` 起容器即可。
+说明你连的是单机 `mongod`,没开副本集。要么启动时加 `--replSet rs0` 并 `rs.initiate()`,要么把事务相关代码改成非事务写法(用条件更新兜底)。开发环境用 `mongo:8.0 --replSet rs0` 起容器即可。
 
 **TTL 索引不删数据**
 
@@ -465,7 +465,7 @@ BSON 是二进制 JSON 扩展,支持日期、ObjectId、二进制、Decimal 等 
 
 ## 参考资料
 
-> 本章基于 **MongoDB 7**、Go 1.23、`go.mongodb.org/mongo-driver/v2` v2.8.0。v1 版驱动已 deprecated,新项目直接用 v2。
+> 本章基于 **MongoDB 8.0**、**Go 1.25**、`go.mongodb.org/mongo-driver/v2` v2.8.0。v1 版驱动已 deprecated,新项目直接用 v2。
 
 - MongoDB 官方手册：https://www.mongodb.com/docs/manual/
 - MongoDB CRUD 操作：https://www.mongodb.com/docs/manual/crud/

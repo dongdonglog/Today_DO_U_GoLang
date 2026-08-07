@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"regexp"
 
+	"github.com/disintegration/imaging"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/nfnt/resize"
 )
 
 // 生成缩略图
@@ -30,7 +30,7 @@ func generateThumbnail(src string, dst string, width, height uint) error {
 	}
 
 	// 生成缩略图
-	thumb := resize.Thumbnail(width, height, img, resize.Lanczos3)
+	thumb := imaging.Thumbnail(img, int(width), int(height), imaging.Lanczos)
 
 	// 保存缩略图
 	out, err := os.Create(dst)

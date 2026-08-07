@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/go-book/grpc/proto/user;userpb";
+
+// User 服务：演示最基本的一元 RPC
+service UserService {
+  // GetUser 按 ID 查用户
+  rpc GetUser(GetUserReq) returns (User);
+}
+
+message GetUserReq {
+  int64 id = 1;
+}
+
+message User {
+  int64 id = 1;
+  string username = 2;
+  string email = 3;
+  int32 status = 4; // 0:禁用 1:启用
+}

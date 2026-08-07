@@ -831,7 +831,7 @@ A：
 
 ## 参考资料
 
-> 本章基于 **Go 1.23**、Gin v1.9.1、golang-jwt/jwt/v5 v5.2.0。API 与默认行为随版本变化，以对应版本官方文档为准。
+> 本章基于 **Go 1.25**、Gin v1.12.0、golang-jwt/jwt/v5 v5.3.1。API 与默认行为随版本变化，以对应版本官方文档为准。
 
 - JWT 规范 RFC 7519：https://www.rfc-editor.org/rfc/rfc7519
 - JWT 最佳实践 RFC 8725：https://www.rfc-editor.org/rfc/rfc8725

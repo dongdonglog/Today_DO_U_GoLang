@@ -146,110 +146,130 @@ func (User) TableName() string {
 
 ## 20.2 CRUD 操作
 
+> GORM v1.30 引入了**泛型 API**（`gorm.G[T]`），编译期绑定模型、每个方法都强制传 `ctx`、返回值直接是类型化对象，官方现在明确推荐新项目用它。本章 CRUD 主线用泛型 API；存量代码里的链式写法见 [20.2.5](#2025-传统链式-api兼容存量代码)。
+
 ### 20.2.1 创建
 
 ```go
+ctx := context.Background()
+users := gorm.G[User](db)
+
 // 单条创建
 user := User{
     Username: "alice",
     Email:    "alice@example.com",
     Password: "hashed_password",
 }
-result := db.Create(&user)
-if result.Error != nil {
-    return result.Error
+if err := users.Create(ctx, &user); err != nil {
+    return err
 }
-fmt.Println(user.ID) // 创建后的 ID
+fmt.Println(user.ID) // 创建后的 ID 自动回填
 
 // 批量创建
-users := []User{
+batch := []User{
     {Username: "bob", Email: "bob@example.com", Password: "xxx"},
     {Username: "charlie", Email: "charlie@example.com", Password: "xxx"},
 }
-if err := db.Create(&users).Error; err != nil {
-    return err
-}
-
-// 批量创建（指定批次大小）
-if err := db.CreateInBatches(&users, 100).Error; err != nil {
+if err := gorm.G[User](db).CreateInBatches(ctx, &batch, 100); err != nil {
     return err
 }
 ```
+
+和链式 API 不同，`Create` 直接返回 `error`，不再返回 `*gorm.DB`，也不会有“忘了取 `.Error`”的隐患。
 
 ### 20.2.2 查询
 
 ```go
-// 查询单条
-var user User
-if err := db.First(&user, 1).Error; err != nil { // WHERE id = 1
-    return err
-}
-if err := db.First(&user, "username = ?", "alice").Error; err != nil {
+// 查询单条：First 返回 (User, error)，无需再声明 var user User
+user, err := gorm.G[User](db).Where("id = ?", 1).First(ctx)
+if err != nil {
     return err
 }
 
-// 查询多条
-var users []User
-if err := db.Find(&users, "status = ?", 1).Error; err != nil {
-    return err
-}
+// 按主键也可以走 Where
+alice, err := gorm.G[User](db).Where("username = ?", "alice").First(ctx)
+
+// 查询多条：Find 返回 ([]User, error)
+enabled, err := gorm.G[User](db).Where("status = ?", 1).Find(ctx)
 
 // 条件查询
-if err := db.Where("status = ? AND created_at > ?", 1, time.Now().AddDate(0, -1, 0)).
-    Find(&users).Error; err != nil {
-    return err
-}
+recent, err := gorm.G[User](db).
+    Where("status = ? AND created_at > ?", 1, time.Now().AddDate(0, -1, 0)).
+    Find(ctx)
 
-// 分页查询
-var total int64
-if err := db.Model(&User{}).Where("status = ?", 1).Count(&total).Error; err != nil {
-    return err
-}
-if err := db.Where("status = ?", 1).
+// 分页：Count(column) 返回 (int64, error)
+total, err := gorm.G[User](db).Count(ctx, "id")
+page, err := gorm.G[User](db).
+    Where("status = ?", 1).
     Order("created_at DESC, id DESC").
     Offset(0).
     Limit(20).
-    Find(&users).Error; err != nil {
-    return err
-}
+    Find(ctx)
 ```
+
+泛型 API 里 `First/Find` 直接返回值，不再需要传入目标切片指针；`ctx` 在方法参数上，避免了漏掉 `WithContext`。
 
 ### 20.2.3 更新
 
 ```go
-// 更新所有字段（包括零值）
-db.Save(&user)
+// 单列更新：返回受影响行数
+rows, err := gorm.G[User](db).
+    Where("id = ?", user.ID).
+    Update(ctx, "status", 0)
 
-// 更新零值或清空字段，使用 map 或 Select
-db.Model(&user).Updates(map[string]interface{}{
-    "status": 0,
-    "phone":  nil,
-})
-db.Model(&user).
-    Select("Status", "Phone").
-    Updates(User{Status: 0, Phone: nil})
-db.Model(&user).Update("status", 0)
-
-// 跳过钩子和更新时间
-db.Model(&user).UpdateColumns(User{Status: 0})
+// 用结构体更新非零字段
+rows, err = gorm.G[User](db).
+    Where("id = ?", user.ID).
+    Updates(ctx, User{Status: 0, Phone: nil})
 ```
 
-`Save` vs `Updates`：
-- `Save`：更新所有字段，包括零值
-- `Updates`：传结构体时只更新非零字段；传 `map` 时会更新零值和 `nil`
+**关于零值更新**：泛型 `Updates` 只接收模型结构体 `T`，不接收 `map`，因此结构体“零值被忽略”的老问题依然存在——传 `User{Status: 0}` 不会更新 `status`。要写入零值或 `nil`，用单列 `Update(ctx, "status", 0)`，或用 `gorm.Expr` 走原生 `Exec`：
+
+```go
+// balance = balance - ?、version = version + 1 这类带表达式的更新，用 Exec
+db.WithContext(ctx).Exec(
+    "UPDATE users SET balance = balance - ?, version = version + 1 WHERE id = ? AND version = ?",
+    amount, userID, user.Version,
+)
+```
+
+> **`Save` 和 `FirstOrCreate` 在泛型 API 里被刻意移除了。** `Save` 会对所有字段执行“全量 upsert”，容易把未读取/零值字段误写回库里；`FirstOrCreate` 把查询和创建揉在一次调用里，并发语义和“哪些字段参与查询”都不清晰。需要 upsert 用 `clause.OnConflict`，需要“查不到就建”就显式分两步写。
 
 ### 20.2.4 删除
 
 ```go
-// 软删除（设置 deleted_at）
-db.Delete(&user, 1)
+// 软删除（设置 deleted_at），Delete 返回受影响行数
+if _, err := gorm.G[User](db).Where("id = ?", user.ID).Delete(ctx); err != nil {
+    return err
+}
+```
+
+泛型 API 没有链式 `Unscoped()` 方法。要包含软删除记录或物理删除，用 `Scopes` 在 `Statement` 层打开 `Unscoped`：
+
+```go
+unscoped := func(stmt *gorm.Statement) { stmt.Unscoped = true }
+
+// 查询包含已删除记录
+u, err := gorm.G[User](db).Scopes(unscoped).Where("id = ?", id).First(ctx)
 
 // 物理删除
-db.Unscoped().Delete(&user, 1)
-
-// 查询包含软删除的记录
-db.Unscoped().Find(&users)
+_, err = gorm.G[User](db).Scopes(unscoped).Where("id = ?", id).Delete(ctx)
 ```
+
+### 20.2.5 传统链式 API（兼容存量代码）
+
+泛型 API 和链式 API **可以混用**，底层是同一个 `*gorm.DB`。你大概率会接手到这样的存量代码：
+
+```go
+// 链式 API：返回 *gorm.DB，错误在 .Error 里
+var users []User
+err := db.Where("status = ?", 1).Find(&users).Error
+
+// 更新所有字段（含零值）的 Save
+db.Save(&user)
+```
+
+维护老代码时能读懂即可；新写或重构时优先用 `gorm.G[T]`。两者共享钩子、软删除、关联等全部能力，唯一区别是泛型 API 收窄了容易误用的方法（`Save`/`FirstOrCreate`），并把 `ctx` 提到了方法签名上。
 
 ---
 
@@ -270,9 +290,8 @@ type Profile struct {
     Bio    string
 }
 
-// 查询时预加载
-var user User
-db.Preload("Profile").First(&user, 1)
+// 查询时预加载：泛型 Preload 第二参是条件闭包，传 nil 表示默认加载全部
+user, err := gorm.G[User](db).Preload("Profile", nil).Where("id = ?", 1).First(ctx)
 ```
 
 ### 20.3.2 一对多
@@ -291,8 +310,7 @@ type Order struct {
 }
 
 // 查询时预加载
-var user User
-db.Preload("Orders").First(&user, 1)
+user, err := gorm.G[User](db).Preload("Orders", nil).Where("id = ?", 1).First(ctx)
 ```
 
 ### 20.3.3 多对多
@@ -310,8 +328,7 @@ type Role struct {
 }
 
 // 查询时预加载
-var user User
-db.Preload("Roles").First(&user, 1)
+user, err := gorm.G[User](db).Preload("Roles", nil).Where("id = ?", 1).First(ctx)
 ```
 
 ### 20.3.4 N+1 查询问题
@@ -320,10 +337,10 @@ db.Preload("Roles").First(&user, 1)
 
 ```go
 // 错误：N+1 查询
-var users []User
-db.Find(&users) // 1 次查询
-for _, user := range users {
-    db.Model(&user).Association("Orders").Find(&user.Orders) // 每个用户 1 次查询
+users, err := gorm.G[User](db).Find(ctx) // 1 次查询
+for i := range users {
+    // 每个用户再查一次订单：Association 仍在链式 API 上
+    db.Model(&users[i]).Association("Orders").Find(&users[i].Orders)
 }
 // 总共 1 + N 次查询
 ```
@@ -331,9 +348,8 @@ for _, user := range users {
 **解决方案**：
 
 ```go
-// 正确：Preload
-var users []User
-db.Preload("Orders").Find(&users) // 2 次查询
+// 正确：Preload，一次主查询 + 一次 IN 批量查询
+users, err := gorm.G[User](db).Preload("Orders", nil).Find(ctx)
 // SELECT * FROM users
 // SELECT * FROM orders WHERE user_id IN (1, 2, 3, ...)
 ```
@@ -343,10 +359,11 @@ db.Preload("Orders").Find(&users) // 2 次查询
 **Preload vs Joins**：
 
 ```go
-// Preload：两次查询
-db.Preload("Orders").Find(&users)
+// Preload：两次查询，把关联装回结构体
+users, err := gorm.G[User](db).Preload("Orders", nil).Find(ctx)
 
-// Joins：适合过滤或聚合，结果通常扫描到 DTO
+// Joins：适合过滤或聚合，结果通常扫描到 DTO。
+// DTO 不是表模型，直接用底层 *gorm.DB 的链式 API 最直接
 type UserOrderStat struct {
     UserID     uint
     Username   string
@@ -354,11 +371,11 @@ type UserOrderStat struct {
 }
 
 var stats []UserOrderStat
-db.Table("users").
+err = db.WithContext(ctx).Table("users").
     Select("users.id AS user_id, users.username, COUNT(orders.id) AS order_count").
     Joins("LEFT JOIN orders ON orders.user_id = users.id").
     Group("users.id, users.username").
-    Scan(&stats)
+    Scan(&stats).Error
 ```
 
 选择建议：
@@ -372,39 +389,37 @@ db.Table("users").
 ### 20.4.1 事务
 
 ```go
-// 自动事务
+// 自动事务：事务内直接把 tx 传给 gorm.G[T]，复用泛型 API
 err := db.Transaction(func(tx *gorm.DB) error {
-    // 扣钱
-    if err := tx.Model(&User{}).Where("id = ?", 1).
-        Update("balance", gorm.Expr("balance - ?", 100)).Error; err != nil {
-        return err
-    }
-    
-    // 加钱
-    if err := tx.Model(&User{}).Where("id = ?", 2).
-        Update("balance", gorm.Expr("balance + ?", 100)).Error; err != nil {
-        return err
-    }
-    
-    return nil // 返回 nil 自动提交，返回 error 自动回滚
+	// 扣钱
+	if _, err := gorm.G[User](tx).Where("id = ?", 1).
+		Update(ctx, "balance", gorm.Expr("balance - ?", 100)); err != nil {
+		return err
+	}
+	// 加钱
+	if _, err := gorm.G[User](tx).Where("id = ?", 2).
+		Update(ctx, "balance", gorm.Expr("balance + ?", 100)); err != nil {
+		return err
+	}
+	return nil // 返回 nil 提交，返回 error 回滚
 })
 
-// 手动事务
+// 手动事务（链式 API，用于需要自己控制提交/回滚的场景）
 tx := db.Begin()
 defer func() {
-    if r := recover(); r != nil {
-        tx.Rollback()
-        panic(r)
-    }
+	if r := recover(); r != nil {
+		tx.Rollback()
+		panic(r)
+	}
 }()
 
 if err := tx.Error; err != nil {
-    return err
+	return err
 }
 
 // 操作...
 if err := tx.Commit().Error; err != nil {
-    return err
+	return err
 }
 ```
 
@@ -528,64 +543,62 @@ type OrderItem struct {
 ```go
 // 接口定义
 type UserRepository interface {
-    Create(ctx context.Context, user *User) error
-    GetByID(ctx context.Context, id uint) (*User, error)
-    List(ctx context.Context, req ListUsersRequest) ([]*User, int64, error)
+	Create(ctx context.Context, user *User) error
+	GetByID(ctx context.Context, id uint) (*User, error)
+	List(ctx context.Context, req ListUsersRequest) ([]User, int64, error)
 }
 
 type ListUsersRequest struct {
-    Page int
-    Size int
+	Page int
+	Size int
 }
 
-// 实现
+// 实现：Repository 持有 *gorm.DB，内部用泛型 API gorm.G[User](db)
 type userRepository struct {
-    db *gorm.DB
+	db *gorm.DB
 }
 
 func NewUserRepository(db *gorm.DB) UserRepository {
-    return &userRepository{db: db}
+	return &userRepository{db: db}
 }
 
 func (r *userRepository) Create(ctx context.Context, user *User) error {
-    return r.db.WithContext(ctx).Create(user).Error
+	return gorm.G[User](r.db).Create(ctx, user)
 }
 
 func (r *userRepository) GetByID(ctx context.Context, id uint) (*User, error) {
-    var user User
-    err := r.db.WithContext(ctx).First(&user, id).Error
-    if err != nil {
-        return nil, err
-    }
-    return &user, nil
+	u, err := gorm.G[User](r.db).Preload("Orders", nil).Where("id = ?", id).First(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &u, nil
 }
 
-func (r *userRepository) List(ctx context.Context, req ListUsersRequest) ([]*User, int64, error) {
-    if req.Page <= 0 {
-        req.Page = 1
-    }
-    if req.Size <= 0 {
-        req.Size = 20
-    }
-    if req.Size > 100 {
-        req.Size = 100
-    }
+func (r *userRepository) List(ctx context.Context, req ListUsersRequest) ([]User, int64, error) {
+	if req.Page <= 0 {
+		req.Page = 1
+	}
+	if req.Size <= 0 {
+		req.Size = 20
+	}
+	if req.Size > 100 {
+		req.Size = 100
+	}
 
-    var users []*User
-    var total int64
-    
-    query := r.db.WithContext(ctx).Model(&User{})
-    
-    if err := query.Count(&total).Error; err != nil {
-        return nil, 0, err
-    }
-    
-    err := query.Order("created_at DESC, id DESC").
-        Offset((req.Page - 1) * req.Size).
-        Limit(req.Size).
-        Find(&users).Error
-    
-    return users, total, err
+	total, err := gorm.G[User](r.db).Count(ctx, "id")
+	if err != nil {
+		return nil, 0, err
+	}
+
+	list, err := gorm.G[User](r.db).
+		Order("created_at DESC, id DESC").
+		Offset((req.Page - 1) * req.Size).
+		Limit(req.Size).
+		Find(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	return list, total, nil
 }
 ```
 
@@ -593,52 +606,53 @@ func (r *userRepository) List(ctx context.Context, req ListUsersRequest) ([]*Use
 
 ```go
 type User struct {
-    ID      uint
-    Balance decimal.Decimal `gorm:"type:decimal(10,2)"`
-    Version int             `gorm:"default:0"` // 版本号
+	ID      uint
+	Balance decimal.Decimal `gorm:"type:decimal(10,2)"`
+	Version int             `gorm:"default:0"` // 版本号
 }
 
 // 扣减余额（乐观锁）
 func (r *userRepository) DeductBalance(ctx context.Context, userID uint, amount decimal.Decimal) error {
-    if amount.LessThanOrEqual(decimal.Zero) {
-        return errors.New("扣减金额必须大于 0")
-    }
+	if amount.LessThanOrEqual(decimal.Zero) {
+		return errors.New("扣减金额必须大于 0")
+	}
 
-    for i := 0; i < 3; i++ {
-        var user User
-        if err := r.db.WithContext(ctx).First(&user, userID).Error; err != nil {
-            return err
-        }
-        
-        if user.Balance.Cmp(amount) < 0 {
-            return errors.New("余额不足")
-        }
-        
-        result := r.db.WithContext(ctx).
-            Model(&User{}).
-            Where("id = ? AND version = ?", userID, user.Version).
-            Updates(map[string]interface{}{
-                "balance": gorm.Expr("balance - ?", amount),
-                "version": gorm.Expr("version + 1"),
-            })
-        
-        if result.Error != nil {
-            return result.Error
-        }
-        
-        if result.RowsAffected > 0 {
-            return nil // 更新成功
-        }
-        
-        timer := time.NewTimer(time.Duration(i+1) * 50 * time.Millisecond)
-        select {
-        case <-ctx.Done():
-            timer.Stop()
-            return ctx.Err()
-        case <-timer.C:
-        }
-    }
-    return errors.New("更新失败，请重试")
+	for i := 0; i < 3; i++ {
+		// 读当前版本
+		user, err := gorm.G[User](r.db).Where("id = ?", userID).First(ctx)
+		if err != nil {
+			return err
+		}
+
+		if user.Balance.Cmp(amount) < 0 {
+			return errors.New("余额不足")
+		}
+
+		// 带 gorm.Expr 的多列更新用 Exec：泛型 Updates 只接收结构体，写不了表达式；
+		// WHERE 带上 version，并发冲突时 RowsAffected 为 0，重试
+		res := r.db.WithContext(ctx).Exec(
+			"UPDATE users SET balance = balance - ?, version = version + 1 "+
+				"WHERE id = ? AND version = ? AND deleted_at IS NULL",
+			amount, userID, user.Version,
+		)
+		if res.Error != nil {
+			return res.Error
+		}
+		if res.RowsAffected > 0 {
+			return nil // 更新成功
+		}
+
+		if i < 2 {
+			timer := time.NewTimer(time.Duration(i+1) * 50 * time.Millisecond)
+			select {
+			case <-ctx.Done():
+				timer.Stop()
+				return ctx.Err()
+			case <-timer.C:
+			}
+		}
+	}
+	return errors.New("更新失败，请重试")
 }
 ```
 
@@ -704,24 +718,25 @@ GORM 的性能开销主要来自：
 ### 20.7.1 查询优化
 
 ```go
-// 错误：Select *
-db.Find(&users)
+// 错误：SELECT * 取了用不到的大字段
+users, err := gorm.G[User](db).Find(ctx)
 
-// 正确：指定字段
-db.Select("id", "username", "email").Find(&users)
+// 正确：只取需要的列
+users, err = gorm.G[User](db).Select("id", "username", "email").Find(ctx)
 
 // 大批量操作
-db.CreateInBatches(&users, 100) // 分批插入
+err = gorm.G[User](db).CreateInBatches(ctx, &users, 100) // 分批插入
 
-// 复杂查询用 Raw，但仍然只取需要的列并检查错误
-err := db.Raw(`
+// 复杂查询用 Raw，Scan 到 DTO/结构体
+var recent []User
+err = gorm.G[User](db).Raw(`
     SELECT id, username, email
     FROM users
     WHERE created_at > ?
     ORDER BY id DESC
     LIMIT 10`,
     time.Now().AddDate(0, -1, 0)).
-    Scan(&users).Error
+    Scan(ctx, &recent)
 ```
 
 ### 20.7.2 日志配置
@@ -774,36 +789,34 @@ fmt.Printf("Idle: %d\n", stats.Idle)
 **问题**：查询用户列表时，每个用户都查询一次订单
 
 ```go
-// 错误
-var users []User
-db.Find(&users)
-for _, user := range users {
-    db.Model(&user).Association("Orders").Find(&user.Orders) // N 次查询
+// 错误：循环里逐个查关联
+users, err := gorm.G[User](db).Find(ctx)
+for i := range users {
+	db.Model(&users[i]).Association("Orders").Find(&users[i].Orders) // N 次查询
 }
 
-// 正确
-var users []User
-db.Preload("Orders").Find(&users) // 2 次查询
+// 正确：Preload 一次批量加载
+users, err = gorm.G[User](db).Preload("Orders", nil).Find(ctx) // 2 次查询
 ```
 
 ### 20.8.2 软删除后关联查询出错
 
 **问题**：历史订单需要展示下单用户，但用户已经被软删除，默认 `Preload` 查不到用户信息。
 
+泛型 `Preload` 的条件闭包只暴露了 `Where/Select/Order` 等，**没有 `Unscoped`**。需要在预加载里包含软删除记录时，回到底层链式 API：
+
 ```go
-// 错误
+// 链式 API：Preload 闭包返回 *gorm.DB，可以 Unscoped()
 var order Order
-db.Preload("User").First(&order, 1) // order.User 可能为空
+err := db.WithContext(ctx).Preload("User", func(tx *gorm.DB) *gorm.DB {
+	return tx.Unscoped() // 包含软删除用户
+}).First(&order, 1).Error
 
-// 需要展示历史订单归属：显式包含软删除用户
-var order Order
-db.Preload("User", func(db *gorm.DB) *gorm.DB {
-    return db.Unscoped() // 包含软删除
-}).First(&order, 1)
-
-// 只展示活跃用户：使用默认作用域即可
-db.Preload("User").First(&order, 1)
+// 只展示活跃用户：默认作用域即可
+gorm.G[Order](db).Preload("User", nil).Where("id = ?", 1).First(ctx)
 ```
+
+这也是“泛型和链式可以混用”的一个实际场景：主线用泛型，个别泛型没覆盖的能力（关联 Unscoped、复杂关联操作）退回链式。
 
 ### 20.8.3 事务中死锁
 
@@ -850,13 +863,20 @@ A：
 - 一对多优先使用 `Preload`
 - `Joins` 更适合过滤、排序、聚合，通常扫描到 DTO
 
-**Q4：`Save` 和 `Updates` 的区别？**
+**Q4：GORM v1.30+ 的泛型 API 解决了什么问题？和链式 API 怎么选？**
 
 A：
-- `Save`：更新所有字段（包括零值），传入的是完整记录
-- `Updates`：**用结构体**时只更新非零字段（零值被忽略，易漏更新）；**用 `map`** 时按 map 的键更新，能写入零值和 nil。改零值优先用 map
+- 泛型 API（`gorm.G[T](db)`）在编译期绑定模型，`First/Find` 直接返回类型化值、方法签名强制传 `ctx`，少了“忘取 `.Error` / 漏 `WithContext`”一类错误
+- 它刻意移除了 `Save`、`FirstOrCreate` 这类语义模糊、易踩并发坑的方法；upsert 用 `clause.OnConflict`
+- 两者共用同一个 `*gorm.DB`，可以混用：新代码用泛型，泛型没覆盖的能力（关联 `Unscoped`、复杂 DTO 聚合）回链式
 
-**Q5：GORM 的性能开销主要来自哪里？**
+**Q5（兼容存量）：`Save` 和 `Updates` 的区别？**
+
+A：
+- `Save`：链式 API 才有，更新所有字段（包括零值），传入的是完整记录，容易误写回未读字段
+- `Updates`：用结构体时只更新非零字段（零值被忽略，易漏更新）；链式 API 用 `map` 能写入零值和 nil；泛型 API 改零值用单列 `Update` 或 `Exec`
+
+**Q6：GORM 的性能开销主要来自哪里？**
 
 A：
 - 反射：解析结构体标签
@@ -887,10 +907,11 @@ A：
 
 ## 参考资料
 
-> 本章基于 **MySQL 8.0**、**Go 1.23**、**GORM v1.25.1**。索引/锁/优化器行为与部分语法（如降序索引、DATETIME 存储）在不同 MySQL 版本间有差异，以对应版本官方文档为准。
+> 本章基于 **MySQL 8.4 LTS**、**Go 1.25**、**GORM v1.31.2**（含 v1.30+ 泛型 API `gorm.G[T]`）。索引/锁/优化器行为与部分语法（如降序索引、DATETIME 存储）在不同 MySQL 版本间有差异，以对应版本官方文档为准。
 
 - GORM 官方文档：https://gorm.io/docs/
+- GORM 泛型 API（v1.30+ 推荐）：https://gorm.io/docs/the_generics_way.html
 - GORM 性能优化：https://gorm.io/docs/performance.html
-- MySQL 8.0 参考手册首页：https://dev.mysql.com/doc/refman/8.0/en/
-- InnoDB 索引 / B+ 树：https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-- 事务隔离级别：https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html
+- MySQL 8.4 参考手册首页：https://dev.mysql.com/doc/refman/8.4/en/
+- InnoDB 索引 / B+ 树：https://dev.mysql.com/doc/refman/8.4/en/innodb-index-types.html
+- 事务隔离级别：https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html

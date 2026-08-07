@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -41,65 +42,87 @@ func main() {
 	if err != nil {
 		log.Fatal("连接失败:", err)
 	}
-
-	fmt.Println("连接成功")
-
-	// 1. 查询单条
-	fmt.Println("\n=== 1. 查询单条 ===")
-	var user User
-	result := db.First(&user, 1)
-	if result.Error != nil {
-		log.Fatal(result.Error)
+	if err := db.AutoMigrate(&User{}); err != nil {
+		log.Fatal("迁移失败:", err)
 	}
-	fmt.Printf("用户: %+v\n", user)
 
-	// 2. 条件查询
-	fmt.Println("\n=== 2. 条件查询 ===")
-	var users []User
-	if err := db.Where("status = ?", 1).Find(&users).Error; err != nil {
+	ctx := context.Background()
+	// users 是泛型 Repository：编译期绑定模型，CRUD 方法都接收 ctx，返回值直接是类型化对象
+	users := gorm.G[User](db)
+
+	// 清理上一次运行的数据（物理删除，避免唯一键冲突）
+	unscoped := func(stmt *gorm.Statement) { stmt.Unscoped = true }
+	gorm.G[User](db).Scopes(unscoped).Where("username LIKE ?", "gorm_demo_%").Delete(ctx)
+
+	// 1. 创建
+	fmt.Println("\n=== 1. 创建 ===")
+	alice := &User{
+		Username: "gorm_demo_alice",
+		Email:    "alice@example.com",
+		Password: "hashed_password",
+		Balance:  decimal.NewFromFloat(1000.00),
+	}
+	if err := users.Create(ctx, alice); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("找到 %d 个启用用户\n", len(users))
-	for _, u := range users {
-		fmt.Printf("  - %s (%s)\n", u.Username, u.Email)
-	}
+	fmt.Printf("创建成功, ID=%d, 余额=%s\n", alice.ID, alice.Balance.StringFixed(2))
 
-	// 3. 分页查询
-	fmt.Println("\n=== 3. 分页查询 ===")
-	var total int64
-	var pageUsers []User
-	if err := db.Model(&User{}).Count(&total).Error; err != nil {
+	// 2. 按主键查询单条（First 返回 (User, error)，无需再传 &user）
+	fmt.Println("\n=== 2. 查询单条 ===")
+	u, err := users.Where("id = ?", alice.ID).First(ctx)
+	if err != nil {
 		log.Fatal(err)
 	}
-	if err := db.Order("created_at DESC, id DESC").Offset(0).Limit(2).Find(&pageUsers).Error; err != nil {
+	fmt.Printf("用户: %s (%s)\n", u.Username, u.Email)
+
+	// 3. 条件查询多条（Find 返回 []User, error）
+	fmt.Println("\n=== 3. 条件查询 ===")
+	enabled, err := users.Where("status = ?", 1).Find(ctx)
+	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("总数: %d, 当前页: %d\n", total, len(pageUsers))
+	fmt.Printf("找到 %d 个启用用户\n", len(enabled))
 
-	// 4. 更新
-	fmt.Println("\n=== 4. 更新 ===")
-	if err := db.Model(&user).Update("balance", decimal.NewFromFloat(1500.00)).Error; err != nil {
+	// 4. 分页：先 Count 再分页查询
+	fmt.Println("\n=== 4. 分页查询 ===")
+	total, err := users.Count(ctx, "id")
+	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("更新后余额: %s\n", user.Balance.StringFixed(2))
+	page, err := users.Order("created_at DESC, id DESC").Offset(0).Limit(2).Find(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("总数: %d, 当前页: %d\n", total, len(page))
 
-	// 5. 软删除
-	fmt.Println("\n=== 5. 软删除 ===")
-	if err := db.Delete(&user).Error; err != nil {
+	// 5. 更新（Update 返回受影响行数）
+	fmt.Println("\n=== 5. 更新 ===")
+	rows, err := users.Where("id = ?", alice.ID).Update(ctx, "balance", decimal.NewFromFloat(1500.00))
+	if err != nil {
+		log.Fatal(err)
+	}
+	updated, _ := users.Where("id = ?", alice.ID).First(ctx)
+	fmt.Printf("更新行数: %d, 更新后余额: %s\n", rows, updated.Balance.StringFixed(2))
+
+	// 6. 软删除（Delete 返回受影响行数）
+	fmt.Println("\n=== 6. 软删除 ===")
+	if _, err := users.Where("id = ?", alice.ID).Delete(ctx); err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println("用户已软删除")
 
-	// 验证软删除
-	var deletedUser User
-	err = db.First(&deletedUser, user.ID).Error
-	fmt.Printf("删除后查询错误: %v\n", err)
-
-	// 查询包含软删除
-	if err := db.Unscoped().First(&deletedUser, user.ID).Error; err != nil {
-		log.Fatal(err)
+	// 软删除后默认查不到
+	if _, err := users.Where("id = ?", alice.ID).First(ctx); err != nil {
+		fmt.Printf("默认查询已查不到: %v\n", err)
 	}
-	fmt.Printf("包含软删除: %+v\n", deletedUser)
+
+	// 包含软删除记录：泛型 API 没有链式 Unscoped() 方法，用 Scopes 在 Statement 层打开
+	includeDeleted := func(stmt *gorm.Statement) { stmt.Unscoped = true }
+	if du, err := users.Scopes(includeDeleted).Where("id = ?", alice.ID).First(ctx); err != nil {
+		log.Fatal(err)
+	} else {
+		fmt.Printf("Unscoped 可查到, 删除时间: %v\n", du.DeletedAt.Time)
+	}
 }
 
 func getenv(key, fallback string) string {

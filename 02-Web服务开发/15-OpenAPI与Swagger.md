@@ -585,7 +585,7 @@ A：
 
 ## 参考资料
 
-> 本章基于 **Go 1.23**、Gin v1.9.1、swaggo/swag v1.16.3。API 与默认行为随版本变化，以对应版本官方文档为准。
+> 本章基于 **Go 1.25**、Gin v1.12.0、swaggo/swag v1.16.6。API 与默认行为随版本变化，以对应版本官方文档为准。
 
 - OpenAPI 规范：https://spec.openapis.org/
 - OpenAPI 3.2.0 发布说明：https://github.com/OAI/OpenAPI-Specification/releases

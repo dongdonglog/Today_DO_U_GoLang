@@ -142,7 +142,7 @@ if _, err := db.Exec("DELETE FROM users WHERE id = ?", 1); err != nil {
 docker run --name go-book-mysql \
   -e MYSQL_ROOT_PASSWORD=root \
   -p 3306:3306 \
-  -d mysql:8.0
+  -d mysql:8.4
 
 cd example1-basic
 go run main.go
@@ -601,7 +601,7 @@ cd example2-admin-mysql
 docker run --name go-book-mysql \
   -e MYSQL_ROOT_PASSWORD=root \
   -p 3306:3306 \
-  -d mysql:8.0
+  -d mysql:8.4
 
 # 等待 MySQL 就绪后初始化数据库
 mysql -u root -p < migrations/001_create_users.sql
@@ -857,9 +857,9 @@ A：
 
 ## 参考资料
 
-> 本章基于 **MySQL 8.0**、**Go 1.23**。索引/锁/优化器行为与部分语法（如降序索引、DATETIME 存储）在不同 MySQL 版本间有差异，以对应版本官方文档为准。
+> 本章基于 **MySQL 8.4 LTS**、**Go 1.25**、go-sql-driver/mysql v1.10.0。索引/锁/优化器行为与部分语法（如降序索引、DATETIME 存储）在不同 MySQL 版本间有差异，以对应版本官方文档为准。
 
-- MySQL 8.0 参考手册首页：https://dev.mysql.com/doc/refman/8.0/en/
-- InnoDB 索引 / B+ 树：https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-- 数据类型存储需求（DATETIME 等）：https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html
-- 降序索引：https://dev.mysql.com/doc/refman/8.0/en/descending-indexes.html
+- MySQL 8.4 参考手册首页：https://dev.mysql.com/doc/refman/8.4/en/
+- InnoDB 索引 / B+ 树：https://dev.mysql.com/doc/refman/8.4/en/innodb-index-types.html
+- 数据类型存储需求（DATETIME 等）：https://dev.mysql.com/doc/refman/8.4/en/storage-requirements.html
+- 降序索引：https://dev.mysql.com/doc/refman/8.4/en/descending-indexes.html
