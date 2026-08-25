@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package advanced;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/go-book/protobuf/proto/advanced;advpb";
+
+// Payment 演示高级类型：oneof、optional、Timestamp、嵌套消息、枚举、map
+message Payment {
+  string order_id = 1;
+  int64 amount_cents = 2;
+  google.protobuf.Timestamp paid_at = 3;
+  Status status = 4;
+
+  // method 是 oneof：同一时刻只有一个字段被设置，天然表达"二选一/多选一"
+  oneof method {
+    Card pay_card = 5;
+    WeChat pay_wechat = 6;
+    Points pay_points = 7;
+  }
+
+  // remark 用 optional：可以区分"没传"和"传了空字符串"
+  optional string remark = 8;
+
+  // 扩展字段用 map，比重复的 key/value 消息更直接
+  map<string, string> metadata = 9;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0; // 零值必须是"未指定"，不要赋予业务含义
+    STATUS_PAID = 1;
+    STATUS_REFUNDED = 2;
+  }
+
+  message Card {
+    string last4 = 1;
+    string brand = 2;
+  }
+  message WeChat {
+    string transaction_id = 1;
+  }
+  message Points {
+    int64 points_used = 1;
+  }
+}

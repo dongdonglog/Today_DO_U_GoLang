@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 500" font-family="system-ui, -apple-system, sans-serif">
+  <title>限流熔断降级三件套</title>
+  <desc>限流在入口拒绝超额请求;熔断在下游故障时快速失败并进入三态状态机;降级在非关键功能失败时返回兜底数据保护主流程</desc>
+
+  <rect width="920" height="500" fill="#fafbfc"/>
+  <text x="460" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a1a">限流 · 熔断 · 降级</text>
+
+  <defs>
+    <marker id="rb" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#4a90e2"/></marker>
+    <marker id="rg" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#27ae60"/></marker>
+    <marker id="rr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#c0392b"/></marker>
+    <marker id="ro" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#e67e22"/></marker>
+  </defs>
+
+  <!-- ① rate limit -->
+  <g transform="translate(30,70)">
+    <rect width="270" height="120" rx="8" fill="#f4f9ff" stroke="#4a90e2" stroke-width="1.5"/>
+    <text x="135" y="28" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#1976d2">① 限流(保护自己)</text>
+    <rect x="18" y="42" width="234" height="60" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="135" y="66" text-anchor="middle" font-size="12" fill="#333">QPS ≤ 阈值? </text>
+    <text x="135" y="90" text-anchor="middle" font-size="11.5" fill="#1976d2">超了 → 429 + Retry-After</text>
+    <text x="135" y="108" text-anchor="middle" font-size="10.5" fill="#888">全局限流 / 按 key 限流</text>
+  </g>
+
+  <!-- ② circuit breaker -->
+  <g transform="translate(330,70)">
+    <rect width="270" height="120" rx="8" fill="#fff8f0" stroke="#e67e22" stroke-width="1.5"/>
+    <text x="135" y="28" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#b9770e">② 熔断(下游故障)</text>
+    <rect x="18" y="42" width="234" height="60" rx="5" fill="#fff" stroke="#e67e22"/>
+    <text x="135" y="66" text-anchor="middle" font-size="12" fill="#333">失败率超阈值? </text>
+    <text x="135" y="90" text-anchor="middle" font-size="11.5" fill="#b9770e">打开 → 快速失败不调下游</text>
+    <text x="135" y="108" text-anchor="middle" font-size="10.5" fill="#888">业务错误不计入统计</text>
+  </g>
+
+  <!-- ③ degrade -->
+  <g transform="translate(630,70)">
+    <rect width="260" height="120" rx="8" fill="#fdf4fb" stroke="#8e44ad" stroke-width="1.5"/>
+    <text x="130" y="28" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#7d3c98">③ 降级(主流程)</text>
+    <rect x="16" y="42" width="228" height="60" rx="5" fill="#fff" stroke="#8e44ad"/>
+    <text x="130" y="66" text-anchor="middle" font-size="12" fill="#333">非关键依赖失败?</text>
+    <text x="130" y="90" text-anchor="middle" font-size="11.5" fill="#7d3c98">返回兜底数据,主流程 200</text>
+    <text x="130" y="108" text-anchor="middle" font-size="10.5" fill="#888">记日志 + 报指标</text>
+  </g>
+
+  <!-- flow through -->
+  <path d="M 300 100 L 326 110" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#rb)"/>
+  <path d="M 600 100 L 626 110" stroke="#e67e22" stroke-width="2" fill="none" marker-end="url(#ro)"/>
+
+  <!-- request path -->
+  <g transform="translate(80,210)">
+    <rect width="760" height="90" rx="8" fill="#eef7ff" stroke="#4a90e2" stroke-dasharray="4 3"/>
+    <text x="24" y="28" font-size="13.5" font-weight="bold" fill="#1976d2">一次请求的完整防线</text>
+    <rect x="24" y="40" width="120" height="36" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="84" y="62" text-anchor="middle" font-size="12" fill="#1976d2">客户端</text>
+    <path d="M 148 58 L 196 58" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#rb)"/>
+    <rect x="200" y="40" width="130" height="36" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="265" y="62" text-anchor="middle" font-size="12" fill="#1976d2">网关限流</text>
+    <path d="M 334 58 L 382 58" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#rb)"/>
+    <rect x="386" y="40" width="130" height="36" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="451" y="62" text-anchor="middle" font-size="12" fill="#1976d2">服务限流</text>
+    <path d="M 520 58 L 568 58" stroke="#e67e22" stroke-width="2" fill="none" marker-end="url(#ro)"/>
+    <rect x="572" y="40" width="130" height="36" rx="5" fill="#fff" stroke="#e67e22"/>
+    <text x="637" y="62" text-anchor="middle" font-size="12" fill="#b9770e">熔断器</text>
+    <path d="M 706 58 L 750 58" stroke="#27ae60" stroke-width="2" fill="none" marker-end="url(#rg)"/>
+    <rect x="754" y="40" width="100" height="36" rx="5" fill="#e8f5e9" stroke="#27ae60"/>
+    <text x="804" y="62" text-anchor="middle" font-size="12" fill="#1e8449">下游</text>
+    <text x="24" y="112" font-size="11" fill="#888">限流挡总量 → 熔断挡坏下游 → 业务层 catch 失败走降级分支 → 非关键功能用兜底数据</text>
+  </g>
+
+  <!-- circuit breaker state machine -->
+  <g transform="translate(80,330)">
+    <rect width="760" height="140" rx="8" fill="#fff" stroke="#ccc"/>
+    <text x="24" y="28" font-size="13.5" font-weight="bold" fill="#333">熔断器三态状态机</text>
+
+    <rect x="24" y="44" width="150" height="44" rx="6" fill="#e8f5e9" stroke="#27ae60"/>
+    <text x="99" y="62" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e8449">Closed</text>
+    <text x="99" y="80" text-anchor="middle" font-size="10.5" fill="#555">正常转发·统计失败率</text>
+
+    <path d="M 178 66 C 230 50, 270 50, 322 66" stroke="#c0392b" stroke-width="2" fill="none" marker-end="url(#rr)"/>
+    <text x="250" y="42" text-anchor="middle" font-size="11" fill="#c0392b">失败率超阈值</text>
+
+    <rect x="326" y="44" width="150" height="44" rx="6" fill="#fdecea" stroke="#c0392b"/>
+    <text x="401" y="62" text-anchor="middle" font-size="13" font-weight="bold" fill="#c0392b">Open</text>
+    <text x="401" y="80" text-anchor="middle" font-size="10.5" fill="#555">快速失败·不调下游</text>
+
+    <path d="M 480 66 C 530 50, 570 50, 622 66" stroke="#e67e22" stroke-width="2" fill="none" marker-end="url(#ro)"/>
+    <text x="551" y="42" text-anchor="middle" font-size="11" fill="#b9770e">Timeout 冷却</text>
+
+    <rect x="626" y="44" width="150" height="44" rx="6" fill="#fff8e1" stroke="#f1c40f"/>
+    <text x="701" y="62" text-anchor="middle" font-size="13" font-weight="bold" fill="#8a6d00">Half-Open</text>
+    <text x="701" y="80" text-anchor="middle" font-size="10.5" fill="#555">放少量试探请求</text>
+
+    <path d="M 701 90 C 701 120, 99 120, 99 92" stroke="#27ae60" stroke-width="2" stroke-dasharray="5 3" fill="none" marker-end="url(#rg)"/>
+    <text x="400" y="130" text-anchor="middle" font-size="11" fill="#1e8449">试探成功 → 回 Closed;试探失败 → 回 Open</text>
+  </g>
+
+  <g transform="translate(80,480)">
+    <text x="0" y="0" font-size="12" fill="#555">
+      三者缺一不可:没有超时(第25章),熔断看到的都是"还在等";没有可观测性,降级不可见等于静默丢功能。
+    </text>
+  </g>
+</svg>

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package evolve.v1;
+
+option go_package = "github.com/go-book/protobuf/proto/evolve/v1;evolvev1";
+
+// Event 是事件契约的 v1 版本。
+// 演进到 v2 时：新增 channel，废弃 source。
+message Event {
+  string id = 1;
+  string name = 2;
+  int64 ts = 3;
+  string source = 4; // v2 中废弃，用 channel 替代
+}

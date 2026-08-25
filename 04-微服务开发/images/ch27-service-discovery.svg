@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 520" font-family="system-ui, -apple-system, sans-serif">
+  <title>服务注册发现架构(基于 etcd 与 gRPC)</title>
+  <desc>服务提供者注册到 etcd 并维持租约;消费者通过 resolver 拉取列表并 watch 变更;gRPC round_robin 在健康实例间负载均衡;控制面(etcd)与数据面(RPC 直连)分离</desc>
+
+  <rect width="920" height="520" fill="#fafbfc"/>
+  <text x="460" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a1a">服务注册发现:etcd + gRPC</text>
+
+  <defs>
+    <marker id="b" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#4a90e2"/></marker>
+    <marker id="g2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#27ae60"/></marker>
+    <marker id="o2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#e67e22"/></marker>
+    <marker id="r2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#c0392b"/></marker>
+  </defs>
+
+  <!-- provider instances -->
+  <g transform="translate(30,70)">
+    <rect width="230" height="200" rx="8" fill="#f4fbf6" stroke="#27ae60" stroke-width="1.5"/>
+    <text x="115" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e8449">服务提供者 user-service</text>
+    <rect x="20" y="42" width="190" height="40" rx="5" fill="#fff" stroke="#27ae60"/>
+    <text x="115" y="67" text-anchor="middle" font-size="12.5" font-family="monospace" fill="#333">实例 A :50061</text>
+    <rect x="20" y="94" width="190" height="40" rx="5" fill="#fff" stroke="#27ae60"/>
+    <text x="115" y="119" text-anchor="middle" font-size="12.5" font-family="monospace" fill="#333">实例 B :50062</text>
+    <rect x="20" y="146" width="190" height="36" rx="5" fill="#fdecea" stroke="#c0392b" stroke-dasharray="4 3"/>
+    <text x="115" y="169" text-anchor="middle" font-size="12" font-family="monospace" fill="#c0392b">实例 C ✕ 崩溃(TTL 摘除)</text>
+  </g>
+
+  <!-- etcd -->
+  <g transform="translate(345,70)">
+    <rect width="230" height="260" rx="8" fill="#f4f9ff" stroke="#4a90e2" stroke-width="1.5"/>
+    <text x="115" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#1976d2">注册中心 etcd(Raft 强一致)</text>
+    <rect x="18" y="46" width="194" height="120" rx="5" fill="#fff" stroke="#ccc"/>
+    <text x="30" y="68" font-size="11.5" font-family="monospace" fill="#555">user-service/:50061 ✓</text>
+    <text x="30" y="88" font-size="11.5" font-family="monospace" fill="#555">user-service/:50062 ✓</text>
+    <text x="30" y="108" font-size="11.5" font-family="monospace" fill="#c0392b">user-service/:50061 租约过期→删除</text>
+    <text x="30" y="128" font-size="11" fill="#999">key 绑定租约 TTL=10~30s</text>
+    <text x="30" y="148" font-size="11" fill="#999">KeepAlive 按 TTL/3 续租</text>
+    <rect x="18" y="180" width="194" height="56" rx="5" fill="#e3f2fd" stroke="#4a90e2" stroke-dasharray="4 3"/>
+    <text x="115" y="203" text-anchor="middle" font-size="12" fill="#1976d2">watch 前缀变更 → 增量推送</text>
+    <text x="115" y="222" text-anchor="middle" font-size="11" fill="#888">put/delete 事件实时通知消费者</text>
+  </g>
+
+  <!-- consumer -->
+  <g transform="translate(660,70)">
+    <rect width="230" height="260" rx="8" fill="#fff8f0" stroke="#e67e22" stroke-width="1.5"/>
+    <text x="115" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#b9770e">服务消费者 order-service</text>
+    <rect x="18" y="46" width="194" height="52" rx="5" fill="#fff" stroke="#e67e22"/>
+    <text x="115" y="68" text-anchor="middle" font-size="12" font-family="monospace" fill="#b9770e">grpc.NewClient("etcd:///user-service")</text>
+    <text x="115" y="86" text-anchor="middle" font-size="11" fill="#888">resolver:全量 Get + watch 增量</text>
+    <rect x="18" y="112" width="194" height="46" rx="5" fill="#fff" stroke="#e67e22"/>
+    <text x="115" y="132" text-anchor="middle" font-size="12" fill="#333">balancer: round_robin</text>
+    <text x="115" y="150" text-anchor="middle" font-size="11" fill="#888">仅在健康实例间轮询</text>
+    <rect x="18" y="172" width="194" height="64" rx="5" fill="#fff" stroke="#e67e22"/>
+    <text x="115" y="196" text-anchor="middle" font-size="12" fill="#333">业务调用(GetUser ...)</text>
+    <text x="115" y="216" text-anchor="middle" font-size="11" fill="#888">deadline + 重试(第25章)</text>
+  </g>
+
+  <!-- arrows: register/keepalive -->
+  <path d="M 260 120 L 345 130" stroke="#27ae60" stroke-width="2" fill="none" marker-end="url(#g2)"/>
+  <text x="300" y="112" text-anchor="middle" font-size="11.5" fill="#1e8449">① 注册+续租</text>
+
+  <!-- arrows: TTL revoke (red) -->
+  <path d="M 260 168 L 345 178" stroke="#c0392b" stroke-width="2" stroke-dasharray="5 4" fill="none" marker-end="url(#r2)"/>
+  <text x="298" y="162" text-anchor="middle" font-size="11.5" fill="#c0392b">崩溃→TTL 到期摘除</text>
+
+  <!-- arrows: watch push to consumer -->
+  <path d="M 575 150 L 660 150" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#b)"/>
+  <text x="618" y="140" text-anchor="middle" font-size="11.5" fill="#1976d2">② 实例列表推送</text>
+
+  <!-- data plane: consumer -> instances direct RPC -->
+  <path d="M 700 330 C 600 430, 350 450, 160 280" stroke="#e67e22" stroke-width="2.5" fill="none" marker-end="url(#o2)"/>
+  <text x="420" y="445" text-anchor="middle" font-size="13" font-weight="bold" fill="#b9770e">③ 数据面:gRPC 直连实例(round_robin),不经过 etcd</text>
+
+  <!-- control vs data plane note -->
+  <g transform="translate(30,470)">
+    <rect width="860" height="38" rx="6" fill="#eef7ff" stroke="#4a90e2" stroke-dasharray="4 3"/>
+    <text x="20" y="24" font-size="12" fill="#1976d2"><tspan font-weight="bold">关键设计:</tspan>控制面(①②,经 etcd,低频)与数据面(③,RPC 直连,高频)分离——etcd 故障只影响变更感知,存量连接不受影响。</text>
+  </g>
+</svg>

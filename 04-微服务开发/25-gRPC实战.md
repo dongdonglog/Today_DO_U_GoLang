@@ -245,6 +245,8 @@ $ go run ./example2-stream -role=client
 
 选型原则:**先用一元,确有批量/流式需求再升级**。流式不是免费的,错误处理、流控、重试都比一元复杂。
 
+![gRPC 四种调用模式与 HTTP/2 多路复用](./images/ch25-grpc-four-modes.svg)
+
 ### 25.3 拦截器:鉴权与日志
 
 > 代码:`25-grpc/example3-interceptor/`
@@ -390,6 +392,8 @@ gRPC 的性能优势来自三层:
 - 为什么 gRPC 不能直接用浏览器调 → 浏览器 fetch/XHR 不暴露 HTTP/2 trailer,需要 grpc-web 转译
 
 ### 25.5.3 拦截器执行顺序
+
+![拦截器洋葱模型与超时传播](./images/ch25-interceptor-deadline.svg)
 
 ```
 请求进入

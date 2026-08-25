@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" font-family="system-ui, -apple-system, sans-serif">
+  <title>Protobuf 版本演进与兼容规则</title>
+  <desc>展示字段编号演进：新增字段用新编号，删除字段用 reserved 占住编号，未知字段被忽略/保留，从而实现前后兼容</desc>
+
+  <rect width="900" height="420" fill="#fafbfc"/>
+  <text x="450" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a1a">版本演进：编号即契约</text>
+
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#4a90e2"/></marker>
+  </defs>
+
+  <!-- v1 -->
+  <g transform="translate(40,70)">
+    <rect width="240" height="250" rx="8" fill="#f4f9ff" stroke="#4a90e2" stroke-width="1.5"/>
+    <text x="120" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#1976d2">v1（旧版本）</text>
+    <g font-family="monospace" font-size="12">
+      <rect x="20" y="46" width="200" height="30" rx="4" fill="#fff" stroke="#4a90e2"/><text x="32" y="66">id      = 1</text>
+      <rect x="20" y="82" width="200" height="30" rx="4" fill="#fff" stroke="#4a90e2"/><text x="32" y="102">name    = 2</text>
+      <rect x="20" y="118" width="200" height="30" rx="4" fill="#fff" stroke="#4a90e2"/><text x="32" y="138">ts      = 3</text>
+      <rect x="20" y="154" width="200" height="30" rx="4" fill="#fff3e0" stroke="#e67e22"/><text x="32" y="174" fill="#b9770e">source  = 4</text>
+    </g>
+    <text x="120" y="214" text-anchor="middle" font-size="11" fill="#888">生产者/消费者都认识 1~4</text>
+  </g>
+
+  <!-- arrow -->
+  <path d="M 290 195 L 360 195" stroke="#4a90e2" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
+
+  <!-- v2 -->
+  <g transform="translate(370,70)">
+    <rect width="240" height="250" rx="8" fill="#f4fbf6" stroke="#27ae60" stroke-width="1.5"/>
+    <text x="120" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e8449">v2（新版本）</text>
+    <g font-family="monospace" font-size="12">
+      <rect x="20" y="46" width="200" height="30" rx="4" fill="#fff" stroke="#27ae60"/><text x="32" y="66">id      = 1</text>
+      <rect x="20" y="82" width="200" height="30" rx="4" fill="#fff" stroke="#27ae60"/><text x="32" y="102">name    = 2</text>
+      <rect x="20" y="118" width="200" height="30" rx="4" fill="#fff" stroke="#27ae60"/><text x="32" y="138">ts      = 3</text>
+      <rect x="20" y="154" width="200" height="30" rx="4" fill="#fdecea" stroke="#c0392b" stroke-dasharray="4 3"/><text x="32" y="174" fill="#c0392b">reserved 4  // source</text>
+      <rect x="20" y="190" width="200" height="30" rx="4" fill="#e8f5e9" stroke="#27ae60"/><text x="32" y="210" font-weight="bold">channel = 5  ← 新增</text>
+    </g>
+  </g>
+
+  <!-- rules on the right -->
+  <g transform="translate(640,70)">
+    <rect width="230" height="250" rx="8" fill="#fff" stroke="#ccc"/>
+    <text x="16" y="28" font-size="14" font-weight="bold" fill="#333">演进铁律</text>
+    <text x="16" y="56" font-size="12" fill="#27ae60">✓ 加字段：用全新编号</text>
+    <text x="16" y="80" font-size="12" fill="#27ae60">✓ 删字段：reserved 编号+名</text>
+    <text x="16" y="104" font-size="12" fill="#27ae60">✓ 改字段名：安全（不进二进制）</text>
+    <text x="16" y="128" font-size="12" fill="#c0392b">✗ 复用已删字段编号</text>
+    <text x="16" y="152" font-size="12" fill="#c0392b">✗ 改字段类型/wire_type</text>
+    <text x="16" y="176" font-size="12" fill="#c0392b">✗ 改已有字段的编号</text>
+    <text x="16" y="204" font-size="11.5" fill="#555">不认识的字段：按 wire_type</text>
+    <text x="16" y="220" font-size="11.5" fill="#555">跳过（或保留到 unknownFields）</text>
+  </g>
+
+  <!-- bottom: compatibility direction -->
+  <g transform="translate(40,345)">
+    <rect width="830" height="56" rx="8" fill="#fff8e1" stroke="#ffc107"/>
+    <text x="20" y="24" font-size="12.5" fill="#8a6d00">
+      <tspan font-weight="bold">后向兼容</tspan>：新代码(v2)读旧数据(v1) → channel 缺失为零值，source 被忽略　　
+      <tspan font-weight="bold">前向兼容</tspan>：旧代码(v1)读新数据(v2) → channel 不认识被跳过
+    </text>
+    <text x="20" y="44" font-size="11.5" fill="#8a6d00">→ 新老版本服务实例可以共存、互通，支持滚动升级。未知字段在 Go 实现里重新序列化时会保留，转发不丢字段。</text>
+  </g>
+</svg>

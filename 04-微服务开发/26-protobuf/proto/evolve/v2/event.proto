@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package evolve.v2;
+
+option go_package = "github.com/go-book/protobuf/proto/evolve/v2;evolvev2";
+
+// Event 是事件契约的 v2 版本。
+// 演示兼容演进：
+//   - 新增字段 channel（编号 5）—— 旧客户端发来的消息没有它，读到零值
+//   - 废弃字段 source（编号 4）—— 用 reserved 占住编号，防止以后被复用
+message Event {
+  string id = 1;
+  string name = 2;
+  int64 ts = 3;
+  // 旧的 source 字段在 v2 已下线。编号 4 必须 reserved，
+  // 否则将来谁又用 4 定义新字段，就会和旧数据的二进制冲突。
+  reserved 4;
+  reserved "source";
+
+  string channel = 5; // 新增
+}

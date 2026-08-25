@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 440" font-family="system-ui, -apple-system, sans-serif">
+  <title>Protobuf 线格式（TLV 编码）</title>
+  <desc>Protobuf 消息由 tag-length-value 组成：tag = (字段编号 &lt;&lt; 3) | wire_type，整数用 varint 变长编码，字符串带长度前缀，字段名不出现在二进制里</desc>
+
+  <rect width="900" height="440" fill="#fafbfc"/>
+  <text x="450" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a1a">Protobuf 线格式（TLV）</text>
+
+  <!-- formula -->
+  <rect x="60" y="60" width="780" height="56" rx="8" fill="#eef7ff" stroke="#4a90e2" stroke-width="1.5"/>
+  <text x="450" y="84" text-anchor="middle" font-size="14" fill="#1976d2">每个字段编码为： [ tag ] [ length? ] [ value ]</text>
+  <text x="450" y="106" text-anchor="middle" font-size="13" fill="#555" font-family="monospace">tag = (field_number &lt;&lt; 3) | wire_type    （0=varint, 1=64-bit, 2=length-delimited, 5=32-bit）</text>
+
+  <!-- byte stream of User{id=1001, username="alice", status=1} -->
+  <text x="60" y="150" font-size="14" font-weight="bold" fill="#333">示例字节流：User{id=1001, username="alice", status=1}</text>
+
+  <!-- field 1: id -->
+  <g transform="translate(60,166)">
+    <rect x="0" y="0" width="60" height="56" rx="4" fill="#e3f2fd" stroke="#4a90e2"/>
+    <text x="30" y="24" text-anchor="middle" font-size="13" font-family="monospace" font-weight="bold" fill="#1976d2">08</text>
+    <text x="30" y="46" text-anchor="middle" font-size="10" fill="#555">tag f1/varint</text>
+
+    <rect x="62" y="0" width="80" height="56" rx="4" fill="#fff" stroke="#4a90e2"/>
+    <text x="102" y="24" text-anchor="middle" font-size="13" font-family="monospace" font-weight="bold" fill="#333">e9 07</text>
+    <text x="102" y="46" text-anchor="middle" font-size="10" fill="#555">varint = 1001</text>
+    <text x="172" y="34" font-size="12" fill="#888">← id=1</text>
+  </g>
+
+  <!-- field 2: username -->
+  <g transform="translate(60,234)">
+    <rect x="0" y="0" width="60" height="56" rx="4" fill="#e8f5e9" stroke="#27ae60"/>
+    <text x="30" y="24" text-anchor="middle" font-size="13" font-family="monospace" font-weight="bold" fill="#1e8449">12</text>
+    <text x="30" y="46" text-anchor="middle" font-size="10" fill="#555">tag f2/LD</text>
+
+    <rect x="62" y="0" width="56" height="56" rx="4" fill="#fff8e1" stroke="#f1c40f"/>
+    <text x="90" y="24" text-anchor="middle" font-size="13" font-family="monospace" font-weight="bold" fill="#8a6d00">05</text>
+    <text x="90" y="46" text-anchor="middle" font-size="10" fill="#555">长度=5</text>
+
+    <rect x="120" y="0" width="170" height="56" rx="4" fill="#fff" stroke="#27ae60"/>
+    <text x="205" y="24" text-anchor="middle" font-size="13" font-family="monospace" font-weight="bold" fill="#333">61 6c 69 63 65</text>
+    <text x="205" y="46" text-anchor="middle" font-size="10" fill="#555">"alice"（5 字节）</text>
+    <text x="300" y="34" font-size="12" fill="#888">← username=2</text>
+  </g>
+
+  <!-- field 4: status -->
+  <g transform="translate(60,302)">
+    <rect x="0" y="0" width="60" height="56" rx="4" fill="#f3e5f5" stroke="#8e44ad"/>
+    <text x="30" y="24" text-anchor="middle" font-size="13" font-family="monospace" font-weight="bold" fill="#7d3c98">20</text>
+    <text x="30" y="46" text-anchor="middle" font-size="10" fill="#555">tag f4/varint</text>
+
+    <rect x="62" y="0" width="80" height="56" rx="4" fill="#fff" stroke="#8e44ad"/>
+    <text x="102" y="24" text-anchor="middle" font-size="13" font-family="monospace" font-weight="bold" fill="#333">01</text>
+    <text x="102" y="46" text-anchor="middle" font-size="10" fill="#555">varint = 1</text>
+    <text x="172" y="34" font-size="12" fill="#888">← status=4</text>
+  </g>
+
+  <!-- takeaways -->
+  <g transform="translate(430,234)">
+    <rect x="0" y="0" width="410" height="124" rx="8" fill="#fff" stroke="#ccc"/>
+    <text x="16" y="26" font-size="13" font-weight="bold" fill="#333">三个关键结论</text>
+    <text x="16" y="50" font-size="12.5" fill="#555">• 二进制里只有字段编号，<tspan font-weight="bold" fill="#c0392b">没有字段名</tspan> → 体积小</text>
+    <text x="16" y="72" font-size="12.5" fill="#555">• 编号是字段的唯一身份，上线后<tspan font-weight="bold" fill="#c0392b">不能改/不能复用</tspan></text>
+    <text x="16" y="94" font-size="12.5" fill="#555">• 小数 varint 仅 1~2 字节；负数建议用 sint32/64</text>
+    <text x="16" y="114" font-size="11" fill="#999">LD = length-delimited（字符串/嵌套消息/字节数组）</text>
+  </g>
+</svg>

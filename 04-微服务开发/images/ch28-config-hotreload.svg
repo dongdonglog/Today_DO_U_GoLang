@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 480" font-family="system-ui, -apple-system, sans-serif">
+  <title>配置中心热更新链路</title>
+  <desc>运维修改 etcd 配置后,watch 毫秒级推送变更到各服务实例;每个实例的 Store 解析、校验、原子替换配置快照;坏配置被拒绝并保持 last-good</desc>
+
+  <rect width="920" height="480" fill="#fafbfc"/>
+  <text x="460" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a1a">配置热更新:从 PUT 到生效</text>
+
+  <defs>
+    <marker id="cb" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#4a90e2"/></marker>
+    <marker id="co" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#e67e22"/></marker>
+    <marker id="cg" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#27ae60"/></marker>
+    <marker id="cr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#c0392b"/></marker>
+  </defs>
+
+  <!-- ops -->
+  <g transform="translate(40,80)">
+    <rect width="180" height="90" rx="8" fill="#fff5f5" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="90" y="34" text-anchor="middle" font-size="14" font-weight="bold" fill="#c0392b">运维 / 发布系统</text>
+    <text x="90" y="58" text-anchor="middle" font-size="12" font-family="monospace" fill="#555">etcdctl put ...</text>
+    <text x="90" y="76" text-anchor="middle" font-size="11" fill="#999">改限流 100 → 800</text>
+  </g>
+
+  <!-- etcd -->
+  <g transform="translate(300,60)">
+    <rect width="200" height="130" rx="8" fill="#f4f9ff" stroke="#4a90e2" stroke-width="1.5"/>
+    <text x="100" y="30" text-anchor="middle" font-size="14" font-weight="bold" fill="#1976d2">etcd (MVCC)</text>
+    <rect x="16" y="46" width="168" height="64" rx="5" fill="#fff" stroke="#ccc"/>
+    <text x="100" y="70" text-anchor="middle" font-size="12" font-family="monospace" fill="#333">demo/app-config</text>
+    <text x="100" y="92" text-anchor="middle" font-size="11.5" font-family="monospace" fill="#1976d2">rev=47 rate_limit=800</text>
+  </g>
+
+  <!-- watch fanout -->
+  <path d="M 220 125 L 296 118" stroke="#e74c3c" stroke-width="2.5" fill="none" marker-end="url(#cr)"/>
+  <text x="256" y="108" text-anchor="middle" font-size="12" fill="#c0392b">① PUT 新值</text>
+
+  <!-- instances -->
+  <g transform="translate(600,50)">
+    <rect width="290" height="150" rx="8" fill="#f4fbf6" stroke="#27ae60" stroke-width="1.5"/>
+    <text x="145" y="26" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e8449">服务实例 × N(每台都收到推送)</text>
+
+    <rect x="16" y="42" width="258" height="92" rx="5" fill="#fff" stroke="#ccc"/>
+    <text x="30" y="64" font-size="12" fill="#333">② watch 事件 → 解析 JSON</text>
+    <text x="30" y="86" font-size="12" fill="#333">③ validate() 校验</text>
+    <text x="30" y="108" font-size="12" fill="#333">④ atomic.Pointer.Store(新快照)</text>
+    <text x="30" y="128" font-size="11.5" fill="#888">⑤ OnChange 回调(重建连接池等)</text>
+  </g>
+
+  <!-- push arrows -->
+  <path d="M 500 105 C 540 95, 550 90, 596 88" stroke="#4a90e2" stroke-width="2.5" fill="none" marker-end="url(#cb)"/>
+  <path d="M 500 120 C 545 140, 555 145, 596 150" stroke="#4a90e2" stroke-width="2.5" fill="none" marker-end="url(#cb)"/>
+  <text x="548" y="112" text-anchor="middle" font-size="12" fill="#1976d2">② watch 推送(毫秒级)</text>
+
+  <!-- business read path -->
+  <g transform="translate(600,240)">
+    <rect width="290" height="110" rx="8" fill="#fff8f0" stroke="#e67e22" stroke-width="1.5"/>
+    <text x="145" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#b9770e">业务请求路径(高频)</text>
+    <text x="145" y="56" text-anchor="middle" font-size="12.5" font-family="monospace" fill="#333">cfg := store.Get()</text>
+    <text x="145" y="78" text-anchor="middle" font-size="11.5" fill="#888">无锁原子读:拿到完整的旧或新快照,</text>
+    <text x="145" y="96" text-anchor="middle" font-size="11.5" fill="#888">绝无"改了一半"的中间状态</text>
+  </g>
+  <path d="M 745 200 L 745 236" stroke="#e67e22" stroke-width="2" fill="none" marker-end="url(#co)"/>
+
+  <!-- bad config path -->
+  <g transform="translate(40,220)">
+    <rect width="420" height="130" rx="8" fill="#fdf4fb" stroke="#8e44ad" stroke-width="1.5"/>
+    <text x="210" y="26" text-anchor="middle" font-size="14" font-weight="bold" fill="#7d3c98">坏配置的三道防线</text>
+    <text x="24" y="52" font-size="12" fill="#333">① 校验失败 → 打日志,<tspan font-weight="bold">保留 last-good</tspan>,服务不中断</text>
+    <text x="24" y="76" font-size="12" fill="#333">② key 被删 → 拒绝应用空配置,告警</text>
+    <text x="24" y="100" font-size="12" fill="#333">③ 需要回退 → WithRev 读 MVCC 历史版本重新 put</text>
+    <text x="24" y="122" font-size="11" fill="#888">回滚也是一次普通 put,watch 链路自动让全部实例生效</text>
+  </g>
+  <path d="M 460 260 C 520 250, 545 235, 596 205" stroke="#8e44ad" stroke-width="2" stroke-dasharray="5 4" fill="none" marker-end="url(#cg)"/>
+
+  <!-- bottom note -->
+  <g transform="translate(40,390)">
+    <rect width="850" height="56" rx="6" fill="#eef7ff" stroke="#4a90e2" stroke-dasharray="4 3"/>
+    <text x="20" y="24" font-size="12" fill="#1976d2"><tspan font-weight="bold">两个边界:</tspan>实例间切换有几十毫秒窗口(无全局一致保证);watch 断连期间事件会丢——重连后必须 Get 全量补偿。</text>
+    <text x="20" y="44" font-size="12" fill="#1976d2"><tspan font-weight="bold">MVCC 边界:</tspan>历史版本会被 compaction 清理,MVCC 回滚只适合最近几小时的应急;长期版本管理仍在 git。</text>
+  </g>
+</svg>
