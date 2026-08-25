@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 470" font-family="system-ui, -apple-system, sans-serif">
+  <title>异步任务三件套:延迟任务、周期任务、Outbox</title>
+  <desc>延迟任务用 ZSET 按到期时间抢占;周期任务用时间片锁保证每周期唯一执行者;Outbox 在业务事务内写事件并由 relay 轮询投递</desc>
+
+  <rect width="920" height="470" fill="#fafbfc"/>
+  <text x="460" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a1a">异步任务三件套</text>
+
+  <defs>
+    <marker id="tb" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#4a90e2"/></marker>
+    <marker id="to" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#e67e22"/></marker>
+    <marker id="tg" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#27ae60"/></marker>
+    <marker id="tp" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#8e44ad"/></marker>
+  </defs>
+
+  <!-- delayed queue -->
+  <g transform="translate(30,70)">
+    <rect width="280" height="180" rx="8" fill="#f4f9ff" stroke="#4a90e2" stroke-width="1.5"/>
+    <text x="140" y="26" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#1976d2">① 延迟任务(ZSET)</text>
+    <rect x="18" y="42" width="244" height="34" rx="4" fill="#fff" stroke="#4a90e2"/>
+    <text x="140" y="63" text-anchor="middle" font-size="11.5" font-family="monospace" fill="#333">ZADD queue &lt;到期ts&gt; taskID</text>
+    <rect x="18" y="84" width="244" height="34" rx="4" fill="#fff" stroke="#4a90e2"/>
+    <text x="140" y="105" text-anchor="middle" font-size="11.5" font-family="monospace" fill="#333">ZRangeByScore [0, now+5s]</text>
+    <rect x="18" y="126" width="244" height="34" rx="4" fill="#e8f5e9" stroke="#27ae60"/>
+    <text x="140" y="147" text-anchor="middle" font-size="11.5" font-family="monospace" fill="#1e8449">ZREM 抢占成功 → 执行</text>
+    <text x="140" y="172" text-anchor="middle" font-size="10.5" fill="#888">多实例只有一个 ZREM 返回 1</text>
+  </g>
+
+  <!-- cron -->
+  <g transform="translate(330,70)">
+    <rect width="270" height="180" rx="8" fill="#fff8f0" stroke="#e67e22" stroke-width="1.5"/>
+    <text x="135" y="26" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#b9770e">② 周期任务(时间片锁)</text>
+    <rect x="18" y="42" width="234" height="34" rx="4" fill="#fff" stroke="#e67e22"/>
+    <text x="135" y="63" text-anchor="middle" font-size="11.5" font-family="monospace" fill="#333">slot = now / 3s(时间片)</text>
+    <rect x="18" y="84" width="234" height="34" rx="4" fill="#fff" stroke="#e67e22"/>
+    <text x="135" y="105" text-anchor="middle" font-size="11.5" font-family="monospace" fill="#333">SetNX cron:x:{slot} TTL=10s</text>
+    <rect x="18" y="126" width="112" height="34" rx="4" fill="#e8f5e9" stroke="#27ae60"/>
+    <text x="74" y="147" text-anchor="middle" font-size="11.5" fill="#1e8449">赢家执行</text>
+    <rect x="140" y="126" width="112" height="34" rx="4" fill="#fdecea" stroke="#c0392b"/>
+    <text x="196" y="147" text-anchor="middle" font-size="11.5" fill="#c0392b">其余跳过</text>
+    <text x="135" y="172" text-anchor="middle" font-size="10.5" fill="#888">TTL 兜底崩溃自愈 · 业务幂等兜底双跑</text>
+  </g>
+
+  <!-- outbox -->
+  <g transform="translate(620,70)">
+    <rect width="270" height="180" rx="8" fill="#fdf4fb" stroke="#8e44ad" stroke-width="1.5"/>
+    <text x="135" y="26" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#7d3c98">③ Outbox(可靠事件)</text>
+    <rect x="18" y="42" width="110" height="52" rx="4" fill="#fff" stroke="#8e44ad"/>
+    <text x="73" y="64" text-anchor="middle" font-size="11.5" fill="#333">业务事务</text>
+    <text x="73" y="82" text-anchor="middle" font-size="10" font-family="monospace" fill="#888">orders + outbox</text>
+    <rect x="142" y="42" width="110" height="52" rx="4" fill="#fff" stroke="#8e44ad"/>
+    <text x="197" y="64" text-anchor="middle" font-size="11.5" fill="#333">relay 轮询</text>
+    <text x="197" y="82" text-anchor="middle" font-size="10" font-family="monospace" fill="#888">sent=0 → 投递</text>
+    <path d="M 128 68 L 138 68" stroke="#8e44ad" stroke-width="2" fill="none" marker-end="url(#tp)"/>
+    <rect x="18" y="108" width="234" height="30" rx="4" fill="#fff" stroke="#ccc"/>
+    <text x="135" y="128" text-anchor="middle" font-size="11" fill="#555">同一本地事务 ⇒ 事件不丢</text>
+    <rect x="18" y="146" width="234" height="24" rx="4" fill="#fff3cd" stroke="#ffc107"/>
+    <text x="135" y="163" text-anchor="middle" font-size="10.5" fill="#856404">at-least-once ⇒ 下游幂等</text>
+  </g>
+
+  <!-- bottom: common principles -->
+  <g transform="translate(30,290)">
+    <rect width="860" height="150" rx="8" fill="#eef7ff" stroke="#4a90e2" stroke-dasharray="4 3"/>
+    <text x="24" y="32" font-size="15" font-weight="bold" fill="#1976d2">共同的三条可靠性承诺</text>
+
+    <rect x="24" y="48" width="256" height="80" rx="6" fill="#fff" stroke="#4a90e2"/>
+    <text x="152" y="74" text-anchor="middle" font-size="13" font-weight="bold" fill="#1976d2">持久化</text>
+    <text x="152" y="96" text-anchor="middle" font-size="11.5" fill="#555">不怕重启:任务在 Redis/DB,</text>
+    <text x="152" y="114" text-anchor="middle" font-size="11.5" fill="#555">不在进程内存</text>
+
+    <rect x="302" y="48" width="256" height="80" rx="6" fill="#fff" stroke="#27ae60"/>
+    <text x="430" y="74" text-anchor="middle" font-size="13" font-weight="bold" fill="#27ae60">互斥</text>
+    <text x="430" y="96" text-anchor="middle" font-size="11.5" fill="#555">不多跑:ZREM 抢占 / SetNX 锁,</text>
+    <text x="430" y="114" text-anchor="middle" font-size="11.5" fill="#555">原子操作即互斥</text>
+
+    <rect x="580" y="48" width="256" height="80" rx="6" fill="#fff" stroke="#e67e22"/>
+    <text x="708" y="74" text-anchor="middle" font-size="13" font-weight="bold" fill="#b9770e">幂等</text>
+    <text x="708" y="96" text-anchor="middle" font-size="11.5" fill="#555">不怕重跑:at-least-once 是常态,</text>
+    <text x="708" y="114" text-anchor="middle" font-size="11.5" fill="#555">覆盖写 / 唯一键消化重复</text>
+  </g>
+
+  <g transform="translate(30,462)">
+    <text x="0" y="0" font-size="12" fill="#555">
+      选型:已有 Redis 且待办百万级以内 → ZSET 延迟队列足够;调度复杂后上 xxl-job / K8s CronJob;事件一致性先 Outbox 轮询,再演进 CDC。
+    </text>
+  </g>
+</svg>

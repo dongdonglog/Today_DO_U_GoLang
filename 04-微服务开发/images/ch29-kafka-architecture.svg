@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 500" font-family="system-ui, -apple-system, sans-serif">
+  <title>Kafka 分区日志与消费组</title>
+  <desc>生产者按 key 路由写入分区日志;消费组内消费者均分分区;位移(offset)记录消费进度;毒消息经有限重试进入死信队列</desc>
+
+  <rect width="920" height="500" fill="#fafbfc"/>
+  <text x="460" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a1a">Kafka 分区日志与消费组</text>
+
+  <defs>
+    <marker id="kb" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#4a90e2"/></marker>
+    <marker id="kg" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#27ae60"/></marker>
+    <marker id="kr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#c0392b"/></marker>
+  </defs>
+
+  <!-- producer -->
+  <g transform="translate(30,70)">
+    <rect width="170" height="80" rx="8" fill="#f4f9ff" stroke="#4a90e2" stroke-width="1.5"/>
+    <text x="85" y="32" text-anchor="middle" font-size="14" font-weight="bold" fill="#1976d2">订单服务(生产者)</text>
+    <text x="85" y="56" text-anchor="middle" font-size="11.5" fill="#555">key=订单号 → 同订单同分区</text>
+    <text x="85" y="72" text-anchor="middle" font-size="11.5" fill="#555">acks=all + 幂等 + 攒批</text>
+  </g>
+
+  <!-- topic partitions -->
+  <g transform="translate(280,60)">
+    <rect width="300" height="220" rx="8" fill="#fff" stroke="#999" stroke-width="1.5"/>
+    <text x="150" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">topic: order-events</text>
+
+    <g transform="translate(20,44)">
+      <rect width="260" height="40" rx="4" fill="#f4f9ff" stroke="#4a90e2"/>
+      <text x="10" y="25" font-size="12" font-family="monospace" fill="#333">p0 [0][1][2][3][4]→</text>
+      <rect x="216" y="10" width="14" height="20" fill="#4a90e2"/>
+      <text x="246" y="25" font-size="10" fill="#1976d2">追加</text>
+    </g>
+    <g transform="translate(20,94)">
+      <rect width="260" height="40" rx="4" fill="#f4f9ff" stroke="#4a90e2"/>
+      <text x="10" y="25" font-size="12" font-family="monospace" fill="#333">p1 [0][1][2][3]→</text>
+      <rect x="186" y="10" width="14" height="20" fill="#4a90e2"/>
+    </g>
+    <g transform="translate(20,144)">
+      <rect width="260" height="40" rx="4" fill="#f4f9ff" stroke="#4a90e2"/>
+      <text x="10" y="25" font-size="12" font-family="monospace" fill="#333">p2 [0][1][2][3][4]→</text>
+      <rect x="216" y="10" width="14" height="20" fill="#4a90e2"/>
+    </g>
+
+    <text x="150" y="206" text-anchor="middle" font-size="11" fill="#888">只追加不改写 · 分区内有序 · offset 定位</text>
+  </g>
+
+  <!-- produce arrow -->
+  <path d="M 200 110 L 276 130" stroke="#4a90e2" stroke-width="2.5" fill="none" marker-end="url(#kb)"/>
+  <text x="238" y="108" text-anchor="middle" font-size="12" fill="#1976d2">① 追加写入</text>
+
+  <!-- consumer group -->
+  <g transform="translate(650,60)">
+    <rect width="240" height="220" rx="8" fill="#f4fbf6" stroke="#27ae60" stroke-width="1.5"/>
+    <text x="120" y="26" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e8449">消费组 billing-service</text>
+
+    <rect x="18" y="46" width="204" height="48" rx="5" fill="#fff" stroke="#27ae60"/>
+    <text x="120" y="66" text-anchor="middle" font-size="12.5" fill="#333">消费者 A</text>
+    <text x="120" y="84" text-anchor="middle" font-size="11" fill="#888">负责 p0 p1</text>
+
+    <rect x="18" y="106" width="204" height="48" rx="5" fill="#fff" stroke="#27ae60"/>
+    <text x="120" y="126" text-anchor="middle" font-size="12.5" fill="#333">消费者 B</text>
+    <text x="120" y="144" text-anchor="middle" font-size="11" fill="#888">负责 p2(B 挂掉则 A 接管)</text>
+
+    <text x="120" y="180" text-anchor="middle" font-size="11" fill="#888">手动提交位移 = at-least-once</text>
+    <text x="120" y="198" text-anchor="middle" font-size="11" fill="#888">再均衡:CooperativeSticky 只动必要分区</text>
+  </g>
+
+  <!-- consume arrows -->
+  <path d="M 584 100 C 615 95, 625 92, 646 90" stroke="#27ae60" stroke-width="2.5" fill="none" marker-end="url(#kg)"/>
+  <path d="M 584 190 C 615 195, 625 198, 646 200" stroke="#27ae60" stroke-width="2.5" fill="none" marker-end="url(#kg)"/>
+  <text x="616" y="82" text-anchor="middle" font-size="12" fill="#1e8449">② 拉取</text>
+  <text x="616" y="222" text-anchor="middle" font-size="12" fill="#1e8449">③ 处理后提交位移</text>
+
+  <!-- DLQ flow -->
+  <g transform="translate(30,330)">
+    <rect width="860" height="140" rx="8" fill="#fdf4fb" stroke="#8e44ad" stroke-width="1.5"/>
+    <text x="24" y="30" font-size="15" font-weight="bold" fill="#7d3c98">消费失败处理范式(example3)</text>
+
+    <rect x="24" y="50" width="180" height="64" rx="5" fill="#fff" stroke="#8e44ad"/>
+    <text x="114" y="76" text-anchor="middle" font-size="12" fill="#333">消息处理失败</text>
+    <text x="114" y="96" text-anchor="middle" font-size="11" fill="#888">(瞬时错误 / 毒消息)</text>
+
+    <path d="M 204 82 L 284 82" stroke="#c0392b" stroke-width="2" fill="none" marker-end="url(#kr)"/>
+    <text x="244" y="74" text-anchor="middle" font-size="11.5" fill="#c0392b">快速重试 ×N</text>
+
+    <rect x="288" y="50" width="170" height="64" rx="5" fill="#fff" stroke="#8e44ad"/>
+    <text x="373" y="76" text-anchor="middle" font-size="12" fill="#333">仍失败?</text>
+    <text x="373" y="96" text-anchor="middle" font-size="11" fill="#888">不阻塞后续消息</text>
+
+    <path d="M 458 82 L 538 82" stroke="#c0392b" stroke-width="2" fill="none" marker-end="url(#kr)"/>
+
+    <rect x="542" y="50" width="290 " height="64" rx="5" fill="#fff" stroke="#c0392b" stroke-dasharray="5 3"/>
+    <text x="687" y="72" text-anchor="middle" font-size="12" font-family="monospace" fill="#c0392b">order-events-dlq(死信队列)</text>
+    <text x="687" y="92" text-anchor="middle" font-size="11" fill="#888">附 dlq-error/dlq-time 头 → 告警 → 人工修复回注</text>
+  </g>
+
+  <!-- key routing note -->
+  <g transform="translate(30,480)">
+    <text x="0" y="0" font-size="12" fill="#555">
+      <tspan font-weight="bold">有序性:</tspan>同一 key(订单号)哈希到同一分区 → 分区内严格有序;跨分区无序。并行度上限 = 分区数。
+    </text>
+  </g>
+</svg>

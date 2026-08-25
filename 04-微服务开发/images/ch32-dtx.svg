@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 500" font-family="system-ui, -apple-system, sans-serif">
+  <title>分布式事务方案对比</title>
+  <desc>对比 TCC(Try/Confirm/Cancel)与 SAGA(正向操作+反向补偿)的执行与失败回滚路径,以及消息最终一致的选型依据</desc>
+
+  <rect width="920" height="500" fill="#fafbfc"/>
+  <text x="460" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a1a">分布式事务:TCC vs SAGA</text>
+
+  <defs>
+    <marker id="db" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#4a90e2"/></marker>
+    <marker id="dg" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#27ae60"/></marker>
+    <marker id="dr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#c0392b"/></marker>
+  </defs>
+
+  <!-- TCC panel -->
+  <g transform="translate(30,70)">
+    <rect width="420" height="180" rx="8" fill="#f4f9ff" stroke="#4a90e2" stroke-width="1.5"/>
+    <text x="210" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#1976d2">TCC(Try-Confirm-Cancel)</text>
+
+    <rect x="20" y="44" width="120" height="50" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="80" y="68" text-anchor="middle" font-size="12" fill="#333">① Try</text>
+    <text x="80" y="86" text-anchor="middle" font-size="10.5" fill="#888">冻结资源</text>
+    <path d="M 140 69 L 196 69" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#db)"/>
+    <rect x="200" y="44" width="120" height="50" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="260" y="68" text-anchor="middle" font-size="12" fill="#333">② Confirm</text>
+    <text x="260" y="86" text-anchor="middle" font-size="10.5" fill="#888">提交·幂等</text>
+    <path d="M 320 69 L 376 69" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#db)"/>
+    <rect x="380" y="44" width="28" height="50" rx="5" fill="#e8f5e9" stroke="#27ae60"/>
+    <text x="394" y="86" text-anchor="middle" font-size="10" fill="#1e8449">✓</text>
+
+    <!-- cancel path -->
+    <path d="M 260 94 C 260 130, 80 130, 80 98" stroke="#c0392b" stroke-width="2" stroke-dasharray="5 3" fill="none" marker-end="url(#dr)"/>
+    <rect x="20" y="128" width="250" height="34" rx="5" fill="#fdecea" stroke="#c0392b"/>
+    <text x="145" y="150" text-anchor="middle" font-size="11.5" fill="#c0392b">任一 Try 失败 → Cancel 已预留的</text>
+
+    <text x="210" y="176" text-anchor="middle" font-size="10.5" fill="#888">强一致 · 每参与方三套方法 · 资金类</text>
+  </g>
+
+  <!-- SAGA panel -->
+  <g transform="translate(470,70)">
+    <rect width="420" height="180" rx="8" fill="#fff8f0" stroke="#e67e22" stroke-width="1.5"/>
+    <text x="210" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#b9770e">SAGA(正向 + 反向补偿)</text>
+
+    <rect x="20" y="44" width="90" height="50" rx="5" fill="#fff" stroke="#e67e22"/>
+    <text x="65" y="66" text-anchor="middle" font-size="11.5" fill="#333">①创建订单</text>
+    <text x="65" y="84" text-anchor="middle" font-size="10" fill="#888">已提交</text>
+    <path d="M 110 69 L 156 69" stroke="#e67e22" stroke-width="2" fill="none" marker-end="url(#db)"/>
+    <rect x="160" y="44" width="90" height="50" rx="5" fill="#fff" stroke="#e67e22"/>
+    <text x="205" y="66" text-anchor="middle" font-size="11.5" fill="#333">②扣余额</text>
+    <text x="205" y="84" text-anchor="middle" font-size="10" fill="#888">已提交</text>
+    <path d="M 250 69 L 296 69" stroke="#e67e22" stroke-width="2" fill="none" marker-end="url(#db)"/>
+    <rect x="300" y="44" width="100" height="50" rx="5" fill="#fdecea" stroke="#c0392b"/>
+    <text x="350" y="66" text-anchor="middle" font-size="11.5" fill="#c0392b">③减库存</text>
+    <text x="350" y="84" text-anchor="middle" font-size="10" fill="#c0392b">失败✗</text>
+
+    <!-- compensation arrows -->
+    <path d="M 340 94 C 330 130, 215 132, 210 98" stroke="#c0392b" stroke-width="2" stroke-dasharray="5 3" fill="none" marker-end="url(#dr)"/>
+    <text x="272" y="128" text-anchor="middle" font-size="11" fill="#c0392b">补偿② 余额+回</text>
+    <path d="M 210 138 C 200 150, 90 150, 80 136" stroke="#c0392b" stroke-width="2" stroke-dasharray="5 3" fill="none" marker-end="url(#dr)"/>
+    <text x="145" y="162" text-anchor="middle" font-size="11" fill="#c0392b">补偿① 订单标 failed</text>
+
+    <text x="210" y="176" text-anchor="middle" font-size="10.5" fill="#888">最终一致 · 补偿幂等可重放 · 可补偿业务</text>
+  </g>
+
+  <!-- selection guide -->
+  <g transform="translate(30,290)">
+    <rect width="860" height="120" rx="8" fill="#eef7ff" stroke="#4a90e2" stroke-dasharray="4 3"/>
+    <text x="24" y="30" font-size="15" font-weight="bold" fill="#1976d2">选型:先收敛,再分层</text>
+
+    <rect x="24" y="46" width="196" height="52" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="122" y="66" text-anchor="middle" font-size="12" fill="#1976d2">能合并就不拆</text>
+    <text x="122" y="84" text-anchor="middle" font-size="10.5" fill="#888">聚合根内单库事务</text>
+
+    <path d="M 224 72 L 260 72" stroke="#999" stroke-width="1.5" fill="none" marker-end="url(#db)"/>
+    <rect x="264" y="46" width="196" height="52" rx="5" fill="#fff" stroke="#27ae60"/>
+    <text x="362" y="66" text-anchor="middle" font-size="12" fill="#27ae60">能最终一致就消息</text>
+    <text x="362" y="84" text-anchor="middle" font-size="10.5" fill="#888">Outbox + 幂等(29/30章)</text>
+
+    <path d="M 464 72 L 500 72" stroke="#999" stroke-width="1.5" fill="none" marker-end="url(#db)"/>
+    <rect x="504" y="46" width="196" height="52" rx="5" fill="#fff" stroke="#e67e22"/>
+    <text x="602" y="66" text-anchor="middle" font-size="12" fill="#b9770e">可补偿才 SAGA</text>
+    <text x="602" y="84" text-anchor="middle" font-size="10.5" fill="#888">正向 + 补偿,编排式</text>
+
+    <path d="M 704 72 L 740 72" stroke="#999" stroke-width="1.5" fill="none" marker-end="url(#db)"/>
+    <rect x="744" y="46" width="130" height="52" rx="5" fill="#fff" stroke="#c0392b"/>
+    <text x="809" y="66" text-anchor="middle" font-size="12" fill="#c0392b">强一致才 TCC</text>
+    <text x="809" y="84" text-anchor="middle" font-size="10.5" fill="#888">资金冻结类</text>
+
+    <text x="24" y="112" font-size="11" fill="#888">2PC/XA:协调者单点 + 锁资源,分布式下不可靠,新系统排除</text>
+  </g>
+
+  <!-- bottom note -->
+  <g transform="translate(30,430)">
+    <text x="0" y="0" font-size="12.5" fill="#555">
+      <tspan font-weight="bold">共同底座:</tspan>所有方案的补偿/重试/投递都依赖 <tspan font-weight="bold">幂等</tspan>(第29章)与 <tspan font-weight="bold">可靠持久化</tspan>(第30章)。分布式下 exactly-once 不可工程化,at-least-once + 幂等才是承诺。
+    </text>
+  </g>
+</svg>
