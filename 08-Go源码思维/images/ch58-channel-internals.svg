@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430" role="img" aria-labelledby="title desc">
+  <title id="title">Channel 缓冲和等待队列</title>
+  <desc id="desc">有缓冲 Channel 通过环形缓冲暂存值，容量耗尽时发送方等待；接收方取值后可唤醒发送方，无缓冲 Channel 则需要发送接收直接配对。</desc>
+  <rect width="1200" height="430" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">缓冲负责暂存，等待队列负责阻塞协作</text>
+  <rect x="60" y="148" width="175" height="90" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="147" y="184" text-anchor="middle" font-size="18" font-weight="700" fill="#203d48">发送方 G</text><text x="147" y="213" text-anchor="middle" font-size="14" fill="#58717b">send(value)</text>
+  <path d="M235 193h76" stroke="#427c8a" stroke-width="3"/><path d="m311 193-12-8v16z" fill="#427c8a"/>
+  <rect x="318" y="119" width="515" height="151" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="575" y="153" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">Channel 缓冲区（环形队列）</text>
+  <rect x="357" y="177" width="106" height="58" fill="#e5f3f3" stroke="#427c8a"/><text x="410" y="212" text-anchor="middle" font-size="15" fill="#203d48">elem 1</text>
+  <rect x="463" y="177" width="106" height="58" fill="#e5f3f3" stroke="#427c8a"/><text x="516" y="212" text-anchor="middle" font-size="15" fill="#203d48">elem 2</text>
+  <rect x="569" y="177" width="106" height="58" fill="#fff4df" stroke="#d28b42"/><text x="622" y="212" text-anchor="middle" font-size="15" fill="#61431f">空槽</text>
+  <rect x="675" y="177" width="106" height="58" fill="#fff4df" stroke="#d28b42"/><text x="728" y="212" text-anchor="middle" font-size="15" fill="#61431f">空槽</text>
+  <path d="M833 193h78" stroke="#427c8a" stroke-width="3"/><path d="m911 193-12-8v16z" fill="#427c8a"/>
+  <rect x="918" y="148" width="175" height="90" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="1005" y="184" text-anchor="middle" font-size="18" font-weight="700" fill="#126d64">接收方 G</text><text x="1005" y="213" text-anchor="middle" font-size="14" fill="#58717b">recv()</text>
+  <rect x="321" y="307" width="275" height="56" rx="7" fill="#f9e9eb" stroke="#d5a1a8"/>
+  <text x="458" y="342" text-anchor="middle" font-size="15" fill="#793d47">缓冲满：发送方进入等待</text>
+  <rect x="631" y="307" width="275" height="56" rx="7" fill="#e2f3ef" stroke="#8abdb0"/>
+  <text x="768" y="342" text-anchor="middle" font-size="15" fill="#126d64">接收取值：可唤醒等待发送方</text>
+  <text x="52" y="403" font-size="14" fill="#58717b">实际同步语义由语言规范定义；runtime 队列结构属于版本实现。</text>
+</svg>

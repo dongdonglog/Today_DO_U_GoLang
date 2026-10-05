@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="480" viewBox="0 0 1120 480" role="img" aria-labelledby="title desc">
+  <title id="title">订单服务 Grafana 看板结构</title>
+  <desc id="desc">看板第一行以请求速率和错误率判断用户影响，第二行用 P95 延迟和处理中请求判断排队与饱和度，用户可从总体趋势下钻到路由或依赖。</desc>
+  <rect width="1120" height="480" rx="8" fill="#f5f8f8"/>
+  <text x="560" y="40" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="23" font-weight="700" fill="#25373d">订单 API：先判断用户影响，再下钻原因</text>
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif">
+    <g transform="translate(36 76)"><rect width="508" height="150" rx="7" fill="#ffffff" stroke="#288477" stroke-width="1.5"/><text x="20" y="30" font-size="16" font-weight="700" fill="#176c63">请求速率 · req/s</text><path d="M30 118 H470 M30 90 L112 83 L190 96 L270 61 L355 71 L475 44" fill="none" stroke="#288477" stroke-width="3"/><text x="30" y="142" font-size="12" fill="#53666d">用户请求量是否变化</text></g>
+    <g transform="translate(576 76)"><rect width="508" height="150" rx="7" fill="#ffffff" stroke="#b7644d" stroke-width="1.5"/><text x="20" y="30" font-size="16" font-weight="700" fill="#934c39">5xx 比例 · %</text><path d="M30 118 H470 M30 111 L145 108 L235 111 L322 67 L380 44 L475 60" fill="none" stroke="#b7644d" stroke-width="3"/><text x="30" y="142" font-size="12" fill="#53666d">是否已经出现用户失败</text></g>
+    <g transform="translate(36 258)"><rect width="508" height="150" rx="7" fill="#ffffff" stroke="#557ba7" stroke-width="1.5"/><text x="20" y="30" font-size="16" font-weight="700" fill="#2d5684">P95 延迟 · seconds</text><path d="M30 118 H470 M30 96 L120 92 L210 84 L300 78 L365 45 L475 40" fill="none" stroke="#557ba7" stroke-width="3"/><text x="30" y="142" font-size="12" fill="#53666d">尾部请求是否变慢</text></g>
+    <g transform="translate(576 258)"><rect width="508" height="150" rx="7" fill="#ffffff" stroke="#be8130" stroke-width="1.5"/><text x="20" y="30" font-size="16" font-weight="700" fill="#94601c">处理中请求 · count</text><path d="M30 118 H470 M30 107 L145 94 L215 103 L300 64 L382 72 L475 38" fill="none" stroke="#be8130" stroke-width="3"/><text x="30" y="142" font-size="12" fill="#53666d">排队和服务饱和度是否升高</text></g>
+  </g>
+  <text x="560" y="450" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="13" fill="#344b52">固定时间范围与单位；从服务总览逐步下钻，不在首屏展开所有 Pod</text>
+</svg>

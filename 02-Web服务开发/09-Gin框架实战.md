@@ -350,6 +350,8 @@ r.Use(Logger())
 
 ![Gin 请求处理流程](./images/ch09-gin-request-flow.svg)
 
+> **图解**：Engine 接收请求后由 Router 匹配路由，再按中间件链进入 Handler；Handler 写出的响应经过框架整理后返回客户端。路由匹配和业务处理是两个不同阶段。
+
 ```go
 // 全局中间件
 r.Use(gin.Recovery())  // 1. Panic 恢复
@@ -364,6 +366,8 @@ api.Use(Auth())         // 3. 认证
 ```
 
 ![中间件链调用流程](./images/ch09-middleware-chain.svg)
+
+> **图解**：请求按注册顺序进入中间件，`c.Next()` 会深入执行后续处理，返回时再沿调用栈反向执行中间件的后半段；`c.Abort()` 阻止后续处理器继续运行。
 
 ### `c.Next()` vs `c.Abort()`
 
@@ -678,6 +682,8 @@ r.MaxMultipartMemory = 8 << 20 // 8 MB
 ### Gin 路由树
 
 ![Gin 路由树（Trie 树）结构](./images/ch09-trie-tree.svg)
+
+> **图解**：相同路径前缀共用树节点，例如 `/api/users` 与 `/api/orders` 共享 `/api`；请求只沿匹配的路径段继续查找，避免逐条扫描所有路由。
 
 Gin 使用 **Trie 树**（前缀树）存储路由，而不是 map。
 

@@ -1,0 +1,45 @@
+openapi: 3.0.3
+info:
+  title: 电商微服务平台 API
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8081
+paths:
+  /healthz:
+    get:
+      summary: 健康检查
+      responses:
+        "200":
+          description: 依赖可用
+        "503":
+          description: 依赖不可用
+  /v1/orders:
+    post:
+      summary: 下单
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: 新订单已创建
+        "200":
+          description: 幂等重试返回已有订单
+        "409":
+          description: 库存不足
+  /v1/orders/{order_no}:
+    get:
+      summary: 查询订单
+      parameters:
+        - name: order_no
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 订单详情
+        "404":
+          description: 订单不存在

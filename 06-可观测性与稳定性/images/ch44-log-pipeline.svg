@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="390" viewBox="0 0 1120 390" role="img" aria-labelledby="title desc">
+  <title id="title">日志从应用到查询平台</title>
+  <desc id="desc">应用输出包含业务字段和 trace ID 的 JSON 日志到 stdout，节点 Agent 采集并添加容器元数据后写入集中日志存储，值班同学按服务、时间和 trace ID 查询。</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1 1 L8 5 L1 9 Z" fill="#53666d"/></marker></defs>
+  <rect width="1120" height="390" rx="8" fill="#f5f8f8"/>
+  <text x="560" y="40" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="23" font-weight="700" fill="#25373d">结构化事件进入集中查询</text>
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif">
+    <rect x="42" y="116" width="230" height="112" rx="7" fill="#e7f3f1" stroke="#288477" stroke-width="1.5"/>
+    <text x="157" y="151" text-anchor="middle" font-size="17" font-weight="700" fill="#176c63">Go 服务</text>
+    <text x="157" y="181" text-anchor="middle" font-size="13" fill="#42575e">JSON → stdout</text>
+    <text x="157" y="204" text-anchor="middle" font-size="12" fill="#42575e">trace_id · route · result</text>
+    <rect x="344" y="116" width="210" height="112" rx="7" fill="#eaf0f8" stroke="#557ba7" stroke-width="1.5"/>
+    <text x="449" y="151" text-anchor="middle" font-size="17" font-weight="700" fill="#2d5684">节点 Agent</text>
+    <text x="449" y="181" text-anchor="middle" font-size="13" fill="#42575e">读取容器日志</text>
+    <text x="449" y="204" text-anchor="middle" font-size="12" fill="#42575e">附加 Pod / Namespace</text>
+    <rect x="626" y="116" width="220" height="112" rx="7" fill="#fff2df" stroke="#be8130" stroke-width="1.5"/>
+    <text x="736" y="151" text-anchor="middle" font-size="17" font-weight="700" fill="#94601c">日志存储</text>
+    <text x="736" y="181" text-anchor="middle" font-size="13" fill="#42575e">索引 · 保留 · 访问控制</text>
+    <rect x="918" y="116" width="160" height="112" rx="7" fill="#f9ece7" stroke="#b7644d" stroke-width="1.5"/>
+    <text x="998" y="151" text-anchor="middle" font-size="17" font-weight="700" fill="#934c39">查询</text>
+    <text x="998" y="181" text-anchor="middle" font-size="13" fill="#42575e">服务 · 时间 · Trace</text>
+  </g>
+  <g fill="none" stroke="#53666d" stroke-width="2" marker-end="url(#arrow)"><path d="M272 172 H336"/><path d="M554 172 H618"/><path d="M846 172 H910"/></g>
+  <rect x="42" y="290" width="1036" height="46" rx="6" fill="#ffffff" stroke="#c8d4d7"/>
+  <text x="560" y="319" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" fill="#344b52">应用保留业务上下文；平台承担采集、限流、保留和检索</text>
+</svg>

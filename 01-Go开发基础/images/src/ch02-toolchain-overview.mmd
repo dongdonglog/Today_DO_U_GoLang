@@ -1,0 +1,49 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph TB
+    subgraph 内置工具链
+        GO_MOD["go mod<br/>依赖管理"]
+        GO_BUILD["go build<br/>编译构建"]
+        GO_TEST["go test<br/>测试"]
+        GO_VET["go vet<br/>静态分析"]
+        GO_FMT["gofmt<br/>格式化"]
+        GO_PPROF["pprof<br/>性能分析"]
+    end
+
+    subgraph 代码质量
+        GOLANGCI["golangci-lint<br/>19.1k Star<br/>多 Linter 聚合"]
+        GOIMPORTS["goimports<br/>Import 整理"]
+        STATICCHECK["staticcheck<br/>深度静态分析"]
+    end
+
+    subgraph 调试与性能
+        DELVE["Delve<br/>Go 调试器"]
+        TRACE["trace<br/>执行追踪"]
+    end
+
+    subgraph 代码生成
+        MOCKGEN["mockgen<br/>Mock 生成"]
+        WIRE["wire<br/>依赖注入"]
+        PROTOC["protoc-gen-go<br/>gRPC 代码"]
+    end
+
+    subgraph 构建与部署
+        GORELEASER["GoReleaser<br/>跨平台发布"]
+        AIR["Air<br/>热重载"]
+        MAGE["Mage<br/>Go 写构建"]
+    end
+
+    subgraph 安全
+        VULN["govulncheck<br/>漏洞扫描"]
+        GOSEC["gosec<br/>安全审计"]
+    end
+
+    subgraph 编辑器
+        VSCODE["VS Code<br/>免费轻量"]
+        GOLAND["GoLand<br/>专业 IDE"]
+    end
+
+    style GOLANGCI fill:#00ADD8,stroke:#007D9C,color:#fff
+    style DELVE fill:#00ADD8,stroke:#007D9C,color:#fff
+    style AIR fill:#00ADD8,stroke:#007D9C,color:#fff
+    style VSCODE fill:#007ACC,stroke:#005A9E,color:#fff
+    style GOLAND fill:#1A6C4F,stroke:#125539,color:#fff

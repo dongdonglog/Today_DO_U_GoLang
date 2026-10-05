@@ -1,0 +1,143 @@
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+    - if: '$CI_COMMIT_BRANCH'
+
+stages:
+  - verify
+  - validate
+  - build
+  - scan
+  - deploy
+
+variables:
+  GO_SERVICE_DIR: "05-云原生开发/33-docker/example1-multistage"
+  HELM_CHART_DIR: "05-云原生开发/37-helm/order-chart"
+  IMAGE_PULL_SECRET_NAME: "gitlab-registry"
+
+verify-go:
+  stage: verify
+  image: golang:1.25-alpine
+  script:
+    - cd "$GO_SERVICE_DIR"
+    - test -z "$(gofmt -l .)"
+    - go vet ./...
+    - go test ./...
+
+validate-chart:
+  stage: validate
+  image: alpine/helm:3.15.4
+  script:
+    - helm lint "$HELM_CHART_DIR"
+    - >-
+      helm template order "$HELM_CHART_DIR"
+      -f "$HELM_CHART_DIR/values-dev.yaml"
+      --set-string image.repository=registry.example.test/order
+      --set-string image.tag=ci-check
+      --set-string secret.existingName=order-runtime-staging
+      --set-string "imagePullSecrets[0].name=$IMAGE_PULL_SECRET_NAME"
+      >/tmp/order-rendered.yaml
+
+build-image:
+  stage: build
+  image: docker:27.5.1-cli
+  services:
+    - name: docker:27.5.1-dind
+      alias: docker
+  tags:
+    - trusted-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: /certs
+    DOCKER_TLS_VERIFY: "1"
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  needs:
+    - verify-go
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  script:
+    - printf '%s' "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+    - >-
+      docker build --pull
+      --file "$GO_SERVICE_DIR/Dockerfile"
+      --tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
+      "$GO_SERVICE_DIR"
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
+
+scan-image:
+  stage: scan
+  image:
+    name: aquasec/trivy:0.59.1
+    entrypoint: [""]
+  needs:
+    - build-image
+  variables:
+    TRIVY_USERNAME: "$CI_REGISTRY_USER"
+    TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  script:
+    - >-
+      trivy image --exit-code 1 --severity HIGH,CRITICAL
+      --ignore-unfixed --no-progress
+      "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
+
+deploy-staging:
+  stage: deploy
+  image: dtzar/helm-kubectl:3.15.4
+  tags:
+    - cluster-deploy
+  needs:
+    - build-image
+    - scan-image
+    - validate-chart
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  environment:
+    name: staging
+  resource_group: order-staging
+  script:
+    - test -r "$KUBE_CONFIG_STAGING"
+    - export KUBECONFIG="$KUBE_CONFIG_STAGING"
+    - >-
+      helm upgrade --install order "$HELM_CHART_DIR"
+      --namespace staging --create-namespace
+      --values "$HELM_CHART_DIR/values-dev.yaml"
+      --set-string image.repository="$CI_REGISTRY_IMAGE"
+      --set-string image.tag="$CI_COMMIT_SHA"
+      --set-string secret.existingName=order-runtime-staging
+      --set-string "imagePullSecrets[0].name=$IMAGE_PULL_SECRET_NAME"
+      --wait --atomic --timeout 3m --history-max 10
+    - kubectl rollout status deployment/order-order --namespace staging --timeout=2m
+    - kubectl get pods --namespace staging -l app.kubernetes.io/instance=order
+
+deploy-production:
+  stage: deploy
+  image: dtzar/helm-kubectl:3.15.4
+  tags:
+    - cluster-deploy
+  needs:
+    - deploy-staging
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: manual
+      allow_failure: false
+    - when: never
+  environment:
+    name: production
+  resource_group: order-production
+  script:
+    - test -r "$KUBE_CONFIG_PRODUCTION"
+    - export KUBECONFIG="$KUBE_CONFIG_PRODUCTION"
+    - >-
+      helm upgrade --install order "$HELM_CHART_DIR"
+      --namespace production --create-namespace
+      --values "$HELM_CHART_DIR/values-prod.yaml"
+      --set-string image.repository="$CI_REGISTRY_IMAGE"
+      --set-string image.tag="$CI_COMMIT_SHA"
+      --set-string "imagePullSecrets[0].name=$IMAGE_PULL_SECRET_NAME"
+      --wait --atomic --timeout 5m --history-max 10
+    - kubectl rollout status deployment/order-order --namespace production --timeout=3m
+    - kubectl get pods --namespace production -l app.kubernetes.io/instance=order

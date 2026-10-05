@@ -23,6 +23,8 @@
 
 ![Redis 分布式锁生命周期](./images/ch23-lock-lifecycle.svg)
 
+> **图解**：用唯一 token 和过期时间原子加锁，只允许持有者续租或释放；Lua 将“比较 token”与“删除 Key”合成原子操作，避免误删他人的锁。
+
 > 本章所有示例在 `03-数据存储与缓存/23-redis-lock/` 下,基于 go-redis v9.22。`mutex` 包是最终可复用的锁实现,example1~4 逐步演示坑与修复。
 >
 > 运行前先起 Redis:

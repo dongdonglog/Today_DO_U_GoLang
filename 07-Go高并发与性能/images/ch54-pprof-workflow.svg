@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">pprof 性能分析闭环</title>
+  <desc id="desc">在代表性负载下从受控诊断端口采集 profile，用 pprof 定位调用栈热点，做一次针对性优化，再以同样条件复测服务指标。</desc>
+  <rect width="1200" height="420" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">用 profile 找证据，用同一负载验证收益</text>
+  <rect x="55" y="144" width="220" height="102" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="165" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">代表性负载</text><text x="165" y="213" text-anchor="middle" font-size="14" fill="#58717b">稳定流量与版本</text>
+  <path d="M275 195h48" stroke="#427c8a" stroke-width="3"/><path d="m323 195-12-8v16z" fill="#427c8a"/>
+  <rect x="330" y="144" width="220" height="102" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="440" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">采集 profile</text><text x="440" y="213" text-anchor="middle" font-size="14" fill="#58717b">CPU / heap / mutex</text>
+  <path d="M550 195h48" stroke="#427c8a" stroke-width="3"/><path d="m598 195-12-8v16z" fill="#427c8a"/>
+  <rect x="605" y="144" width="220" height="102" rx="8" fill="#fff4df" stroke="#d28b42" stroke-width="2"/>
+  <text x="715" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#61431f">pprof 定位</text><text x="715" y="213" text-anchor="middle" font-size="14" fill="#675541">top / list / 栈关系</text>
+  <path d="M825 195h48" stroke="#427c8a" stroke-width="3"/><path d="m873 195-12-8v16z" fill="#427c8a"/>
+  <rect x="880" y="144" width="220" height="102" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="990" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#126d64">针对性优化</text><text x="990" y="213" text-anchor="middle" font-size="14" fill="#58717b">一次聚焦主要热点</text>
+  <path d="M990 246v73H165v-73" fill="none" stroke="#ad6672" stroke-width="2.5" stroke-dasharray="8 7"/><path d="m165 246 7 12h-14z" fill="#ad6672"/>
+  <text x="578" y="350" text-anchor="middle" font-size="16" fill="#793d47">相同条件复测：吞吐、错误率、P95/P99、资源与下游排队</text>
+</svg>

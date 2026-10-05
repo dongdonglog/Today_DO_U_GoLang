@@ -146,7 +146,7 @@ func (User) TableName() string {
 
 ## 20.2 CRUD 操作
 
-> GORM v1.30 引入了**泛型 API**（`gorm.G[T]`），编译期绑定模型、每个方法都强制传 `ctx`、返回值直接是类型化对象，官方现在明确推荐新项目用它。本章 CRUD 主线用泛型 API；存量代码里的链式写法见 [20.2.5](#2025-传统链式-api兼容存量代码)。
+> GORM v1.30 引入了**泛型 API**（`gorm.G[T]`），编译期绑定模型、每个方法都强制传 `ctx`、返回值直接是类型化对象，官方现在明确推荐新项目用它。本章 CRUD 主线用泛型 API；存量代码里的链式写法见 [20.2.5](#2025-api)。
 
 ### 20.2.1 创建
 
@@ -355,6 +355,8 @@ users, err := gorm.G[User](db).Preload("Orders", nil).Find(ctx)
 ```
 
 ![Preload vs Joins](./images/ch20-preload-vs-joins.svg)
+
+> **图解**：`Preload` 通常先查主表，再按关联键批量查关联表；`Joins` 把关联放进一条 SQL。前者避免 N+1，后者减少往返但可能产生重复列和行，按结果形状与数据量选。
 
 **Preload vs Joins**：
 

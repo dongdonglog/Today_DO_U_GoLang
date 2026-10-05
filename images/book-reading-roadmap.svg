@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="470" viewBox="0 0 1120 470" role="img" aria-labelledby="title desc">
+  <title id="title">Go 服务器开发工程师实战学习路线</title>
+  <desc id="desc">十个阶段按顺序从 Go 基础走向云原生和 AI 应用。上排从左向右学习第一至第五阶段，下排从右向左学习第六至第十阶段，最后通过四个毕业项目综合实践。</desc>
+  <defs>
+    <marker id="arrow-right" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M1 1 L8 5 L1 9 Z" fill="#526873"/>
+    </marker>
+    <marker id="arrow-left" markerWidth="10" markerHeight="10" refX="2" refY="5" orient="auto">
+      <path d="M9 1 L2 5 L9 9 Z" fill="#526873"/>
+    </marker>
+    <marker id="arrow-down" markerWidth="10" markerHeight="10" refX="5" refY="8" orient="auto">
+      <path d="M1 1 L5 8 L9 1 Z" fill="#526873"/>
+    </marker>
+  </defs>
+  <rect width="1120" height="470" rx="8" fill="#f5f8f8"/>
+  <text x="560" y="38" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="23" font-weight="700" fill="#24363d">从业务服务到云原生与 AI 应用</text>
+  <text x="560" y="65" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" fill="#526873">每阶段都以可运行的服务、平台或项目为落点</text>
+
+  <g fill="none" stroke="#526873" stroke-width="2" marker-end="url(#arrow-right)">
+    <path d="M222 153 H246"/><path d="M437 153 H461"/><path d="M652 153 H676"/><path d="M867 153 H891"/>
+  </g>
+  <path d="M1004 214 V258" fill="none" stroke="#526873" stroke-width="2" marker-end="url(#arrow-down)"/>
+  <g fill="none" stroke="#526873" stroke-width="2" marker-end="url(#arrow-left)">
+    <path d="M891 320 H867"/><path d="M676 320 H652"/><path d="M461 320 H437"/><path d="M246 320 H222"/>
+  </g>
+
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif">
+    <g transform="translate(32 91)">
+      <rect width="190" height="123" rx="7" fill="#e7f3f1" stroke="#288477" stroke-width="1.5"/>
+      <text x="16" y="27" font-size="13" font-weight="700" fill="#176c63">01 · 第 1-8 章</text>
+      <text x="16" y="58" font-size="18" font-weight="700" fill="#24363d">Go 开发基础</text>
+      <text x="16" y="88" font-size="13" fill="#42575e">写出可测试的 HTTP 服务</text>
+    </g>
+    <g transform="translate(247 91)">
+      <rect width="190" height="123" rx="7" fill="#eaf0f8" stroke="#5277a5" stroke-width="1.5"/>
+      <text x="16" y="27" font-size="13" font-weight="700" fill="#3c618e">02 · 第 9-16 章</text>
+      <text x="16" y="58" font-size="18" font-weight="700" fill="#24363d">Web 服务</text>
+      <text x="16" y="88" font-size="13" fill="#42575e">构建完整业务 API</text>
+    </g>
+    <g transform="translate(462 91)">
+      <rect width="190" height="123" rx="7" fill="#fff2df" stroke="#be8130" stroke-width="1.5"/>
+      <text x="16" y="27" font-size="13" font-weight="700" fill="#94601c">03 · 第 17-24 章</text>
+      <text x="16" y="58" font-size="18" font-weight="700" fill="#24363d">数据与缓存</text>
+      <text x="16" y="88" font-size="13" fill="#42575e">设计可靠的数据层</text>
+    </g>
+    <g transform="translate(677 91)">
+      <rect width="190" height="123" rx="7" fill="#f9ece7" stroke="#b7644d" stroke-width="1.5"/>
+      <text x="16" y="27" font-size="13" font-weight="700" fill="#934c39">04 · 第 25-32 章</text>
+      <text x="16" y="58" font-size="18" font-weight="700" fill="#24363d">微服务</text>
+      <text x="16" y="88" font-size="13" fill="#42575e">处理通信与分布式协作</text>
+    </g>
+    <g transform="translate(892 91)">
+      <rect width="190" height="123" rx="7" fill="#edf2df" stroke="#758c3c" stroke-width="1.5"/>
+      <text x="16" y="27" font-size="13" font-weight="700" fill="#596e2a">05 · 第 33-40 章</text>
+      <text x="16" y="58" font-size="18" font-weight="700" fill="#24363d">云原生</text>
+      <text x="16" y="88" font-size="13" fill="#42575e">打包、发布和运维服务</text>
+    </g>
+
+    <g transform="translate(892 258)">
+      <rect width="190" height="123" rx="7" fill="#f1eaf2" stroke="#86658c" stroke-width="1.5"/>
+      <text x="16" y="27" font-size="13" font-weight="700" fill="#6b4b71">06 · 第 41-47 章</text>
+      <text x="16" y="58" font-size="18" font-weight="700" fill="#24363d">可观测性</text>
+      <text x="16" y="88" font-size="13" fill="#42575e">监控、追踪和故障定位</text>
+    </g>
+    <g transform="translate(677 258)">
+      <rect width="190" height="123" rx="7" fill="#e6f0f2" stroke="#477d88" stroke-width="1.5"/>
+      <text x="16" y="27" font-size="13" font-weight="700" fill="#356671">07 · 第 48-55 章</text>
+      <text x="16" y="58" font-size="18" font-weight="700" fill="#24363d">并发与性能</text>
+      <text x="16" y="88" font-size="13" fill="#42575e">定位瓶颈并验证优化</text>
+    </g>
+    <g transform="translate(462 258)">
+      <rect width="190" height="123" rx="7" fill="#f7eee0" stroke="#9e7941" stroke-width="1.5"/>
+      <text x="16" y="27" font-size="13" font-weight="700" fill="#7e5d2c">08 · 第 56-61 章</text>
+      <text x="16" y="58" font-size="18" font-weight="700" fill="#24363d">Go 源码思维</text>
+      <text x="16" y="88" font-size="13" fill="#42575e">解释运行时行为与代价</text>
+    </g>
+    <g transform="translate(247 258)">
+      <rect width="190" height="123" rx="7" fill="#eaf0f8" stroke="#5277a5" stroke-width="1.5"/>
+      <text x="16" y="27" font-size="13" font-weight="700" fill="#3c618e">09 · 第 62-66 章</text>
+      <text x="16" y="58" font-size="18" font-weight="700" fill="#24363d">AI 辅助开发</text>
+      <text x="16" y="88" font-size="13" fill="#42575e">把 AI 纳入工程工作流</text>
+    </g>
+    <g transform="translate(32 258)">
+      <rect width="190" height="123" rx="7" fill="#e7f3f1" stroke="#288477" stroke-width="1.5"/>
+      <text x="16" y="27" font-size="13" font-weight="700" fill="#176c63">10 · 第 67-76 章</text>
+      <text x="16" y="58" font-size="18" font-weight="700" fill="#24363d">Go 构建 AI 应用</text>
+      <text x="16" y="88" font-size="13" fill="#42575e">完成知识库与 Agent 应用</text>
+    </g>
+  </g>
+
+  <rect x="32" y="407" width="1050" height="42" rx="6" fill="#ffffff" stroke="#c8d4d7"/>
+  <text x="557" y="434" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" fill="#344b52">毕业项目：企业用户中心 · 电商微服务 · 云原生平台 · AI 知识库</text>
+</svg>

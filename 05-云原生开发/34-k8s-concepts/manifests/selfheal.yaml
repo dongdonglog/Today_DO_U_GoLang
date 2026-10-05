@@ -1,0 +1,28 @@
+# 自愈演示:应用周期性假死,liveness 探测失败,kubelet 自动重启容器。
+#
+# kubectl apply -f selfheal.yaml
+# kubectl get pod selfheal -w
+#   正常 30s -> 假死 20s(healthz 阻塞) -> liveness 连续失败 -> RESTARTS +1 -> 恢复
+# kubectl describe pod selfheal | grep -A3 "Last State"
+#   能看到 "Reason: Error" 或探针失败的退出信息——第40章排障的起点
+apiVersion: v1
+kind: Pod
+metadata:
+  name: selfheal
+spec:
+  containers:
+    - name: app
+      image: go-book-docker:flaky
+      imagePullPolicy: IfNotPresent
+      env:
+        - name: FLAKY # 打开假死开关
+          value: "1"
+      ports:
+        - containerPort: 8080
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 8080
+        periodSeconds: 5
+        timeoutSeconds: 1 # 假死时 healthz 阻塞 10s,必超时
+        failureThreshold: 3 # 15 秒内连续 3 次失败 -> 重启容器

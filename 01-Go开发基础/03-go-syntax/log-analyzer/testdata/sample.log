@@ -1,0 +1,30 @@
+2024-01-01 10:00:00 ERROR ERROR_TIMEOUT: connection timeout after 30s
+2024-01-01 10:00:01 INFO INFO_START: server started on port 8080
+2024-01-01 10:00:02 ERROR ERROR_CONNECTION: failed to connect to database
+2024-01-01 10:00:03 WARN WARN_SLOW: slow query detected
+2024-01-01 10:00:04 ERROR ERROR_TIMEOUT: connection timeout after 30s
+2024-01-01 10:00:05 ERROR ERROR_AUTH: authentication failed for user alice
+2024-01-01 10:00:06 ERROR ERROR_TIMEOUT: connection timeout after 30s
+2024-01-01 10:00:07 INFO INFO_REQUEST: GET /api/users 200
+2024-01-01 10:00:08 ERROR ERROR_CONNECTION: failed to connect to database
+2024-01-01 10:00:09 ERROR ERROR_TIMEOUT: connection timeout after 30s
+2024-01-01 10:00:10 ERROR ERROR_VALIDATION: invalid input: email format
+2024-01-01 10:00:11 ERROR ERROR_TIMEOUT: connection timeout after 30s
+2024-01-01 10:00:12 ERROR ERROR_AUTH: authentication failed for user bob
+2024-01-01 10:00:13 ERROR ERROR_CONNECTION: failed to connect to redis
+2024-01-01 10:00:14 ERROR ERROR_TIMEOUT: connection timeout after 30s
+2024-01-01 10:00:15 INFO INFO_REQUEST: POST /api/users 201
+2024-01-01 10:00:16 ERROR ERROR_TIMEOUT: connection timeout after 30s
+2024-01-01 10:00:17 ERROR ERROR_CONNECTION: failed to connect to database
+2024-01-01 10:00:18 ERROR ERROR_AUTH: authentication failed for user charlie
+2024-01-01 10:00:19 ERROR ERROR_TIMEOUT: connection timeout after 30s
+2024-01-01 10:00:20 ERROR ERROR_VALIDATION: invalid input: phone format
+2024-01-01 10:00:21 ERROR ERROR_TIMEOUT: connection timeout after 30s
+2024-01-01 10:00:22 ERROR ERROR_CONNECTION: failed to connect to database
+2024-01-01 10:00:23 ERROR ERROR_AUTH: authentication failed for user david
+2024-01-01 10:00:24 ERROR ERROR_TIMEOUT: connection timeout after 30s
+2024-01-01 10:00:25 ERROR ERROR_PERMISSION: access denied for resource /admin
+2024-01-01 10:00:26 ERROR ERROR_TIMEOUT: connection timeout after 30s
+2024-01-01 10:00:27 ERROR ERROR_CONNECTION: failed to connect to database
+2024-01-01 10:00:28 ERROR ERROR_AUTH: authentication failed for user eve
+2024-01-01 10:00:29 ERROR ERROR_TIMEOUT: connection timeout after 30s

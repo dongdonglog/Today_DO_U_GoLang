@@ -1,0 +1,37 @@
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:-local-postgres-only}
+      POSTGRES_DB: knowledge
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - knowledge-data:/var/lib/postgresql/data
+      - ./migrations/001_knowledge.sql:/docker-entrypoint-initdb.d/001_knowledge.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d knowledge"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  api:
+    build: .
+    env_file: .env
+    environment:
+      KB_LISTEN_ADDR: ":8080"
+      KB_DATABASE_URL: postgres://kb_app:kb-local-only@db:5432/knowledge?sslmode=disable
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+    depends_on:
+      db:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "127.0.0.1:8080:8080"
+    restart: unless-stopped
+
+volumes:
+  knowledge-data:

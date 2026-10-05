@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="390" viewBox="0 0 1120 390" role="img" aria-labelledby="title desc">
+  <title id="title">容器结构化日志采集与检索</title>
+  <desc id="desc">Go 应用把 JSON 业务事件写到 stdout/stderr，节点 Agent 读取容器日志并附加 Pod 和 namespace 元数据，再发送到 Loki 或 Elasticsearch，值班同学使用 Grafana 或 Kibana 查询。</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1 1 L8 5 L1 9 Z" fill="#53666d"/></marker></defs>
+  <rect width="1120" height="390" rx="8" fill="#f5f8f8"/>
+  <text x="560" y="40" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="23" font-weight="700" fill="#25373d">应用输出事件，平台负责采集与查询</text>
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif">
+    <rect x="35" y="112" width="220" height="108" rx="7" fill="#e7f3f1" stroke="#288477" stroke-width="1.5"/><text x="145" y="148" text-anchor="middle" font-size="17" font-weight="700" fill="#176c63">Go 应用</text><text x="145" y="179" text-anchor="middle" font-size="13" fill="#42575e">JSON → stdout/stderr</text><text x="145" y="201" text-anchor="middle" font-size="12" fill="#53666d">trace_id · route · result</text>
+    <rect x="325" y="112" width="205" height="108" rx="7" fill="#eaf0f8" stroke="#557ba7" stroke-width="1.5"/><text x="427" y="148" text-anchor="middle" font-size="17" font-weight="700" fill="#2d5684">节点 Agent</text><text x="427" y="179" text-anchor="middle" font-size="13" fill="#42575e">读取容器日志</text><text x="427" y="201" text-anchor="middle" font-size="12" fill="#53666d">Pod · Namespace 元数据</text>
+    <rect x="600" y="112" width="205" height="108" rx="7" fill="#fff2df" stroke="#be8130" stroke-width="1.5"/><text x="702" y="148" text-anchor="middle" font-size="17" font-weight="700" fill="#94601c">集中存储</text><text x="702" y="179" text-anchor="middle" font-size="13" fill="#42575e">Loki / Elasticsearch</text><text x="702" y="201" text-anchor="middle" font-size="12" fill="#53666d">索引 · 保留 · 权限</text>
+    <rect x="875" y="112" width="210" height="108" rx="7" fill="#f9ece7" stroke="#b7644d" stroke-width="1.5"/><text x="980" y="148" text-anchor="middle" font-size="17" font-weight="700" fill="#934c39">检索界面</text><text x="980" y="179" text-anchor="middle" font-size="13" fill="#42575e">Grafana / Kibana</text><text x="980" y="201" text-anchor="middle" font-size="12" fill="#53666d">时间 · 服务 · trace_id</text>
+  </g>
+  <g fill="none" stroke="#53666d" stroke-width="2" marker-end="url(#arrow)"><path d="M255 166 H317"/><path d="M530 166 H592"/><path d="M805 166 H867"/></g>
+  <rect x="35" y="284" width="1050" height="48" rx="6" fill="#ffffff" stroke="#c8d4d7"/>
+  <text x="560" y="314" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" fill="#344b52">应用提供可关联的业务上下文；平台控制采集量、保留期和访问权限</text>
+</svg>

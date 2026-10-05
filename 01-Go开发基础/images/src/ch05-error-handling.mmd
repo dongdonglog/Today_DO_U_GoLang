@@ -1,0 +1,47 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph TB
+    subgraph Error Creation
+        NEW["errors.New"]
+        ERRORF["fmt.Errorf"]
+        CUSTOM["Custom Type"]
+    end
+
+    subgraph Error Wrapping
+        WRAP["fmt.Errorf with %w"]
+        CHAIN["Error Chain"]
+    end
+
+    subgraph Error Checking
+        IS["errors.Is"]
+        AS["errors.As"]
+        UNWRAP["errors.Unwrap"]
+    end
+
+    subgraph Error Handling
+        IF["if err != nil"]
+        RETURN["return err"]
+        LOG["log error"]
+    end
+
+    NEW --> WRAP
+    ERRORF --> WRAP
+    CUSTOM --> WRAP
+    WRAP --> CHAIN
+
+    CHAIN --> IS
+    CHAIN --> AS
+    CHAIN --> UNWRAP
+
+    IS --> IF
+    AS --> IF
+    IF --> RETURN
+    IF --> LOG
+
+    style NEW fill:#00ADD8,stroke:#007D9C,color:#fff
+    style ERRORF fill:#00ADD8,stroke:#007D9C,color:#fff
+    style CUSTOM fill:#00ADD8,stroke:#007D9C,color:#fff
+    style WRAP fill:#3498DB,stroke:#2980B9,color:#fff
+    style CHAIN fill:#9B59B6,stroke:#8E44AD,color:#fff
+    style IS fill:#2ECC71,stroke:#27AE60,color:#fff
+    style AS fill:#2ECC71,stroke:#27AE60,color:#fff
+    style UNWRAP fill:#2ECC71,stroke:#27AE60,color:#fff

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 480" font-family="system-ui, -apple-system, sans-serif">
+  <title>Docker 多阶段构建与镜像分层</title>
+  <desc>左侧对比单阶段与多阶段构建的镜像内容与体积;右侧展示层的堆叠与缓存复用原理——低频变化层在前,高频变化层在后</desc>
+
+  <rect width="920" height="480" fill="#fafbfc"/>
+  <text x="460" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a1a">多阶段构建与镜像分层</text>
+
+  <defs>
+    <marker id="db33" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#4a90e2"/></marker>
+    <marker id="dg33" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#27ae60"/></marker>
+  </defs>
+
+  <!-- single-stage -->
+  <g transform="translate(40,70)">
+    <rect width="250" height="240" rx="8" fill="#fff5f5" stroke="#e74c3c" stroke-width="1.5"/>
+    <text x="125" y="26" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#c0392b">单阶段:302MB ✗</text>
+    <rect x="24" y="42" width="202" height="34" rx="4" fill="#fff" stroke="#e74c3c"/>
+    <text x="125" y="64" text-anchor="middle" font-size="11.5" fill="#333">/app(二进制 ~6MB)</text>
+    <rect x="24" y="80" width="202" height="34" rx="4" fill="#fff" stroke="#e74c3c"/>
+    <text x="125" y="102" text-anchor="middle" font-size="11.5" fill="#333">源码 + go mod 缓存</text>
+    <rect x="24" y="118" width="202" height="34" rx="4" fill="#fff" stroke="#e74c3c"/>
+    <text x="125" y="140" text-anchor="middle" font-size="11.5" fill="#333">Go 工具链(编译器)</text>
+    <rect x="24" y="156" width="202" height="34" rx="4" fill="#fff" stroke="#e74c3c"/>
+    <text x="125" y="178" text-anchor="middle" font-size="11.5" fill="#333">alpine 基础层(~8MB)</text>
+    <text x="125" y="216" text-anchor="middle" font-size="11" fill="#c0392b">95% 是运行时用不到的构建素材</text>
+    <text x="125" y="232" text-anchor="middle" font-size="10.5" fill="#999">攻击面大 · 拉取慢 · 分发贵</text>
+  </g>
+
+  <!-- arrow -->
+  <path d="M 300 190 C 330 190, 340 190, 360 190" stroke="#27ae60" stroke-width="2.5" fill="none" marker-end="url(#dg33)"/>
+  <text x="330" y="178" text-anchor="middle" font-size="11.5" fill="#1e8449">多阶段</text>
+
+  <!-- multi-stage -->
+  <g transform="translate(370,70)">
+    <rect width="250" height="240" rx="8" fill="#f4fbf6" stroke="#27ae60" stroke-width="1.5"/>
+    <text x="125" y="26" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#1e8449">多阶段:5.37MB ✓</text>
+    <rect x="24" y="60" width="202" height="60" rx="4" fill="#fff" stroke="#27ae60"/>
+    <text x="125" y="86" text-anchor="middle" font-size="11.5" fill="#333">/app(静态二进制)</text>
+    <text x="125" y="106" text-anchor="middle" font-size="10.5" fill="#888">CGO_ENABLED=0 · USER 10001</text>
+    <rect x="24" y="140" width="202" height="30" rx="4" fill="none" stroke="#ccc" stroke-dasharray="4 3"/>
+    <text x="125" y="160" text-anchor="middle" font-size="10.5" fill="#bbb">(scratch 空镜像:零基础层)</text>
+    <text x="125" y="196" text-anchor="middle" font-size="11" fill="#1e8449">builder 阶段被丢弃,</text>
+    <text x="125" y="212" text-anchor="middle" font-size="11" fill="#1e8449">只有 COPY --from 的产物进入 final</text>
+    <text x="125" y="232" text-anchor="middle" font-size="10.5" fill="#999">不可变 · 攻击面小 · 秒级分发</text>
+  </g>
+
+  <!-- layer caching -->
+  <g transform="translate(660,70)">
+    <rect width="230" height="240" rx="8" fill="#f4f9ff" stroke="#4a90e2" stroke-width="1.5"/>
+    <text x="115" y="26" text-anchor="middle" font-size="14" font-weight="bold" fill="#1976d2">层缓存(自上而下)</text>
+    <rect x="18" y="44" width="194" height="34" rx="4" fill="#e3f2fd" stroke="#4a90e2"/>
+    <text x="115" y="66" text-anchor="middle" font-size="11" fill="#1976d2">COPY go.mod → 缓存✓</text>
+    <rect x="18" y="84" width="194" height="34" rx="4" fill="#e3f2fd" stroke="#4a90e2"/>
+    <text x="115" y="106" text-anchor="middle" font-size="11" fill="#1976d2">go mod download → 缓存✓</text>
+    <rect x="18" y="124" width="194" height="34" rx="4" fill="#fff" stroke="#e67e22"/>
+    <text x="115" y="146" text-anchor="middle" font-size="11" fill="#b9770e">COPY . . → 重建(源码变了)</text>
+    <rect x="18" y="164" width="194" height="34" rx="4" fill="#fff" stroke="#e67e22"/>
+    <text x="115" y="186" text-anchor="middle" font-size="11" fill="#b9770e">go build → 重建</text>
+    <text x="115" y="222" text-anchor="middle" font-size="10.5" fill="#888">改一行代码只重建后两层,</text>
+    <text x="115" y="236" text-anchor="middle" font-size="10.5" fill="#888">十几秒 → 2 秒内</text>
+  </g>
+
+  <!-- bottom: runtime -->
+  <g transform="translate(40,340)">
+    <rect width="850" height="110" rx="8" fill="#eef7ff" stroke="#4a90e2" stroke-dasharray="4 3"/>
+    <text x="24" y="30" font-size="14.5" font-weight="bold" fill="#1976d2">容器 = 共享内核的受限进程(不是虚拟机)</text>
+    <rect x="24" y="46" width="260" height="48" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="154" y="66" text-anchor="middle" font-size="12" fill="#1976d2">namespace:隔离视图</text>
+    <text x="154" y="84" text-anchor="middle" font-size="10.5" fill="#888">PID / 网络 / 挂载点</text>
+    <rect x="300" y="46" width="260" height="48" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="430" y="66" text-anchor="middle" font-size="12" fill="#1976d2">cgroups:资源限额</text>
+    <text x="430" y="84" text-anchor="middle" font-size="10.5" fill="#888">CPU / 内存(必须显式设置)</text>
+    <rect x="576" y="46" width="250" height="48" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="701" y="66" text-anchor="middle" font-size="12" fill="#1976d2">联合文件系统:分层</text>
+    <text x="701" y="84" text-anchor="middle" font-size="10.5" fill="#888">只读层 + 可写层(删容器即丢弃)</text>
+  </g>
+</svg>

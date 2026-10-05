@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="470" viewBox="0 0 1120 470" role="img" aria-labelledby="title desc">
+  <title id="title">订单请求的 Trace Span 关系</title>
+  <desc id="desc">订单 API server span 包含库存 RPC 和数据库查询两个子 Span，横向宽度表示执行时间，parent span 关系和 trace ID 让跨服务请求可关联。</desc>
+  <rect width="1120" height="470" rx="8" fill="#f5f8f8"/>
+  <text x="560" y="40" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="23" font-weight="700" fill="#25373d">一个请求如何跨越服务边界</text>
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" fill="#344b52">
+    <text x="42" y="113">order-api</text><text x="42" y="205">inventory</text><text x="42" y="297">mysql</text>
+    <path d="M150 128 H1060 M150 220 H1060 M150 312 H1060" stroke="#d1dcde" stroke-width="1"/>
+  </g>
+  <rect x="190" y="91" width="790" height="54" rx="6" fill="#eaf0f8" stroke="#557ba7" stroke-width="1.5"/>
+  <text x="210" y="114" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" font-weight="700" fill="#2d5684">HTTP POST /orders · server span</text>
+  <rect x="360" y="184" width="380" height="54" rx="6" fill="#e7f3f1" stroke="#288477" stroke-width="1.5"/>
+  <text x="380" y="207" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" font-weight="700" fill="#176c63">ReserveInventory · client/server span</text>
+  <rect x="440" y="276" width="220" height="54" rx="6" fill="#fff2df" stroke="#be8130" stroke-width="1.5"/>
+  <text x="460" y="299" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" font-weight="700" fill="#94601c">SELECT · DB span</text>
+  <path d="M360 145 V178 M550 238 V270" fill="none" stroke="#53666d" stroke-width="2" stroke-dasharray="6 5"/>
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="12" fill="#53666d"><text x="188" y="380">0 ms</text><text x="452" y="380">500 ms</text><text x="715" y="380">1000 ms</text><text x="976" y="380">1500 ms</text></g>
+  <path d="M190 354 H980 M190 349 V360 M455 349 V360 M720 349 V360 M980 349 V360" stroke="#53666d" stroke-width="1.5"/>
+  <rect x="190" y="410" width="790" height="32" rx="5" fill="#ffffff" stroke="#c8d4d7"/>
+  <text x="585" y="431" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="13" fill="#344b52">同一 trace_id 串联父子 Span；横向长度帮助定位耗时占比</text>
+</svg>

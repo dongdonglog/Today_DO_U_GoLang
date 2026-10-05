@@ -1,0 +1,8 @@
+# 反面教材:单阶段构建。
+# 最终镜像里包含完整的 Go 工具链、源码、模块缓存——又大又不安全。
+# 与同目录的 Dockerfile(多阶段)对比:约 470MB vs 5.37MB。
+FROM golang:1.25-alpine
+WORKDIR /src
+COPY . .
+RUN CGO_ENABLED=0 go build -o /app .
+ENTRYPOINT ["/app"]

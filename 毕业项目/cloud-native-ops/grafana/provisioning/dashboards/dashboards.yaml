@@ -1,0 +1,10 @@
+apiVersion: 1
+providers:
+  - name: order-api
+    orgId: 1
+    folder: Services
+    type: file
+    disableDeletion: true
+    editable: false
+    options:
+      path: /var/lib/grafana/dashboards

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430" role="img" aria-labelledby="title desc">
+  <title id="title">秒杀架构讨论的关键决策</title>
+  <desc id="desc">入口限流并识别重复请求，Redis 原子扣减库存并写入待处理事件，消费者幂等写 MySQL 订单；故障时需要补偿、重放和对账路径。</desc>
+  <rect width="1200" height="430" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">评审架构时同时画正常路径和恢复路径</text>
+  <rect x="55" y="133" width="180" height="88" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="145" y="169" text-anchor="middle" font-size="18" font-weight="700" fill="#203d48">活动 API</text><text x="145" y="198" text-anchor="middle" font-size="14" fill="#58717b">鉴权 · 限流</text>
+  <path d="M235 177h58" stroke="#427c8a" stroke-width="3"/><path d="m293 177-12-8v16z" fill="#427c8a"/>
+  <rect x="300" y="133" width="211" height="88" rx="8" fill="#fff4df" stroke="#d28b42" stroke-width="2"/>
+  <text x="405" y="169" text-anchor="middle" font-size="18" font-weight="700" fill="#61431f">Redis Lua</text><text x="405" y="198" text-anchor="middle" font-size="14" fill="#675541">限购 + 扣库存</text>
+  <path d="M511 177h58" stroke="#427c8a" stroke-width="3"/><path d="m569 177-12-8v16z" fill="#427c8a"/>
+  <rect x="576" y="133" width="211" height="88" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="681" y="169" text-anchor="middle" font-size="18" font-weight="700" fill="#203d48">事件队列</text><text x="681" y="198" text-anchor="middle" font-size="14" fill="#58717b">重试 · 积压监控</text>
+  <path d="M787 177h58" stroke="#427c8a" stroke-width="3"/><path d="m845 177-12-8v16z" fill="#427c8a"/>
+  <rect x="852" y="133" width="211" height="88" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="957" y="169" text-anchor="middle" font-size="18" font-weight="700" fill="#126d64">订单消费者</text><text x="957" y="198" text-anchor="middle" font-size="14" fill="#58717b">幂等写 MySQL</text>
+  <rect x="852" y="278" width="211" height="72" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="957" y="308" text-anchor="middle" font-size="18" font-weight="700" fill="#126d64">订单状态查询</text><text x="957" y="333" text-anchor="middle" font-size="13" fill="#58717b">受理不等于成功</text>
+  <path d="M957 221v57" stroke="#18877c" stroke-width="2.5"/><path d="m957 278-7-12h14z" fill="#18877c"/>
+  <path d="M680 221v126h-275V221" fill="none" stroke="#ad6672" stroke-width="2.5" stroke-dasharray="8 7"/>
+  <path d="m405 221 7 12h-14z" fill="#ad6672"/>
+  <text x="541" y="372" text-anchor="middle" font-size="14" fill="#793d47">队列或消费者故障：重放事件并对账库存与订单</text>
+  <text x="52" y="408" font-size="14" fill="#58717b">图中组件必须对应已确认的容量、恢复责任和团队运维能力。</text>
+</svg>

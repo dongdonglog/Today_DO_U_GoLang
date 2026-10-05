@@ -1,0 +1,6 @@
+apiVersion: v2
+name: cloud-native-ops
+description: Helm chart for the cloud native operations demo service
+type: application
+version: 0.2.0
+appVersion: "v1"

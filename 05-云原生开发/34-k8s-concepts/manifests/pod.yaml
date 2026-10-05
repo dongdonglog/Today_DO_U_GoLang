@@ -1,0 +1,25 @@
+# 第一个 Pod:最小可运行单元。
+#
+# kubectl apply -f pod.yaml
+# kubectl get pods -w        # 观察 Pending -> ContainerCreating -> Running
+# kubectl logs pod-demo
+# kubectl delete pod pod-demo
+#
+# 为什么不推荐手写 Pod?Pod 没有自愈能力:节点重启/容器崩溃后不会重建,
+# 它只是 Deployment(第35章)等控制器的积木。这里用它看清最小单元的本质。
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-demo
+  labels:
+    app: demo
+spec:
+  containers:
+    - name: app
+      image: go-book-docker:multistage # 第33章构建的镜像
+      # minikube 内的 kubelet 拉不到宿主机 Docker Desktop 里的镜像,
+      # 需要先把镜像喂进 minikube(见 README):minikube image load go-book-docker:multistage
+      # 或者用 imagePullPolicy: IfNotPresent 配合 minikube image load
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080

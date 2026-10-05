@@ -1,0 +1,11 @@
+1. Check the release:
+
+   kubectl get deploy,svc -l app.kubernetes.io/instance={{ .Release.Name }}
+
+2. Port-forward the service locally:
+
+   kubectl port-forward svc/{{ include "order.fullname" . }} 18080:{{ .Values.service.port }}
+
+3. Test health:
+
+   curl http://localhost:18080/healthz

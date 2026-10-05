@@ -1,0 +1,14 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#007d9c', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8'}}}%%
+graph TB
+    A[HTTP Request] --> B[Middleware 1<br/>Logging]
+    B --> C[Middleware 2<br/>Auth]
+    C --> D[Middleware 3<br/>CORS]
+    D --> E[Handler<br/>ServeHTTP]
+    E --> F[HTTP Response]
+
+    style A fill:#00ADD8,stroke:#007d9c
+    style B fill:#E0EBF5,stroke:#5A6376
+    style C fill:#E0EBF5,stroke:#5A6376
+    style D fill:#E0EBF5,stroke:#5A6376
+    style E fill:#00ADD8,stroke:#007d9c
+    style F fill:#00ADD8,stroke:#007d9c

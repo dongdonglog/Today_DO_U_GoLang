@@ -1,0 +1,37 @@
+.md-content img[src$=".svg"] {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 1.35rem auto 0.65rem;
+  border: 1px solid #d8e4e2;
+  border-radius: 0.4rem;
+  box-shadow: 0 0.35rem 1.2rem rgba(25, 59, 64, 0.08);
+  background: #f7faf9;
+}
+
+.md-typeset p:has(> img[src$=".svg"]) {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.md-typeset p:has(> img[src$=".svg"]) + blockquote {
+  margin: 0.15rem 0 1.6rem;
+  padding: 0.65rem 1rem 0.7rem;
+  border: 1px solid #b8d7cf;
+  border-inline-start: 0.34rem solid #147d72;
+  border-radius: 0.35rem;
+  background: linear-gradient(180deg, #f0faf7 0%, #e9f6f2 100%);
+  color: #203a35;
+  box-shadow: 0 0.2rem 0.7rem rgba(20, 125, 114, 0.08);
+}
+
+.md-typeset p:has(> img[src$=".svg"]) + blockquote p {
+  margin: 0.2rem 0;
+}
+
+.md-typeset p:has(> img[src$=".svg"]) + blockquote strong:first-child {
+  color: #0e655c;
+  display: inline-block;
+  margin-right: 0.25rem;
+}

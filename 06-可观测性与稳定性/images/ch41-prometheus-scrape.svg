@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="390" viewBox="0 0 1120 390" role="img" aria-labelledby="title desc">
+  <title id="title">Prometheus 指标采集链路</title>
+  <desc id="desc">Go 服务在进程内更新 Counter、Histogram 和 Gauge，Prometheus 定时拉取 metrics endpoint 并保存带时间戳的样本，Grafana 查询 Prometheus 展示趋势。</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1 1 L8 5 L1 9 Z" fill="#53666d"/></marker></defs>
+  <rect width="1120" height="390" rx="8" fill="#f5f8f8"/>
+  <text x="560" y="40" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="23" font-weight="700" fill="#25373d">指标从进程状态到趋势图</text>
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif">
+    <rect x="50" y="112" width="225" height="116" rx="7" fill="#e7f3f1" stroke="#288477" stroke-width="1.5"/>
+    <text x="162" y="148" text-anchor="middle" font-size="18" font-weight="700" fill="#176c63">Go 服务</text>
+    <text x="162" y="177" text-anchor="middle" font-size="13" fill="#42575e">Counter · Histogram · Gauge</text>
+    <text x="162" y="201" text-anchor="middle" font-size="13" fill="#42575e">GET /metrics</text>
+    <rect x="365" y="112" width="225" height="116" rx="7" fill="#eaf0f8" stroke="#557ba7" stroke-width="1.5"/>
+    <text x="477" y="148" text-anchor="middle" font-size="18" font-weight="700" fill="#2d5684">Prometheus</text>
+    <text x="477" y="177" text-anchor="middle" font-size="13" fill="#42575e">按 interval 拉取 target</text>
+    <text x="477" y="201" text-anchor="middle" font-size="13" fill="#42575e">TSDB 保存时间序列</text>
+    <rect x="680" y="112" width="190" height="116" rx="7" fill="#fff2df" stroke="#be8130" stroke-width="1.5"/>
+    <text x="775" y="148" text-anchor="middle" font-size="18" font-weight="700" fill="#94601c">PromQL</text>
+    <text x="775" y="177" text-anchor="middle" font-size="13" fill="#42575e">rate · histogram_quantile</text>
+    <text x="775" y="201" text-anchor="middle" font-size="13" fill="#42575e">服务级聚合</text>
+    <rect x="960" y="112" width="130" height="116" rx="7" fill="#f9ece7" stroke="#b7644d" stroke-width="1.5"/>
+    <text x="1025" y="156" text-anchor="middle" font-size="18" font-weight="700" fill="#934c39">Grafana</text>
+    <text x="1025" y="187" text-anchor="middle" font-size="13" fill="#42575e">图表与看板</text>
+  </g>
+  <g fill="none" stroke="#53666d" stroke-width="2" marker-end="url(#arrow)"><path d="M275 170 H357"/><path d="M590 170 H672"/><path d="M870 170 H952"/></g>
+  <path d="M365 213 H283" fill="none" stroke="#288477" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+  <text x="324" y="249" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="12" fill="#176c63">scrape pull</text>
+  <rect x="50" y="300" width="1040" height="42" rx="6" fill="#ffffff" stroke="#c8d4d7"/>
+  <text x="570" y="327" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" fill="#344b52">每个 metric name + label set 都会产生一条 time series；动态标签会推高基数</text>
+</svg>

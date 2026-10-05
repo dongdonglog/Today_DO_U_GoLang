@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="title desc">
+  <title id="title">客服 Agent 的有界决策循环</title>
+  <desc id="desc">用户请求进入 Go 调度器，调度器向模型提供当前状态和允许的只读工具。模型返回最终回答或工具建议，调度器验证工具名、参数、身份和预算后执行。工具结果进入下一轮上下文；超时、最大步数和最大调用数都会使流程退出。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#347d76"/></marker>
+    <marker id="arrow-coral" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#b56b75"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#193b40" flood-opacity=".10"/></filter>
+  </defs>
+  <rect width="1200" height="500" rx="8" fill="#f4f8f7"/>
+  <text x="52" y="55" font-size="27" font-weight="700" fill="#203a40">把动态决策限制在 Go 调度器能管理的范围</text>
+  <rect x="50" y="169" width="174" height="98" rx="8" fill="#fff" stroke="#628894" stroke-width="2" filter="url(#shadow)"/>
+  <text x="137" y="207" text-anchor="middle" font-size="18" font-weight="700" fill="#294a54">客服请求</text>
+  <text x="137" y="237" text-anchor="middle" font-size="13" fill="#60777c">问题 + 已认证身份</text>
+
+  <path d="M224 218h64" fill="none" stroke="#347d76" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="296" y="133" width="280" height="171" rx="8" fill="#e7f3f0" stroke="#347d76" stroke-width="2" filter="url(#shadow)"/>
+  <text x="436" y="168" text-anchor="middle" font-size="19" font-weight="700" fill="#205e56">Go 调度器</text>
+  <text x="436" y="202" text-anchor="middle" font-size="14" fill="#42635e">总 deadline · 最大步数</text>
+  <text x="436" y="228" text-anchor="middle" font-size="14" fill="#42635e">工具白名单 · 重复调用</text>
+  <text x="436" y="268" text-anchor="middle" font-size="13" fill="#5f7974">允许执行 / 拒绝 / 转人工</text>
+
+  <path d="M576 218h74" fill="none" stroke="#347d76" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="613" y="197" text-anchor="middle" font-size="13" fill="#4f706b">状态与工具</text>
+
+  <rect x="658" y="169" width="192" height="98" rx="8" fill="#fff4e4" stroke="#c48a45" stroke-width="2" filter="url(#shadow)"/>
+  <text x="754" y="207" text-anchor="middle" font-size="18" font-weight="700" fill="#77501f">模型决策</text>
+  <text x="754" y="237" text-anchor="middle" font-size="13" fill="#705e43">最终回答或工具建议</text>
+
+  <path d="M850 218h73" fill="none" stroke="#347d76" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="931" y="169" width="218" height="98" rx="8" fill="#fff" stroke="#83979c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1040" y="207" text-anchor="middle" font-size="18" font-weight="700" fill="#354e54">只读工具</text>
+  <text x="1040" y="237" text-anchor="middle" font-size="13" fill="#61777b">订单状态 / 规则检索</text>
+
+  <path d="M1040 268v89H436v-51" fill="none" stroke="#347d76" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+  <text x="739" y="342" text-anchor="middle" font-size="14" fill="#4f706b">精简后的工具结果进入下一轮上下文</text>
+
+  <path d="M436 304v102h713v-138" fill="none" stroke="#b56b75" stroke-width="2.5" stroke-dasharray="7 7" marker-end="url(#arrow-coral)"/>
+  <rect x="517" y="383" width="532" height="52" rx="6" fill="#fff" stroke="#d8aab0"/>
+  <text x="783" y="415" text-anchor="middle" font-size="14" fill="#794d53">达到超时或调用上限时停止；写操作转独立授权与人工确认</text>
+  <text x="600" y="470" text-anchor="middle" font-size="14" fill="#536b6d">模型选择下一步，应用仍掌握状态、权限和退出条件。</text>
+</svg>

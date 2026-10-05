@@ -92,6 +92,8 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHA
 
 ![JWT 结构](./images/ch13-jwt-structure.svg)
 
+> **图解**：Header 和 Payload 经 Base64URL 编码后与密钥/私钥参与签名；签名用于发现内容被篡改，不会把 Payload 加密。任何拿到 Token 的人都能解码其中的声明。
+
 ### 13.2.2 签名算法
 
 - HS256：HMAC 对称签名（简单，适合内部服务）
@@ -102,6 +104,8 @@ JWT 默认只做签名，不做加密。不要把密码、手机号、身份证�
 ### 13.2.3 验证流程
 
 ![JWT 认证流程](./images/ch13-jwt-flow.svg)
+
+> **图解**：登录成功后服务端签发 Token，客户端在后续请求中携带，服务端验证签名和过期时间后再做权限判断。签名有效只说明 Token 未被篡改，不代表用户有权访问每个资源。
 
 ```
 1. 客户端发送 Token（Authorization: Bearer xxx）

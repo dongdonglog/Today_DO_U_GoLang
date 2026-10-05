@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-labelledby="title desc">
+  <title id="title">有界 Goroutine 工作队列</title>
+  <desc id="desc">请求将任务发送到有容量上限的队列，固定 worker 执行任务，Context 取消会通知生产者和 worker 退出。</desc>
+  <rect width="1200" height="440" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">订单请求的并发预算</text>
+  <text x="52" y="84" font-size="16" fill="#58717b">限制同时执行的工作，也限制等待中的工作</text>
+  <rect x="55" y="158" width="190" height="92" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="150" y="197" text-anchor="middle" font-size="21" font-weight="700" fill="#203d48">请求处理器</text>
+  <text x="150" y="225" text-anchor="middle" font-size="15" fill="#58717b">生产 SKU 任务</text>
+  <path d="M245 204h78" stroke="#427c8a" stroke-width="3"/>
+  <path d="m323 204-12-8v16z" fill="#427c8a"/>
+  <rect x="330" y="138" width="225" height="132" rx="8" fill="#fff" stroke="#d28b42" stroke-width="2"/>
+  <text x="442" y="176" text-anchor="middle" font-size="20" font-weight="700" fill="#61431f">有限任务队列</text>
+  <text x="442" y="207" text-anchor="middle" font-size="16" fill="#675541">容量 = 4</text>
+  <text x="442" y="237" text-anchor="middle" font-size="14" fill="#675541">满队列形成背压</text>
+  <path d="M555 204h72" stroke="#427c8a" stroke-width="3"/>
+  <path d="m627 204-12-8v16z" fill="#427c8a"/>
+  <rect x="637" y="128" width="260" height="152" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="767" y="163" text-anchor="middle" font-size="20" font-weight="700" fill="#126d64">固定 worker</text>
+  <rect x="662" y="184" width="58" height="38" rx="5" fill="#e2f3ef"/><text x="691" y="209" text-anchor="middle" font-size="15" fill="#126d64">W1</text>
+  <rect x="738" y="184" width="58" height="38" rx="5" fill="#e2f3ef"/><text x="767" y="209" text-anchor="middle" font-size="15" fill="#126d64">W2</text>
+  <rect x="814" y="184" width="58" height="38" rx="5" fill="#e2f3ef"/><text x="843" y="209" text-anchor="middle" font-size="15" fill="#126d64">W3</text>
+  <text x="767" y="252" text-anchor="middle" font-size="14" fill="#58717b">每个任务传递请求 Context</text>
+  <path d="M897 204h67" stroke="#427c8a" stroke-width="3"/>
+  <path d="m964 204-12-8v16z" fill="#427c8a"/>
+  <rect x="974" y="158" width="175" height="92" rx="8" fill="#fff" stroke="#627b8b" stroke-width="2"/>
+  <text x="1061" y="197" text-anchor="middle" font-size="20" font-weight="700" fill="#203d48">库存 / 价格</text>
+  <text x="1061" y="225" text-anchor="middle" font-size="15" fill="#58717b">下游依赖</text>
+  <path d="M150 320h918" stroke="#ad6672" stroke-width="2.5" stroke-dasharray="8 7"/>
+  <path d="m1068 320-12-7v14z" fill="#ad6672"/>
+  <rect x="474" y="296" width="280" height="48" rx="6" fill="#f9e9eb" stroke="#d5a1a8"/>
+  <text x="614" y="326" text-anchor="middle" font-size="16" fill="#793d47">deadline 到期：停止发送与处理</text>
+  <text x="52" y="399" font-size="15" fill="#58717b">并发上限控制依赖压力；队列上限控制内存与等待时间。</text>
+</svg>

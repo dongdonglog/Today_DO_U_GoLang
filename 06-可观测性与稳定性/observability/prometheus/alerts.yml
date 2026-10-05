@@ -1,0 +1,39 @@
+groups:
+  - name: order-api
+    rules:
+      - alert: OrderAPIHigh5xxRate
+        expr: |
+          sum(rate(http_requests_total{job="order-api",route="orders",code=~"5.."}[5m]))
+          / clamp_min(sum(rate(http_requests_total{job="order-api",route="orders"}[5m])), 0.001)
+          > 0.02
+        for: 10m
+        labels:
+          severity: critical
+          service: order-api
+        annotations:
+          summary: Order API 5xx rate is above 2%
+          description: Check the order API dashboard, recent deployment, and linked traces.
+          runbook_url: http://localhost:8000/06-%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E4%B8%8E%E7%A8%B3%E5%AE%9A%E6%80%A7/47-%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5%E6%96%B9%E6%B3%95%E8%AE%BA/
+
+      - alert: OrderAPIHighP95Latency
+        expr: |
+          histogram_quantile(0.95,
+            sum by (le) (rate(http_request_duration_seconds_bucket{job="order-api",route="orders"}[5m])))
+          > 0.5
+        for: 10m
+        labels:
+          severity: warning
+          service: order-api
+        annotations:
+          summary: Order API P95 latency is above 500ms
+          description: Compare dependency spans and resource saturation before scaling.
+
+      - alert: OrderAPITargetDown
+        expr: up{job="order-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: order-api
+        annotations:
+          summary: Prometheus cannot scrape order API
+          description: Check the application process, service discovery, and metrics endpoint.

@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 500" font-family="system-ui, -apple-system, sans-serif">
+  <title>Kubernetes 架构:控制面与数据面</title>
+  <desc>kubectl 提交期望状态到 apiserver,存入 etcd;控制器计算差异并下发,scheduler 决定节点,kubelet 在节点上拉镜像起容器并执行探针,状态回报 apiserver 形成控制循环</desc>
+
+  <rect width="920" height="500" fill="#fafbfc"/>
+  <text x="460" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a1a">Kubernetes 架构与控制循环</text>
+
+  <defs>
+    <marker id="kb34" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#4a90e2"/></marker>
+    <marker id="kg34" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#27ae60"/></marker>
+    <marker id="ko34" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#e67e22"/></marker>
+  </defs>
+
+  <!-- control plane -->
+  <g transform="translate(30,70)">
+    <rect width="400" height="240" rx="8" fill="#f4f9ff" stroke="#4a90e2" stroke-width="1.5"/>
+    <text x="200" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#1976d2">控制面(做决策)</text>
+
+    <rect x="24" y="46" width="160" height="40" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="104" y="72" text-anchor="middle" font-size="12" fill="#1976d2">kube-apiserver</text>
+    <text x="104" y="83" text-anchor="middle" font-size="9.5" fill="#888">唯一入口</text>
+
+    <rect x="216" y="46" width="160" height="40" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="296" y="72" text-anchor="middle" font-size="12" fill="#1976d2">etcd</text>
+    <text x="296" y="83" text-anchor="middle" font-size="9.5" fill="#888">唯一事实来源</text>
+
+    <rect x="24" y="100" width="160" height="40" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="104" y="126" text-anchor="middle" font-size="12" fill="#1976d2">scheduler</text>
+    <text x="104" y="137" text-anchor="middle" font-size="9.5" fill="#888">决定 Pod 放哪台节点</text>
+
+    <rect x="216" y="100" width="160" height="40" rx="5" fill="#fff" stroke="#4a90e2"/>
+    <text x="296" y="126" text-anchor="middle" font-size="12" fill="#1976d2">controller-manager</text>
+    <text x="296" y="137" text-anchor="middle" font-size="9.5" fill="#888">几十个控制循环</text>
+
+    <rect x="24" y="154" width="352" height="66" rx="5" fill="#e3f2fd" stroke="#4a90e2" stroke-dasharray="4 3"/>
+    <text x="200" y="178" text-anchor="middle" font-size="12" fill="#1976d2">控制循环:期望状态 vs 实际状态 → 收敛差异</text>
+    <text x="200" y="200" text-anchor="middle" font-size="10.5" fill="#888">Deployment 控制器发现副本不足 → 建 Pod → scheduler 派节点</text>
+  </g>
+
+  <!-- data plane -->
+  <g transform="translate(520,70)">
+    <rect width="370" height="240" rx="8" fill="#f4fbf6" stroke="#27ae60" stroke-width="1.5"/>
+    <text x="185" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e8449">数据面(节点上执行)</text>
+
+    <rect x="20" y="48" width="150" height="40" rx="5" fill="#fff" stroke="#27ae60"/>
+    <text x="95" y="74" text-anchor="middle" font-size="12" fill="#1e8449">kubelet</text>
+    <text x="95" y="85" text-anchor="middle" font-size="9.5" fill="#888">生命周期·探针</text>
+
+    <rect x="200" y="48" width="150" height="40" rx="5" fill="#fff" stroke="#27ae60"/>
+    <text x="275" y="74" text-anchor="middle" font-size="12" fill="#1e8449">kube-proxy</text>
+    <text x="275" y="85" text-anchor="middle" font-size="9.5" fill="#888">Service 转发规则</text>
+
+    <rect x="20" y="100" width="150" height="40" rx="5" fill="#fff" stroke="#27ae60"/>
+    <text x="95" y="126" text-anchor="middle" font-size="12" fill="#1e8449">containerd</text>
+    <text x="95" y="137" text-anchor="middle" font-size="9.5" fill="#888">拉镜像·起容器</text>
+
+    <!-- pod box -->
+    <rect x="200" y="100" width="150" height="120" rx="5" fill="#fff" stroke="#e67e22"/>
+    <text x="275" y="120" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#b9770e">Pod</text>
+    <rect x="214" y="128" width="122" height="26" rx="3" fill="#f4f9ff" stroke="#4a90e2"/>
+    <text x="275" y="145" text-anchor="middle" font-size="10.5" fill="#1976d2">容器 app</text>
+    <text x="275" y="172" text-anchor="middle" font-size="9.5" fill="#888">liveness/readiness</text>
+    <text x="275" y="188" text-anchor="middle" font-size="9.5" fill="#888">startup 探针</text>
+    <text x="275" y="207" text-anchor="middle" font-size="9.5" fill="#888">resources 限额</text>
+  </g>
+
+  <!-- flow arrows -->
+  <path d="M 430 130 L 516 130" stroke="#4a90e2" stroke-width="2.5" fill="none" marker-end="url(#kb34)"/>
+  <text x="472" y="120" text-anchor="middle" font-size="11.5" fill="#1976d2">下发决策</text>
+  <path d="M 516 190 C 470 210, 450 210, 434 195" stroke="#e67e22" stroke-width="2" stroke-dasharray="5 3" fill="none" marker-end="url(#ko34)"/>
+  <text x="474" y="222" text-anchor="middle" font-size="11.5" fill="#b9770e">状态回报</text>
+  <path d="M 60 40 C 60 46, 60 50, 60 54" stroke="#4a90e2" stroke-width="0" fill="none"/>
+
+  <!-- kubectl -->
+  <g transform="translate(30,335)">
+    <rect width="860" height="140" rx="8" fill="#fff" stroke="#ccc"/>
+    <text x="24" y="30" font-size="14.5" font-weight="bold" fill="#333">一次 kubectl apply 的完整旅程(全部自动)</text>
+
+    <rect x="24" y="46" width="120" height="40" rx="5" fill="#f4f9ff" stroke="#4a90e2"/>
+    <text x="84" y="70" text-anchor="middle" font-size="11" fill="#1976d2">kubectl apply</text>
+    <path d="M 148 66 L 190 66" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#kb34)"/>
+    <rect x="194" y="46" width="130" height="40" rx="5" fill="#f4f9ff" stroke="#4a90e2"/>
+    <text x="259" y="70" text-anchor="middle" font-size="11" fill="#1976d2">apiserver 校验</text>
+    <path d="M 328 66 L 370 66" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#kb34)"/>
+    <rect x="374" y="46" width="110" height="40" rx="5" fill="#f4f9ff" stroke="#4a90e2"/>
+    <text x="429" y="70" text-anchor="middle" font-size="11" fill="#1976d2">写入 etcd</text>
+    <path d="M 488 66 L 530 66" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#kb34)"/>
+    <rect x="534" y="46" width="150" height="40" rx="5" fill="#f4f9ff" stroke="#4a90e2"/>
+    <text x="609" y="70" text-anchor="middle" font-size="11" fill="#1976d2">controller 发现差异</text>
+    <path d="M 688 66 L 730 66" stroke="#4a90e2" stroke-width="2" fill="none" marker-end="url(#kb34)"/>
+    <rect x="734" y="46" width="100" height="40" rx="5" fill="#f4f9ff" stroke="#4a90e2"/>
+    <text x="784" y="70" text-anchor="middle" font-size="11" fill="#1976d2">scheduler 派节点</text>
+
+    <text x="24" y="116" font-size="11.5" fill="#888">→ kubelet 拉镜像、起容器、跑探针 → 状态回报 apiserver → 循环收敛。没有一步是人工执行的。</text>
+  </g>
+
+  <g transform="translate(30,486)">
+    <text x="0" y="0" font-size="12" fill="#555">
+      <tspan font-weight="bold">心智模型:</tspan>声明期望状态 + 控制循环收敛。Pod 易死是特性——长命百岁是控制器(第35章 Deployment)的事。
+    </text>
+  </g>
+</svg>

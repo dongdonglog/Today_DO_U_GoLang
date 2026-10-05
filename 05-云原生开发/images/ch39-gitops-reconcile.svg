@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="title desc">
+  <title id="title">Argo CD GitOps 发布与状态回环</title>
+  <desc id="desc">CI 验证代码并构建扫描不可变镜像，部署配置通过合并请求更新镜像 SHA。Argo CD 从 Git 拉取期望状态，同步到 Kubernetes 集群，再读取健康状态并持续检查漂移。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M1 1 L8 5 L1 9 Z" fill="#53666d"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M1 1 L8 5 L1 9 Z" fill="#288477"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="500" rx="8" fill="#f5f8f8"/>
+  <text x="600" y="42" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="24" font-weight="700" fill="#25373d">从不可变镜像到持续调和</text>
+  <text x="600" y="68" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" fill="#53666d">CI 交付产物，Git 记录期望状态，集群控制器负责调和</text>
+
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif">
+    <rect x="32" y="112" width="190" height="92" rx="7" fill="#eaf0f8" stroke="#557ba7" stroke-width="1.5"/>
+    <text x="127" y="145" text-anchor="middle" font-size="17" font-weight="700" fill="#2d5684">应用代码</text>
+    <text x="127" y="174" text-anchor="middle" font-size="13" fill="#42575e">提交 · 合并请求</text>
+
+    <rect x="270" y="112" width="210" height="92" rx="7" fill="#e7f3f1" stroke="#288477" stroke-width="1.5"/>
+    <text x="375" y="145" text-anchor="middle" font-size="17" font-weight="700" fill="#176c63">CI 验证与构建</text>
+    <text x="375" y="174" text-anchor="middle" font-size="13" fill="#42575e">test · scan · commit SHA</text>
+
+    <rect x="530" y="112" width="205" height="92" rx="7" fill="#fff2df" stroke="#be8130" stroke-width="1.5"/>
+    <text x="632" y="145" text-anchor="middle" font-size="17" font-weight="700" fill="#94601c">镜像仓库</text>
+    <text x="632" y="174" text-anchor="middle" font-size="13" fill="#42575e">只读版本，不重复构建</text>
+
+    <rect x="785" y="112" width="250" height="92" rx="7" fill="#f9ece7" stroke="#b7644d" stroke-width="1.5"/>
+    <text x="910" y="145" text-anchor="middle" font-size="17" font-weight="700" fill="#934c39">部署配置合并请求</text>
+    <text x="910" y="174" text-anchor="middle" font-size="13" fill="#42575e">values-staging.yaml 更新 SHA</text>
+
+    <rect x="250" y="302" width="300" height="104" rx="7" fill="#eaf0f8" stroke="#557ba7" stroke-width="1.5"/>
+    <text x="400" y="339" text-anchor="middle" font-size="18" font-weight="700" fill="#2d5684">Argo CD 控制器</text>
+    <text x="400" y="370" text-anchor="middle" font-size="13" fill="#42575e">拉取 Git · 比较差异 · 同步资源</text>
+
+    <rect x="680" y="302" width="300" height="104" rx="7" fill="#edf2df" stroke="#758c3c" stroke-width="1.5"/>
+    <text x="830" y="339" text-anchor="middle" font-size="18" font-weight="700" fill="#596e2a">Kubernetes 集群</text>
+    <text x="830" y="370" text-anchor="middle" font-size="13" fill="#42575e">Deployment · Service · Pod</text>
+  </g>
+
+  <g fill="none" stroke="#53666d" stroke-width="2" marker-end="url(#arrow)">
+    <path d="M222 158 H262"/>
+    <path d="M480 158 H522"/>
+    <path d="M735 158 H777"/>
+  </g>
+  <path d="M910 204 V252 H400 V294" fill="none" stroke="#288477" stroke-width="2.5" marker-end="url(#arrow-green)"/>
+  <path d="M550 354 H672" fill="none" stroke="#53666d" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M830 302 V260 H510 V294" fill="none" stroke="#288477" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow-green)"/>
+
+  <rect x="32" y="438" width="1003" height="38" rx="6" fill="#ffffff" stroke="#c8d4d7"/>
+  <text x="533" y="462" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="13" fill="#344b52">应用 CI 不持有集群写凭据；生产环境以获批的 Git 提交作为部署入口</text>
+</svg>

@@ -247,6 +247,8 @@ $ go run ./example2-stream -role=client
 
 ![gRPC 四种调用模式与 HTTP/2 多路复用](./images/ch25-grpc-four-modes.svg)
 
+> **图解**：四种模式的区别在请求端和响应端是否持续发送消息；一元调用只收发一条，流式调用通过同一条 RPC 持续传输。HTTP/2 多路复用让多个 RPC 共用连接，但不会消除流控、取消和错误处理的责任。
+
 ### 25.3 拦截器:鉴权与日志
 
 > 代码:`25-grpc/example3-interceptor/`
@@ -394,6 +396,8 @@ gRPC 的性能优势来自三层:
 ### 25.5.3 拦截器执行顺序
 
 ![拦截器洋葱模型与超时传播](./images/ch25-interceptor-deadline.svg)
+
+> **图解**：请求从外层拦截器进入业务，响应按相反方向返回；客户端 deadline 随 RPC 元数据传到服务端 Context。下游调用应继续传递这个 deadline，不能重新开一个更长的预算。
 
 ```
 请求进入

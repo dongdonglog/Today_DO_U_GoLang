@@ -395,6 +395,8 @@ run: docs
 
 ![swag 工作流程](./images/ch15-swag-flow.svg)
 
+> **图解**：`swag init` 扫描 Go 源码注释和类型，生成 OpenAPI 描述与文档页面；源代码注释是输入，生成文件应由构建流程更新并检查。
+
 ```
 1. 扫描 Go 源码
 2. 解析注释（@Summary、@Tags 等）

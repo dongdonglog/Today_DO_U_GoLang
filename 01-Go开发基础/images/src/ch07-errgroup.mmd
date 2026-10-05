@@ -1,0 +1,27 @@
+sequenceDiagram
+    participant Handler
+    participant ErrGroup
+    participant UserDB
+    participant PermDB
+    participant MenuDB
+
+    Handler->>ErrGroup: 并发查询
+    ErrGroup->>UserDB: getUser(ctx)
+    ErrGroup->>PermDB: getPermission(ctx)
+    ErrGroup->>MenuDB: getMenu(ctx)
+
+    Note over UserDB: 2s 完成
+    UserDB-->>ErrGroup: 返回用户信息
+
+    Note over PermDB: 3s 完成
+    PermDB-->>ErrGroup: 返回权限信息
+
+    Note over MenuDB: 10s 超时...
+    Note over ErrGroup: 5s 超时触发
+    ErrGroup->>MenuDB: ctx.Done() 取消
+    MenuDB--xErrGroup: 查询取消
+
+    Note over ErrGroup: 所有任务取消
+    ErrGroup-->>Handler: 返回超时错误
+
+    Note over Handler: 不会等待 MenuDB 完成

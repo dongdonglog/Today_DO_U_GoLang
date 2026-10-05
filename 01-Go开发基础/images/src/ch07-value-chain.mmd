@@ -1,0 +1,25 @@
+graph LR
+    subgraph Context Chain
+        A[Background] --> B[WithValue<br/>requestID=req-123]
+        B --> C[WithValue<br/>userID=123]
+        C --> D[WithValue<br/>traceID=abc-456]
+    end
+
+    D -->|查找 userID| C
+    C -->|找到| E[返回 123]
+
+    D -->|查找 requestID| B
+    B -->|找到| F[返回 req-123]
+
+    D -->|查找 notExist| A
+    A -->|没找到| G[返回 nil]
+
+    style D fill:#FFCDD2,stroke:#D32F2F
+    style C fill:#C8E6C9,stroke:#388E3C
+    style B fill:#C8E6C9,stroke:#388E3C
+    style A fill:#E0E0E0,stroke:#333
+
+    note1[向上查找<br/>找到第一个匹配就返回]
+    note1 -.-> C
+    note1 -.-> B
+    note1 -.-> A

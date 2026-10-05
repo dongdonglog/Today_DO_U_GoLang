@@ -1,0 +1,31 @@
+replicaCount: 2
+
+image:
+  repository: registry.example.com/acme/cloud-native-ops
+  tag: 7bc6b86d8c61 # 替换为已扫描镜像对应的完整 commit SHA
+  pullPolicy: IfNotPresent
+
+imagePullSecrets:
+  - name: gitlab-registry
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+config:
+  serviceName: order-api
+  otelEndpoint: otel-collector.observability.svc:4318
+  logLevel: info
+  environment: staging
+
+secret:
+  existingName: cloud-native-ops-runtime-staging
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi

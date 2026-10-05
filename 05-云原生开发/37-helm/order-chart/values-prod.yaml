@@ -1,0 +1,30 @@
+replicaCount: 3
+
+image:
+  # 发布前由 CI 覆盖为实际仓库地址和不可变 tag 或 digest。
+  repository: registry.example.com/acme/order
+  tag: REPLACE_WITH_IMMUTABLE_TAG
+  pullPolicy: IfNotPresent
+
+imagePullSecrets:
+  - name: gitlab-registry
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+config:
+  logLevel: info
+  environment: prod
+
+secret:
+  existingName: order-runtime
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: "1"
+    memory: 512Mi

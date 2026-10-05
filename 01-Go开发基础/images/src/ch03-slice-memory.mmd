@@ -1,0 +1,30 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph LR
+    subgraph Slice Header
+        ARRAY["array: pointer"]
+        LEN["len: 3"]
+        CAP["cap: 5"]
+    end
+
+    subgraph Underlying Array
+        A0["[0]: 10"]
+        A1["[1]: 20"]
+        A2["[2]: 30"]
+        A3["[3]: 40"]
+        A4["[4]: 50"]
+    end
+
+    ARRAY --> A0
+
+    subgraph Slice View
+        S0["s[0] = 10"]
+        S1["s[1] = 20"]
+        S2["s[2] = 30"]
+    end
+
+    LEN -.->|"length"| S2
+    CAP -.->|"capacity"| A4
+
+    style ARRAY fill:#00ADD8,stroke:#007D9C,color:#fff
+    style LEN fill:#3498DB,stroke:#2980B9,color:#fff
+    style CAP fill:#E74C3C,stroke:#C0392B,color:#fff

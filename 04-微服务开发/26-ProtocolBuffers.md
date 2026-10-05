@@ -118,6 +118,8 @@ JSON:     69 字节  {"email":"alice@example.com","id":1001,...}
 
 ![Protobuf 线格式 TLV 编码](./images/ch26-wire-format.svg)
 
+> **图解**：每个字段先编码 tag，再按 wire type 编码值；tag 同时携带字段编号和 wire type。线上数据依赖字段编号而非字段名，所以已发布字段不能随意改号。
+
 ### 26.2 版本演进与兼容性
 
 > 代码:`26-protobuf/example2-evolution/`(含 `proto/evolve/v1` 和 `v2` 两个版本)
@@ -182,6 +184,8 @@ B) v2->v1: id=evt-2 name=order.paid source=""
 **前向兼容(旧代码读新数据)能成立的前提**:旧客户端不认识的字段,Go 实现会把它放进 `unknownFields` 并在重新 Marshal 时保留(example2 场景 C 验证了这点),不会因为多了字段就报错。这让**滚动升级**成为可能:新老版本服务实例可以共存、互通。
 
 ![Protobuf 版本演进与编号规则](./images/ch26-version-evolution.svg)
+
+> **图解**：新增字段分配新编号，删除字段把编号标记为 `reserved`，旧消费者忽略未知字段。保持编号不变，才能让新旧版本按同一份二进制契约通信。
 
 兼容/破坏性变更速查:
 

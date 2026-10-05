@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="title desc">
+  <title id="title">客服问答 Prompt 的可信边界</title>
+  <desc id="desc">Go 服务把固定系统规则、已认证身份、用户问题和检索证据组织成不同消息。模型生成候选答案后，Go 服务根据权限、schema 和业务规则校验，再决定展示或拒绝。用户文字与检索资料不能直接改变服务端权限。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#347d76"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#193b40" flood-opacity=".10"/></filter>
+  </defs>
+  <rect width="1200" height="500" rx="8" fill="#f4f8f7"/>
+  <text x="52" y="55" font-size="27" font-weight="700" fill="#203a40">把规则、输入和权限放在各自的边界里</text>
+  <rect x="50" y="110" width="260" height="278" rx="8" fill="#e6f3ef" stroke="#43877e" stroke-width="2" filter="url(#shadow)"/>
+  <text x="180" y="145" text-anchor="middle" font-size="19" font-weight="700" fill="#225b54">Go 服务控制面</text>
+  <rect x="77" y="169" width="206" height="70" rx="6" fill="#fff" stroke="#73a79d"/>
+  <text x="180" y="199" text-anchor="middle" font-size="16" font-weight="600" fill="#294b48">已认证身份与租户</text>
+  <text x="180" y="222" text-anchor="middle" font-size="13" fill="#607b76">来自登录上下文</text>
+  <rect x="77" y="256" width="206" height="93" rx="6" fill="#fff" stroke="#73a79d"/>
+  <text x="180" y="287" text-anchor="middle" font-size="16" font-weight="600" fill="#294b48">固定规则与输出校验</text>
+  <text x="180" y="313" text-anchor="middle" font-size="13" fill="#607b76">业务权限 · schema · 长度</text>
+  <text x="180" y="334" text-anchor="middle" font-size="13" fill="#607b76">应用代码最终把关</text>
+
+  <path d="M310 247h68" fill="none" stroke="#347d76" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="344" y="224" text-anchor="middle" font-size="13" fill="#4f706b">组织消息</text>
+
+  <rect x="386" y="110" width="420" height="278" rx="8" fill="#fff" stroke="#9aaeb0" stroke-width="2" filter="url(#shadow)"/>
+  <text x="596" y="145" text-anchor="middle" font-size="19" font-weight="700" fill="#354d52">本次模型上下文</text>
+  <rect x="415" y="169" width="362" height="57" rx="5" fill="#edf6f4" stroke="#8cb6ad"/>
+  <text x="435" y="193" font-size="14" font-weight="600" fill="#285c55">system</text>
+  <text x="435" y="214" font-size="13" fill="#546b68">任务、证据要求、拒答条件</text>
+  <rect x="415" y="239" width="362" height="57" rx="5" fill="#fff4e4" stroke="#dab16f"/>
+  <text x="435" y="263" font-size="14" font-weight="600" fill="#865c26">user</text>
+  <text x="435" y="284" font-size="13" fill="#766447">用户问题（不可信输入）</text>
+  <rect x="415" y="309" width="362" height="57" rx="5" fill="#f8ecee" stroke="#c9949b"/>
+  <text x="435" y="333" font-size="14" font-weight="600" fill="#804c55">evidence</text>
+  <text x="435" y="354" font-size="13" fill="#755e62">检索资料（事实参考，不授予权限）</text>
+
+  <path d="M806 247h68" fill="none" stroke="#347d76" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="840" y="224" text-anchor="middle" font-size="13" fill="#4f706b">生成候选</text>
+
+  <rect x="882" y="153" width="262" height="188" rx="8" fill="#fff" stroke="#b66c78" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1013" y="190" text-anchor="middle" font-size="19" font-weight="700" fill="#75454e">服务端校验</text>
+  <text x="1013" y="225" text-anchor="middle" font-size="15" fill="#624f52">格式是否有效？</text>
+  <text x="1013" y="252" text-anchor="middle" font-size="15" fill="#624f52">证据是否真实存在？</text>
+  <text x="1013" y="279" text-anchor="middle" font-size="15" fill="#624f52">动作是否有权执行？</text>
+  <text x="1013" y="317" text-anchor="middle" font-size="13" fill="#806b6e">校验失败就拒绝或转人工</text>
+
+  <text x="600" y="448" text-anchor="middle" font-size="15" fill="#536b6d">消息角色帮助表达语义；只有应用代码和后端授权能真正限制业务行为。</text>
+</svg>

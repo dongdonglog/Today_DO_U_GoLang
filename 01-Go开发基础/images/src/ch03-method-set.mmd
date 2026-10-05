@@ -1,0 +1,42 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph TB
+    subgraph Type T
+        T_METHODS["Method Set of T"]
+        M1["Method1()"]
+        M2["Method2()"]
+    end
+
+    subgraph Type *T
+        PT_METHODS["Method Set of *T"]
+        M3["Method1()"]
+        M4["Method2()"]
+        M5["Method3()"]
+    end
+
+    T_METHODS --> M1
+    T_METHODS --> M2
+
+    PT_METHODS --> M3
+    PT_METHODS --> M4
+    PT_METHODS --> M5
+
+    subgraph Interface Implementation
+        IMPL["*T implements Interface"]
+        NO_IMPL["T does NOT implement Interface"]
+    end
+
+    PT_METHODS --> IMPL
+    T_METHODS --> NO_IMPL
+
+    subgraph Rules
+        RULE1["T: only value receiver methods"]
+        RULE2["*T: value + pointer receiver methods"]
+    end
+
+    T_METHODS -.-> RULE1
+    PT_METHODS -.-> RULE2
+
+    style T_METHODS fill:#00ADD8,stroke:#007D9C,color:#fff
+    style PT_METHODS fill:#E74C3C,stroke:#C0392B,color:#fff
+    style IMPL fill:#2ECC71,stroke:#27AE60,color:#fff
+    style NO_IMPL fill:#E74C3C,stroke:#C0392B,color:#fff

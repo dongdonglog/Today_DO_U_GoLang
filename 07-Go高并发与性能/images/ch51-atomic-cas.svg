@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">CAS 原子扣减流程</title>
+  <desc id="desc">读取名额并检查大于零后，CAS 尝试将其减一；若其他请求先修改值则重试，成功提交才表示获得名额。</desc>
+  <rect width="1200" height="420" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">CAS：基于旧值尝试提交更新</text>
+  <rect x="62" y="138" width="205" height="100" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="164" y="177" text-anchor="middle" font-size="20" font-weight="700" fill="#203d48">Load 当前值</text><text x="164" y="208" text-anchor="middle" font-size="15" fill="#58717b">stock = n</text>
+  <path d="M267 188h83" stroke="#427c8a" stroke-width="3"/><path d="m350 188-12-8v16z" fill="#427c8a"/>
+  <path d="M385 132 470 188 385 244 300 188z" fill="#fff4df" stroke="#d28b42" stroke-width="2"/>
+  <text x="385" y="184" text-anchor="middle" font-size="17" font-weight="700" fill="#61431f">n &gt; 0 ?</text><text x="385" y="207" text-anchor="middle" font-size="14" fill="#675541">否则拒绝</text>
+  <path d="M470 188h85" stroke="#427c8a" stroke-width="3"/><path d="m555 188-12-8v16z" fill="#427c8a"/>
+  <rect x="562" y="138" width="235" height="100" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="679" y="177" text-anchor="middle" font-size="20" font-weight="700" fill="#126d64">CAS(n, n-1)</text><text x="679" y="208" text-anchor="middle" font-size="15" fill="#58717b">仅当当前值仍是 n</text>
+  <path d="M797 170h82" stroke="#18877c" stroke-width="3"/><path d="m879 170-12-8v16z" fill="#18877c"/>
+  <rect x="886" y="123" width="250" height="72" rx="8" fill="#e4f3ed" stroke="#18877c" stroke-width="2"/>
+  <text x="1011" y="167" text-anchor="middle" font-size="18" font-weight="700" fill="#126d64">成功：获得一个名额</text>
+  <path d="M679 238v61h-294v-55" fill="none" stroke="#ad6672" stroke-width="2.5" stroke-dasharray="8 7"/><path d="m385 244 7 12h-14z" fill="#ad6672"/>
+  <text x="532" y="324" text-anchor="middle" font-size="16" fill="#793d47">失败：值已被其他请求修改，重新 Load 并判断</text>
+  <text x="52" y="388" font-size="15" fill="#58717b">原子操作只协调同一进程中的共享地址，不能替代跨实例库存事务。</text>
+</svg>

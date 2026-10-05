@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430" role="img" aria-labelledby="title desc">
+  <title id="title">net/http 请求与连接生命周期</title>
+  <desc id="desc">Listener 接受连接，Server 读取请求并调用 Handler，写完响应后连接可能进入 keep-alive；超时限制连接占用，Shutdown 停止新请求并等待在途处理。</desc>
+  <rect width="1200" height="430" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">HTTP Handler 运行在连接生命周期之中</text>
+  <rect x="55" y="141" width="160" height="91" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="135" y="178" text-anchor="middle" font-size="18" font-weight="700" fill="#203d48">Listener</text><text x="135" y="208" text-anchor="middle" font-size="14" fill="#58717b">Accept</text>
+  <path d="M215 186h52" stroke="#427c8a" stroke-width="3"/><path d="m267 186-12-8v16z" fill="#427c8a"/>
+  <rect x="274" y="141" width="182" height="91" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="365" y="178" text-anchor="middle" font-size="18" font-weight="700" fill="#203d48">解析请求</text><text x="365" y="208" text-anchor="middle" font-size="14" fill="#58717b">header / body</text>
+  <path d="M456 186h52" stroke="#427c8a" stroke-width="3"/><path d="m508 186-12-8v16z" fill="#427c8a"/>
+  <rect x="515" y="141" width="182" height="91" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="606" y="178" text-anchor="middle" font-size="18" font-weight="700" fill="#126d64">调用 Handler</text><text x="606" y="208" text-anchor="middle" font-size="14" fill="#58717b">业务请求处理</text>
+  <path d="M697 186h52" stroke="#427c8a" stroke-width="3"/><path d="m749 186-12-8v16z" fill="#427c8a"/>
+  <rect x="756" y="141" width="182" height="91" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="847" y="178" text-anchor="middle" font-size="18" font-weight="700" fill="#203d48">写响应</text><text x="847" y="208" text-anchor="middle" font-size="14" fill="#58717b">完成本次请求</text>
+  <path d="M938 186h52" stroke="#427c8a" stroke-width="3"/><path d="m990 186-12-8v16z" fill="#427c8a"/>
+  <rect x="997" y="141" width="148" height="91" rx="8" fill="#fff4df" stroke="#d28b42" stroke-width="2"/>
+  <text x="1071" y="178" text-anchor="middle" font-size="18" font-weight="700" fill="#61431f">Keep-alive</text><text x="1071" y="208" text-anchor="middle" font-size="14" fill="#675541">复用或关闭</text>
+  <path d="M1071 232v77H365v-77" fill="none" stroke="#18877c" stroke-width="2.5" stroke-dasharray="8 7"/><path d="m365 232 7 12h-14z" fill="#18877c"/>
+  <text x="715" y="341" text-anchor="middle" font-size="16" fill="#126d64">复用连接减少握手；超时限制慢连接占用资源</text>
+  <rect x="385" y="365" width="430" height="43" rx="7" fill="#f9e9eb" stroke="#d5a1a8"/>
+  <text x="600" y="393" text-anchor="middle" font-size="14" fill="#793d47">Shutdown：停止接新连接，给在途请求有限收尾时间</text>
+</svg>

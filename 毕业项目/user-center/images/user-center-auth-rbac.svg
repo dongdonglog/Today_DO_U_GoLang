@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="610" viewBox="0 0 1180 610" role="img" aria-labelledby="title desc">
+  <title id="title">用户中心的认证、令牌轮换与 RBAC 边界</title>
+  <desc id="desc">图中展示用户中心从登录、签发访问令牌和刷新令牌，到受保护接口认证、RBAC 授权、账号禁用和退出撤销的完整链路。MySQL 保存长期状态，Redis 保存短期限流和撤销状态。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#347d76"/>
+    </marker>
+    <marker id="warn-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#b66a37"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="135%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#18363d" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .title { font: 700 26px Arial, 'Microsoft YaHei', sans-serif; fill: #203a40; }
+      .subtitle { font: 14px Arial, 'Microsoft YaHei', sans-serif; fill: #5b7075; }
+      .label { font: 700 17px Arial, 'Microsoft YaHei', sans-serif; fill: #213c42; }
+      .body { font: 14px Arial, 'Microsoft YaHei', sans-serif; fill: #4f666b; }
+      .small { font: 12px Arial, 'Microsoft YaHei', sans-serif; fill: #72858a; }
+      .card { stroke-width: 1.8; rx: 9; filter: url(#shadow); }
+      .arrow { fill: none; stroke: #347d76; stroke-width: 2.6; marker-end: url(#arrow); }
+      .warn { fill: none; stroke: #b66a37; stroke-width: 2.4; marker-end: url(#warn-arrow); stroke-dasharray: 8 6; }
+    </style>
+  </defs>
+
+  <rect width="1180" height="610" rx="8" fill="#f5f8f8"/>
+  <text x="590" y="48" text-anchor="middle" class="title">用户中心把“身份状态”留在服务端控制</text>
+  <text x="590" y="78" text-anchor="middle" class="subtitle">JWT 负责携带短期声明，MySQL 和 Redis 负责判断账号是否仍然有效</text>
+
+  <rect x="54" y="138" width="180" height="116" class="card" fill="#ffffff" stroke="#89a2a8"/>
+  <text x="144" y="174" text-anchor="middle" class="label">客户端</text>
+  <text x="144" y="205" text-anchor="middle" class="body">登录 / 刷新 / 访问</text>
+  <text x="144" y="231" text-anchor="middle" class="small">保存 access + refresh</text>
+
+  <path d="M234 196 H300" class="arrow"/>
+
+  <rect x="304" y="116" width="224" height="160" class="card" fill="#e7f3f1" stroke="#2d8579"/>
+  <text x="416" y="152" text-anchor="middle" class="label">Gin API 边界</text>
+  <text x="416" y="184" text-anchor="middle" class="body">参数校验 · 统一响应</text>
+  <text x="416" y="212" text-anchor="middle" class="body">认证中间件验证签名</text>
+  <text x="416" y="240" text-anchor="middle" class="body">授权中间件检查角色</text>
+
+  <path d="M528 196 H594" class="arrow"/>
+
+  <rect x="598" y="116" width="224" height="160" class="card" fill="#fff2df" stroke="#bf8134"/>
+  <text x="710" y="152" text-anchor="middle" class="label">认证服务</text>
+  <text x="710" y="184" text-anchor="middle" class="body">密码哈希校验</text>
+  <text x="710" y="212" text-anchor="middle" class="body">签发短期 access token</text>
+  <text x="710" y="240" text-anchor="middle" class="body">刷新令牌族轮换</text>
+
+  <path d="M822 196 H888" class="arrow"/>
+
+  <rect x="892" y="116" width="234" height="160" class="card" fill="#eaf0f8" stroke="#5277a5"/>
+  <text x="1009" y="152" text-anchor="middle" class="label">业务接口</text>
+  <text x="1009" y="184" text-anchor="middle" class="body">/v1/me</text>
+  <text x="1009" y="212" text-anchor="middle" class="body">/v1/admin/users/:id/disable</text>
+  <text x="1009" y="240" text-anchor="middle" class="body">区分 401 / 403</text>
+
+  <rect x="192" y="364" width="286" height="142" class="card" fill="#ffffff" stroke="#89a2a8"/>
+  <text x="335" y="400" text-anchor="middle" class="label">MySQL：长期状态</text>
+  <text x="335" y="432" text-anchor="middle" class="body">users · roles · user_roles</text>
+  <text x="335" y="459" text-anchor="middle" class="body">refresh_token_families</text>
+  <text x="335" y="486" text-anchor="middle" class="small">账号禁用后访问令牌仍要回查状态</text>
+
+  <rect x="690" y="364" width="286" height="142" class="card" fill="#f9ece7" stroke="#b7644d"/>
+  <text x="833" y="400" text-anchor="middle" class="label">Redis：短期状态</text>
+  <text x="833" y="432" text-anchor="middle" class="body">登录失败限流</text>
+  <text x="833" y="459" text-anchor="middle" class="body">退出登录后的 JTI 撤销</text>
+  <text x="833" y="486" text-anchor="middle" class="small">过期时间与 access token 生命周期对齐</text>
+
+  <path d="M416 276 C416 316 354 324 340 358" class="arrow"/>
+  <path d="M710 276 C710 320 832 320 833 358" class="arrow"/>
+  <path d="M1009 276 C1009 334 468 334 404 360" class="warn"/>
+  <path d="M1009 276 C1009 334 858 334 842 358" class="warn"/>
+
+  <text x="590" y="558" text-anchor="middle" class="subtitle">核心结论：JWT 不是会话数据库。线上禁用账号、退出登录和刷新令牌复用，都要回到服务端状态判断。</text>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="430" viewBox="0 0 1120 430" role="img" aria-labelledby="title desc">
+  <title id="title">订单 API 压测阶段</title>
+  <desc id="desc">k6 压测先以低并发预热，随后分阶段上升到目标虚拟用户并保持稳态，最后降载。稳定段同时观察请求速率、失败率、尾延迟和资源使用。</desc>
+  <rect width="1120" height="430" rx="8" fill="#f5f8f8"/>
+  <text x="560" y="40" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="23" font-weight="700" fill="#25373d">压测负载曲线与观测窗口</text>
+  <path d="M110 328 V96 M110 328 H1040" fill="none" stroke="#53666d" stroke-width="2"/>
+  <text x="48" y="200" transform="rotate(-90 48 200)" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" fill="#53666d">并发 VU</text>
+  <text x="570" y="376" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" fill="#53666d">测试时间</text>
+  <path d="M110 310 L230 278 L380 202 L500 170 L760 170 L900 230 L1040 310" fill="none" stroke="#288477" stroke-width="4"/>
+  <path d="M500 145 V328 M760 145 V328" stroke="#be8130" stroke-width="2" stroke-dasharray="6 5"/>
+  <rect x="505" y="102" width="250" height="40" rx="6" fill="#fff2df" stroke="#be8130"/>
+  <text x="630" y="128" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" font-weight="700" fill="#94601c">稳态采样窗口</text>
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="13" fill="#344b52"><text x="170" y="349">预热</text><text x="302" y="240">逐步加压</text><text x="575" y="198">保持目标负载</text><text x="935" y="274">逐步降载</text></g>
+  <text x="560" y="410" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="13" fill="#53666d">同步观察 RPS、错误率、P95/P99、CPU、内存和依赖饱和度</text>
+</svg>
