@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">AI 协助开发的可审查工作流</title>
+  <desc id="desc">开发者提供目标、仓库约定和边界，AI 先复述规则并提出方案；开发者确认后生成小范围修改，最后以 diff、构建、测试和人工评审决定是否合并。</desc>
+  <rect width="1200" height="420" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">让每一步输出都能被开发者核对</text>
+  <rect x="55" y="144" width="190" height="100" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="150" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">业务目标</text><text x="150" y="213" text-anchor="middle" font-size="14" fill="#58717b">规则 · 边界 · 验收</text>
+  <path d="M245 194h57" stroke="#427c8a" stroke-width="3"/><path d="m302 194-12-8v16z" fill="#427c8a"/>
+  <rect x="309" y="144" width="190" height="100" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="404" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">AI 复述方案</text><text x="404" y="213" text-anchor="middle" font-size="14" fill="#58717b">列假设与改动面</text>
+  <path d="M499 194h57" stroke="#d28b42" stroke-width="3"/><path d="m556 194-12-8v16z" fill="#d28b42"/>
+  <rect x="563" y="144" width="190" height="100" rx="8" fill="#fff4df" stroke="#d28b42" stroke-width="2"/>
+  <text x="658" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#61431f">开发者确认</text><text x="658" y="213" text-anchor="middle" font-size="14" fill="#675541">澄清后再实现</text>
+  <path d="M753 194h57" stroke="#427c8a" stroke-width="3"/><path d="m810 194-12-8v16z" fill="#427c8a"/>
+  <rect x="817" y="144" width="190" height="100" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="912" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#126d64">小范围 diff</text><text x="912" y="213" text-anchor="middle" font-size="14" fill="#58717b">一项行为变化</text>
+  <path d="M1007 194h57" stroke="#427c8a" stroke-width="3"/><path d="m1064 194-12-8v16z" fill="#427c8a"/>
+  <rect x="1071" y="144" width="92" height="100" rx="8" fill="#fff" stroke="#627b8b" stroke-width="2"/>
+  <text x="1117" y="181" text-anchor="middle" font-size="17" font-weight="700" fill="#203d48">验证</text><text x="1117" y="213" text-anchor="middle" font-size="13" fill="#58717b">人审</text>
+  <path d="M1117 244v77H150v-77" fill="none" stroke="#ad6672" stroke-width="2.5" stroke-dasharray="8 7"/><path d="m150 244 7 12h-14z" fill="#ad6672"/>
+  <text x="636" y="354" text-anchor="middle" font-size="16" fill="#793d47">发现行为不符时回到规则或实现，不把生成完成当作验收</text>
+</svg>

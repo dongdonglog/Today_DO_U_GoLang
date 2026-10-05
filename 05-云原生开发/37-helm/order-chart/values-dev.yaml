@@ -1,0 +1,27 @@
+replicaCount: 1
+
+image:
+  repository: go-book-docker
+  tag: order-v1
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+config:
+  logLevel: debug
+  environment: dev
+
+secret:
+  existingName: ""
+  dbPassword: local-demo-only # 仅为本地演示占位值,不要复用到生产
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 32Mi
+  limits:
+    cpu: 200m
+    memory: 64Mi

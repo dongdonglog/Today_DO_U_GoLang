@@ -1,0 +1,63 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph TB
+    ROOT["myapp/"]
+
+    subgraph 应用入口
+        CMD["cmd/<br/>server/main.go"]
+    end
+
+    subgraph 私有代码
+        INTERNAL["internal/"]
+        HANDLER["handler/<br/>HTTP 处理器"]
+        SERVICE["service/<br/>业务逻辑"]
+        REPO["repo/<br/>数据访问"]
+        MODEL["model/<br/>数据模型"]
+        MW["middleware/<br/>中间件"]
+    end
+
+    subgraph 公开代码
+        PKG["pkg/"]
+        AUTH["auth/<br/>JWT 工具"]
+        RESP["response/<br/>统一响应"]
+        ERR["errcode/<br/>错误码"]
+    end
+
+    subgraph 配置与部署
+        CONF["configs/<br/>配置文件"]
+        DEPLOY["deployments/<br/>Docker / K8s"]
+        API["api/proto/<br/>API 定义"]
+    end
+
+    subgraph 工程化
+        MK["Makefile"]
+        LINT[".golangci.yml"]
+        GOMOD["go.mod"]
+        AIR[".air.toml"]
+    end
+
+    ROOT --> CMD
+    ROOT --> INTERNAL
+    INTERNAL --> HANDLER
+    INTERNAL --> SERVICE
+    INTERNAL --> REPO
+    INTERNAL --> MODEL
+    INTERNAL --> MW
+    ROOT --> PKG
+    PKG --> AUTH
+    PKG --> RESP
+    PKG --> ERR
+    ROOT --> CONF
+    ROOT --> DEPLOY
+    ROOT --> API
+    ROOT --> MK
+    ROOT --> LINT
+    ROOT --> GOMOD
+    ROOT --> AIR
+
+    style CMD fill:#00ADD8,stroke:#007D9C,color:#fff
+    style INTERNAL fill:#E0EBF5,stroke:#00ADD8,color:#333
+    style PKG fill:#E0EBF5,stroke:#00ADD8,color:#333
+    style MK fill:#5A6376,stroke:#3D4555,color:#fff
+    style LINT fill:#5A6376,stroke:#3D4555,color:#fff
+    style GOMOD fill:#5A6376,stroke:#3D4555,color:#fff
+    style AIR fill:#5A6376,stroke:#3D4555,color:#fff

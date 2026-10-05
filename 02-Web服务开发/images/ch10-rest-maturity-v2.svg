@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="440" viewBox="0 0 1180 440" role="img" aria-labelledby="title desc">
+  <title id="title">REST API Richardson 成熟度模型</title>
+  <desc id="desc">四张依次递进的卡片展示 API 从单一 RPC 端点，到资源 URL、HTTP 方法语义，再到通过响应链接发现相关资源。成熟度是分析模型，不是所有业务必须达到的等级。</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1 1 L8 5 L1 9 Z" fill="#53666d"/></marker></defs>
+  <rect width="1180" height="440" rx="8" fill="#f5f8f8"/>
+  <text x="590" y="42" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="23" font-weight="700" fill="#25373d">从 RPC 端点到资源驱动的 Web API</text>
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif">
+    <g transform="translate(28 100)"><rect width="260" height="222" rx="7" fill="#f9ece7" stroke="#b7644d" stroke-width="1.5"/><text x="20" y="35" font-size="14" font-weight="700" fill="#934c39">LEVEL 0</text><text x="20" y="68" font-size="18" font-weight="700" fill="#25373d">RPC 风格</text><text x="20" y="110" font-size="14" fill="#344b52">POST /api/getUsers</text><text x="20" y="140" font-size="14" fill="#344b52">POST /api/deleteUser</text><text x="20" y="184" font-size="12" fill="#53666d">操作名称决定语义</text></g>
+    <g transform="translate(326 100)"><rect width="260" height="222" rx="7" fill="#fff2df" stroke="#be8130" stroke-width="1.5"/><text x="20" y="35" font-size="14" font-weight="700" fill="#94601c">LEVEL 1</text><text x="20" y="68" font-size="18" font-weight="700" fill="#25373d">资源标识</text><text x="20" y="110" font-size="14" fill="#344b52">/api/users</text><text x="20" y="140" font-size="14" fill="#344b52">/api/users/1</text><text x="20" y="184" font-size="12" fill="#53666d">URL 指向业务资源</text></g>
+    <g transform="translate(624 100)"><rect width="260" height="222" rx="7" fill="#e7f3f1" stroke="#288477" stroke-width="1.5"/><text x="20" y="35" font-size="14" font-weight="700" fill="#176c63">LEVEL 2</text><text x="20" y="68" font-size="18" font-weight="700" fill="#25373d">HTTP 方法语义</text><text x="20" y="110" font-size="14" fill="#344b52">GET /api/users/1</text><text x="20" y="140" font-size="14" fill="#344b52">PUT /api/users/1</text><text x="20" y="170" font-size="14" fill="#344b52">DELETE /api/users/1</text><text x="20" y="200" font-size="12" fill="#53666d">统一方法与状态码</text></g>
+    <g transform="translate(922 100)"><rect width="230" height="222" rx="7" fill="#eaf0f8" stroke="#557ba7" stroke-width="1.5"/><text x="20" y="35" font-size="14" font-weight="700" fill="#2d5684">LEVEL 3</text><text x="20" y="68" font-size="18" font-weight="700" fill="#25373d">超媒体链接</text><text x="20" y="108" font-size="13" fill="#344b52">GET /api/users/1</text><text x="20" y="142" font-size="12" fill="#344b52">links: self, orders</text><text x="20" y="180" font-size="12" fill="#53666d">响应描述可继续执行的关系</text></g>
+  </g>
+  <g fill="none" stroke="#53666d" stroke-width="2" marker-end="url(#arrow)"><path d="M288 211 H317"/><path d="M586 211 H615"/><path d="M884 211 H913"/></g>
+  <rect x="28" y="360" width="1124" height="44" rx="6" fill="#ffffff" stroke="#c8d4d7"/>
+  <text x="590" y="388" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="13" fill="#344b52">层级用于分析接口约束；大多数业务优先做好资源、HTTP 语义和一致的错误响应</text>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="390" viewBox="0 0 1120 390" role="img" aria-labelledby="title desc">
+  <title id="title">告警从规则到恢复的生命周期</title>
+  <desc id="desc">Prometheus 计算规则并经过 for 窗口确认持续异常，Alertmanager 对通知分组和路由，值班同学按 Runbook 止血恢复并持续观察 SLI 后关闭事件。</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1 1 L8 5 L1 9 Z" fill="#53666d"/></marker></defs>
+  <rect width="1120" height="390" rx="8" fill="#f5f8f8"/>
+  <text x="560" y="40" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="23" font-weight="700" fill="#25373d">从持续异常到业务恢复</text>
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif">
+    <rect x="35" y="117" width="205" height="108" rx="7" fill="#eaf0f8" stroke="#557ba7" stroke-width="1.5"/>
+    <text x="137" y="153" text-anchor="middle" font-size="17" font-weight="700" fill="#2d5684">Prometheus</text>
+    <text x="137" y="183" text-anchor="middle" font-size="13" fill="#42575e">PromQL 规则求值</text>
+    <text x="137" y="205" text-anchor="middle" font-size="12" fill="#42575e">Pending → Firing</text>
+    <rect x="292" y="117" width="205" height="108" rx="7" fill="#fff2df" stroke="#be8130" stroke-width="1.5"/>
+    <text x="394" y="153" text-anchor="middle" font-size="17" font-weight="700" fill="#94601c">Alertmanager</text>
+    <text x="394" y="183" text-anchor="middle" font-size="13" fill="#42575e">分组 · 去重 · 抑制</text>
+    <rect x="550" y="117" width="205" height="108" rx="7" fill="#f9ece7" stroke="#b7644d" stroke-width="1.5"/>
+    <text x="652" y="153" text-anchor="middle" font-size="17" font-weight="700" fill="#934c39">值班响应</text>
+    <text x="652" y="183" text-anchor="middle" font-size="13" fill="#42575e">影响判断 · Runbook</text>
+    <rect x="807" y="117" width="265" height="108" rx="7" fill="#e7f3f1" stroke="#288477" stroke-width="1.5"/>
+    <text x="939" y="153" text-anchor="middle" font-size="17" font-weight="700" fill="#176c63">止血与恢复</text>
+    <text x="939" y="183" text-anchor="middle" font-size="13" fill="#42575e">验证 SLI · 关闭 · 复盘</text>
+  </g>
+  <g fill="none" stroke="#53666d" stroke-width="2" marker-end="url(#arrow)"><path d="M240 171 H284"/><path d="M497 171 H542"/><path d="M755 171 H799"/></g>
+  <path d="M940 225 V278 H135 V234" fill="none" stroke="#288477" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+  <text x="540" y="306" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="13" fill="#176c63">恢复后的指标继续参与下一轮规则判断</text>
+  <text x="560" y="355" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="13" fill="#53666d">告警必须有明确影响、负责人、接收渠道和可执行 Runbook</text>
+</svg>

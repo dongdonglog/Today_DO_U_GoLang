@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">Channel 生产消费与关闭顺序</title>
+  <desc id="desc">生产者写入 jobs 并关闭它；worker 排空 jobs 后退出；协调者等待全部 worker 结束后关闭 results，主 goroutine 排空结果。</desc>
+  <rect width="1200" height="420" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">Channel 生命周期：先停发送，再关结果</text>
+  <rect x="55" y="142" width="190" height="92" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="150" y="180" text-anchor="middle" font-size="20" font-weight="700" fill="#203d48">生产者</text><text x="150" y="208" text-anchor="middle" font-size="15" fill="#58717b">发送任务</text>
+  <path d="M245 188h76" stroke="#427c8a" stroke-width="3"/><path d="m321 188-12-8v16z" fill="#427c8a"/>
+  <rect x="328" y="142" width="180" height="92" rx="8" fill="#fff" stroke="#d28b42" stroke-width="2"/>
+  <text x="418" y="180" text-anchor="middle" font-size="20" font-weight="700" fill="#61431f">jobs</text><text x="418" y="208" text-anchor="middle" font-size="15" fill="#675541">生产者关闭</text>
+  <path d="M508 188h76" stroke="#427c8a" stroke-width="3"/><path d="m584 188-12-8v16z" fill="#427c8a"/>
+  <rect x="591" y="124" width="240" height="128" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="711" y="162" text-anchor="middle" font-size="20" font-weight="700" fill="#126d64">worker pool</text><text x="711" y="192" text-anchor="middle" font-size="15" fill="#58717b">range jobs，排空后退出</text><text x="711" y="222" text-anchor="middle" font-size="15" fill="#58717b">WaitGroup 汇总完成</text>
+  <path d="M831 188h76" stroke="#427c8a" stroke-width="3"/><path d="m907 188-12-8v16z" fill="#427c8a"/>
+  <rect x="914" y="142" width="145" height="92" rx="8" fill="#fff" stroke="#d28b42" stroke-width="2"/>
+  <text x="986" y="180" text-anchor="middle" font-size="20" font-weight="700" fill="#61431f">results</text><text x="986" y="208" text-anchor="middle" font-size="15" fill="#675541">协调者关闭</text>
+  <path d="M1059 188h55" stroke="#427c8a" stroke-width="3"/><path d="m1114 188-12-8v16z" fill="#427c8a"/>
+  <rect x="1118" y="142" width="60" height="92" rx="8" fill="#fff" stroke="#627b8b" stroke-width="2"/>
+  <text x="1148" y="180" text-anchor="middle" font-size="16" font-weight="700" fill="#203d48">读</text><text x="1148" y="208" text-anchor="middle" font-size="14" fill="#58717b">range</text>
+  <path d="M150 294v43h560v-84" fill="none" stroke="#ad6672" stroke-width="2.5" stroke-dasharray="8 7"/><path d="m710 253-7 12h14z" fill="#ad6672"/>
+  <text x="433" y="366" text-anchor="middle" font-size="16" fill="#793d47">关闭通知“不会再有新任务”；已有缓冲值仍可读取</text>
+</svg>

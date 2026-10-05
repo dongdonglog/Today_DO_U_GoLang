@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">Benchmark 测量与比较步骤</title>
+  <desc id="desc">先定义相同输入下的等价工作单元，再运行多轮基准并记录耗时和分配，分析波动，最后回到服务压测验证用户可感知的收益。</desc>
+  <rect width="1200" height="420" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">从局部微基准回到服务负载验证</text>
+  <rect x="58" y="145" width="220" height="96" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="168" y="182" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">定义工作单元</text><text x="168" y="213" text-anchor="middle" font-size="14" fill="#58717b">等价输入与结果</text>
+  <path d="M278 193h56" stroke="#427c8a" stroke-width="3"/><path d="m334 193-12-8v16z" fill="#427c8a"/>
+  <rect x="341" y="145" width="220" height="96" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="451" y="182" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">运行多轮</text><text x="451" y="213" text-anchor="middle" font-size="14" fill="#58717b">benchmem / count</text>
+  <path d="M561 193h56" stroke="#427c8a" stroke-width="3"/><path d="m617 193-12-8v16z" fill="#427c8a"/>
+  <rect x="624" y="145" width="220" height="96" rx="8" fill="#fff4df" stroke="#d28b42" stroke-width="2"/>
+  <text x="734" y="182" text-anchor="middle" font-size="19" font-weight="700" fill="#61431f">比较数据</text><text x="734" y="213" text-anchor="middle" font-size="14" fill="#675541">ns/op · B/op · allocs/op</text>
+  <path d="M844 193h56" stroke="#427c8a" stroke-width="3"/><path d="m900 193-12-8v16z" fill="#427c8a"/>
+  <rect x="907" y="145" width="235" height="96" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="1024" y="182" text-anchor="middle" font-size="19" font-weight="700" fill="#126d64">服务压测复核</text><text x="1024" y="213" text-anchor="middle" font-size="14" fill="#58717b">验证端到端 SLI</text>
+  <path d="M1024 241v74H168v-74" fill="none" stroke="#ad6672" stroke-width="2.5" stroke-dasharray="8 7"/><path d="m168 241 7 12h-14z" fill="#ad6672"/>
+  <text x="595" y="347" text-anchor="middle" font-size="16" fill="#793d47">记录 Go 版本、硬件、命令与波动；微基准不是绝对性能承诺</text>
+</svg>

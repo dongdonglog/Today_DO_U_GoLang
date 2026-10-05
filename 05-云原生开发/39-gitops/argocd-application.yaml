@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: order-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://gitlab.example.com/team/go-book-from-me.git
+    targetRevision: main
+    path: 05-云原生开发/37-helm/order-chart
+    helm:
+      releaseName: order
+      valueFiles:
+        - values-staging.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true

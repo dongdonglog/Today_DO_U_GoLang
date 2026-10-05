@@ -1,0 +1,40 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph TB
+    subgraph Map Structure
+        HMAP["hmap"]
+        BUCKETS["buckets"]
+    end
+
+    subgraph Bucket 0
+        B0_TOPHASH["tophash: [8]byte"]
+        B0_KEYS["keys: [8]key"]
+        B0_VALUES["values: [8]value"]
+        B0_OVERFLOW["overflow: *bucket"]
+    end
+
+    subgraph Bucket 1
+        B1_TOPHASH["tophash: [8]byte"]
+        B1_KEYS["keys: [8]key"]
+        B1_VALUES["values: [8]value"]
+        B1_OVERFLOW["overflow: *bucket"]
+    end
+
+    HMAP --> BUCKETS
+    BUCKETS --> B0_TOPHASH
+    BUCKETS --> B1_TOPHASH
+
+    B0_OVERFLOW -->|"overflow"| B1_TOPHASH
+
+    subgraph Key-Value Pairs
+        KV1["key1 -> value1"]
+        KV2["key2 -> value2"]
+        KV3["key3 -> value3"]
+    end
+
+    B0_KEYS --> KV1
+    B0_VALUES --> KV1
+
+    style HMAP fill:#00ADD8,stroke:#007D9C,color:#fff
+    style BUCKETS fill:#3498DB,stroke:#2980B9,color:#fff
+    style B0_TOPHASH fill:#9B59B6,stroke:#8E44AD,color:#fff
+    style B1_TOPHASH fill:#9B59B6,stroke:#8E44AD,color:#fff

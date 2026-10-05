@@ -1,0 +1,39 @@
+site_name: Go 服务器开发工程师实战
+site_description: 从业务系统到云原生平台的 Go 工程实践
+docs_dir: .book-docs
+site_dir: site
+
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.sections
+    - navigation.path
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search
+
+exclude_docs: |
+  **/images/src/**
+  **/testdata/**
+  **/vendor/**
+  **/.DS_Store
+  AGENTS.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+
+extra_css:
+  - stylesheets/extra.css

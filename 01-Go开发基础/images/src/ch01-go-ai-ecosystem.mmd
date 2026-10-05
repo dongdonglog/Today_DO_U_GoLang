@@ -1,0 +1,39 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph TB
+    subgraph AI应用层
+        AGENT["Agent 智能体<br/>Eino ADK"]
+        RAG["RAG 知识检索<br/>LangChainGo"]
+        CHAT["AI 对话系统<br/>MCP 协议"]
+    end
+
+    subgraph 框架层
+        EINO["Eino 框架<br/>12k Star<br/>字节开源"]
+        LCGO["LangChainGo<br/>9.5k Star"]
+    end
+
+    subgraph 模型层
+        OPENAI["OpenAI API"]
+        OLLAMA["Ollama<br/>本地推理"]
+        CLAUDE["Claude API"]
+    end
+
+    subgraph 基础设施层
+        MILVUS["Milvus<br/>向量数据库"]
+        GATEWAY["AI Gateway<br/>高性能代理"]
+        MCP["MCP Server<br/>工具集成"]
+    end
+
+    AGENT --> EINO
+    RAG --> LCGO
+    CHAT --> MCP
+    EINO --> OPENAI
+    EINO --> OLLAMA
+    EINO --> CLAUDE
+    LCGO --> OPENAI
+    LCGO --> OLLAMA
+    RAG --> MILVUS
+    CHAT --> GATEWAY
+
+    style EINO fill:#00ADD8,stroke:#007D9C,color:#fff
+    style LCGO fill:#76E0F7,stroke:#00ADD8,color:#333
+    style OLLAMA fill:#FF6B6B,stroke:#CC5555,color:#fff

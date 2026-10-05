@@ -1,0 +1,46 @@
+# 探针演示:liveness / readiness / startup 三种探针各司其职。
+#
+# kubectl apply -f probes.yaml
+# kubectl get pods -w   # READY 从 0/1 -> 1/1(readiness 通过)
+#
+# 三个探针的分工:
+#   startupProbe  :应用启动慢时,先别让 liveness 杀它(给启动留时间)
+#   readinessProbe:没就绪就别把流量给我(从 Service endpoints 摘除,第35章呼应)
+#   livenessProbe :活着吗?失败就重启容器——自愈的核心机制
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-probes
+  labels:
+    app: demo-probes
+spec:
+  containers:
+    - name: app
+      image: go-book-docker:multistage
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080
+      startupProbe:
+        httpGet:
+          path: /healthz
+          port: 8080
+        periodSeconds: 2
+        failureThreshold: 30 # 最多等 60s 启动
+      readinessProbe:
+        httpGet:
+          path: /healthz
+          port: 8080
+        periodSeconds: 5
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 8080
+        periodSeconds: 5
+        failureThreshold: 3 # 连续 3 次失败(15s)才重启,避免抖动误杀
+      resources:
+        requests: # 调度依据:kubelet 保证这些资源可用
+          cpu: 50m
+          memory: 32Mi
+        limits: # 硬顶:超限 CPU 被限流,内存超限 OOMKill
+          cpu: 200m
+          memory: 64Mi

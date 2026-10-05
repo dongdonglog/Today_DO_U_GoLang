@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430" role="img" aria-labelledby="title desc">
+  <title id="title">Slice 与底层数组的引用关系</title>
+  <desc id="desc">两个 slice header 可以指向同一底层数组，长度和容量描述可访问范围；复制一小段数据会建立新的短数组并允许原大数组回收。</desc>
+  <rect width="1200" height="430" rx="8" fill="#f4f8fa"/>
+  <text x="50" y="52" font-size="27" font-weight="700" fill="#1b3440">短 Slice 可能继续保留整块底层数组</text>
+  <rect x="70" y="118" width="255" height="76" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="197" y="151" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">header A</text><text x="197" y="178" text-anchor="middle" font-size="14" fill="#58717b">len=16 · cap=1 MiB</text>
+  <rect x="70" y="222" width="255" height="76" rx="8" fill="#fff" stroke="#d28b42" stroke-width="2"/>
+  <text x="197" y="255" text-anchor="middle" font-size="19" font-weight="700" fill="#61431f">header B</text><text x="197" y="282" text-anchor="middle" font-size="14" fill="#675541">len=16 · cap=16</text>
+  <path d="M325 155h82v57h55M325 260h82v-48h55" fill="none" stroke="#427c8a" stroke-width="2.5"/>
+  <path d="m462 212-12-8v16z" fill="#427c8a"/>
+  <rect x="468" y="119" width="630" height="188" rx="8" fill="#fff" stroke="#627b8b" stroke-width="2"/>
+  <text x="783" y="151" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">同一个底层数组</text>
+  <rect x="500" y="181" width="172" height="70" fill="#e5f3f3" stroke="#427c8a"/><text x="586" y="211" text-anchor="middle" font-size="16" fill="#203d48">前 16 字节</text><text x="586" y="236" text-anchor="middle" font-size="13" fill="#58717b">两个视图可访问</text>
+  <rect x="672" y="181" width="390" height="70" fill="#eef1f4" stroke="#aab8c1"/><text x="867" y="222" text-anchor="middle" font-size="16" fill="#58717b">其余空间仍被引用保留</text>
+  <text x="74" y="352" font-size="16" font-weight="700" fill="#126d64">复制所需片段</text>
+  <path d="M210 348h144" stroke="#18877c" stroke-width="3"/><path d="m354 348-12-8v16z" fill="#18877c"/>
+  <rect x="363" y="319" width="322" height="56" rx="7" fill="#e2f3ef" stroke="#18877c" stroke-width="2"/>
+  <text x="524" y="354" text-anchor="middle" font-size="16" fill="#126d64">独立的 16 字节数组</text>
+  <text x="723" y="354" font-size="15" fill="#58717b">不再引用原大块数据</text>
+  <text x="50" y="409" font-size="14" fill="#58717b">限制 cap 可防止后续 append 覆盖相邻数据，但不会释放原数组。</text>
+</svg>

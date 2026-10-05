@@ -1,0 +1,38 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#007d9c', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8'}}}%%
+graph TB
+    subgraph "Empty Interface eface"
+        A["type: *_type"]
+        B["data: unsafe.Pointer"]
+    end
+
+    subgraph "Non-empty Interface iface"
+        C["tab: *itab"]
+        D["data: unsafe.Pointer"]
+    end
+
+    subgraph "itab Structure"
+        E["inter: *interfacetype"]
+        F["_type: *_type"]
+        G["link: *itab"]
+        H["bad: int32"]
+        I["inhash: int32"]
+        J["fun: uintptr array"]
+    end
+
+    C --> E
+    C --> F
+    C --> G
+    C --> H
+    C --> I
+    C --> J
+
+    style A fill:#00ADD8,stroke:#007d9c
+    style B fill:#00ADD8,stroke:#007d9c
+    style C fill:#E0EBF5,stroke:#5A6376
+    style D fill:#E0EBF5,stroke:#5A6376
+    style E fill:#F0F4F8,stroke:#5A6376
+    style F fill:#F0F4F8,stroke:#5A6376
+    style G fill:#F0F4F8,stroke:#5A6376
+    style H fill:#F0F4F8,stroke:#5A6376
+    style I fill:#F0F4F8,stroke:#5A6376
+    style J fill:#F0F4F8,stroke:#5A6376

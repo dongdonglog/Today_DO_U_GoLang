@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430" role="img" aria-labelledby="title desc">
+  <title id="title">GMP 调度关系</title>
+  <desc id="desc">Goroutine 进入运行队列，由持有 P 的操作系统线程 M 执行；系统调用阻塞时 M 可释放 P，让其他 M 继续执行可运行任务，网络等待由 netpoller 协调。</desc>
+  <rect width="1200" height="430" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">GMP：任务、并行资源和操作系统线程</text>
+  <rect x="65" y="123" width="260" height="144" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="195" y="158" text-anchor="middle" font-size="20" font-weight="700" fill="#203d48">P：逻辑处理器</text>
+  <rect x="96" y="182" width="67" height="43" rx="5" fill="#e5f3f3"/><text x="129" y="209" text-anchor="middle" font-size="15" fill="#203d48">G1</text>
+  <rect x="172" y="182" width="67" height="43" rx="5" fill="#e5f3f3"/><text x="205" y="209" text-anchor="middle" font-size="15" fill="#203d48">G2</text>
+  <rect x="248" y="182" width="49" height="43" rx="5" fill="#fff4df"/><text x="272" y="209" text-anchor="middle" font-size="15" fill="#61431f">...</text>
+  <text x="195" y="250" text-anchor="middle" font-size="14" fill="#58717b">本地可运行队列</text>
+  <path d="M325 195h98" stroke="#427c8a" stroke-width="3"/><path d="m423 195-12-8v16z" fill="#427c8a"/>
+  <rect x="430" y="145" width="215" height="100" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="537" y="183" text-anchor="middle" font-size="20" font-weight="700" fill="#126d64">M：OS 线程</text><text x="537" y="215" text-anchor="middle" font-size="14" fill="#58717b">持有 P 执行 G</text>
+  <path d="M645 195h92" stroke="#427c8a" stroke-width="3"/><path d="m737 195-12-8v16z" fill="#427c8a"/>
+  <rect x="744" y="145" width="175" height="100" rx="8" fill="#fff" stroke="#627b8b" stroke-width="2"/>
+  <text x="831" y="183" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">CPU 核心</text><text x="831" y="215" text-anchor="middle" font-size="14" fill="#58717b">并行执行</text>
+  <rect x="974" y="112" width="166" height="72" rx="8" fill="#fff4df" stroke="#d28b42" stroke-width="2"/>
+  <text x="1057" y="143" text-anchor="middle" font-size="18" font-weight="700" fill="#61431f">阻塞系统调用</text><text x="1057" y="166" text-anchor="middle" font-size="13" fill="#675541">M 暂时等待</text>
+  <path d="M537 145V112h437" fill="none" stroke="#d28b42" stroke-width="2.5"/><path d="m974 112-12-7v14z" fill="#d28b42"/>
+  <rect x="974" y="219" width="166" height="72" rx="8" fill="#e2f3ef" stroke="#18877c" stroke-width="2"/>
+  <text x="1057" y="250" text-anchor="middle" font-size="18" font-weight="700" fill="#126d64">netpoller</text><text x="1057" y="273" text-anchor="middle" font-size="13" fill="#58717b">等待网络事件</text>
+  <path d="M537 245v78h437v-68" fill="none" stroke="#18877c" stroke-width="2.5"/><path d="m974 255-7 12h14z" fill="#18877c"/>
+  <text x="52" y="386" font-size="14" fill="#58717b">GOMAXPROCS 控制可同时运行 Go 代码的 P 数，不限制 G 的总数。</text>
+</svg>

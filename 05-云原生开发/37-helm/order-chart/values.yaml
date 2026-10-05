@@ -1,0 +1,29 @@
+replicaCount: 2
+
+image:
+  repository: go-book-docker
+  tag: order-v1
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+config:
+  logLevel: info
+  environment: dev
+
+secret:
+  existingName: ""
+  dbPassword: change-me
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 32Mi
+  limits:
+    cpu: 200m
+    memory: 64Mi

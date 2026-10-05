@@ -69,6 +69,8 @@ curl http://localhost:8080/hello
 
 ![请求处理生命周期](./images/ch04-request-lifecycle.svg)
 
+> **图解**：请求从监听端口进入连接与 HTTP 解析层，再由路由分发到 Handler；Handler 写入响应后，结果沿 HTTP 层返回客户端。业务代码主要负责路由之后的部分。
+
 ```
 ListenAndServe(":8080", nil)
   │
@@ -572,6 +574,8 @@ curl http://localhost:8080/slow
 
 ![优雅关闭流程](./images/ch04-graceful-shutdown.svg)
 
+> **图解**：收到退出信号后先停止接纳新连接，再给正在处理的请求一个有上限的完成窗口，最后关闭依赖并退出；超时后仍未结束的工作需要按策略中止。
+
 ```go
 func (s *Server) Shutdown(ctx context.Context) error {
     s.inShutdown.Store(true)       // 1. 标记正在关闭
@@ -701,6 +705,8 @@ handler := ChainMiddleware(mux,
 **顺序很重要：**
 
 ![中间件链式调用](./images/ch04-middleware-chain.svg)
+
+> **图解**：请求按注册顺序穿过中间件，响应按调用栈逆序返回。恢复、日志和请求 ID 等横切能力放在 Handler 外层，业务处理仍由 Handler 负责。
 
 1. **Recovery 最外层**：确保任何 panic 都能被捕获
 2. **Logging 第二层**：记录所有请求，包括被后续中间件拒绝的

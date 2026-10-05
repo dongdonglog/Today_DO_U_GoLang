@@ -1,0 +1,55 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph TB
+    subgraph 应用层
+        APP["微服务应用<br/>Gin / gRPC / Kitex"]
+    end
+
+    subgraph 编排层
+        K8S["Kubernetes<br/>容器编排"]
+        HELM["Helm<br/>包管理"]
+    end
+
+    subgraph 运行时
+        DOCKER["Docker<br/>容器运行时"]
+        CD["containerd<br/>CRI-O"]
+    end
+
+    subgraph 服务治理
+        MESH["Istio / Linkerd<br/>服务网格"]
+        REG["Consul / etcd<br/>服务注册"]
+    end
+
+    subgraph 可观测性
+        PROM["Prometheus<br/>监控"]
+        GRAF["Grafana<br/>可视化"]
+        OTEL["OpenTelemetry<br/>链路追踪"]
+        LOKI["Loki<br/>日志"]
+    end
+
+    subgraph 基础设施
+        ETCD["etcd<br/>KV 存储"]
+        TF["Terraform<br/>IaC"]
+        HARBOR["Harbor<br/>镜像仓库"]
+        GITLAB["GitLab CI/CD<br/>持续集成"]
+    end
+
+    APP --> K8S
+    K8S --> HELM
+    K8S --> DOCKER
+    DOCKER --> CD
+    APP --> MESH
+    APP --> REG
+    APP --> PROM
+    PROM --> GRAF
+    APP --> OTEL
+    APP --> LOKI
+    K8S --> ETCD
+    TF --> K8S
+    GITLAB --> DOCKER
+    HARBOR --> DOCKER
+
+    style APP fill:#00ADD8,stroke:#007D9C,color:#fff
+    style K8S fill:#326CE5,stroke:#2456C4,color:#fff
+    style DOCKER fill:#2496ED,stroke:#1A7BC7,color:#fff
+    style PROM fill:#E6522C,stroke:#B84122,color:#fff
+    style GRAF fill:#F46800,stroke:#C45300,color:#fff

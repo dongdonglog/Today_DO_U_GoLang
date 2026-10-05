@@ -347,7 +347,9 @@ Accept: application/vnd.myapp.v1+json
 
 ### 10.6.3 Richardson 成熟度模型
 
-![REST 成熟度模型](./images/ch10-rest-maturity.svg)
+![REST 成熟度模型](./images/ch10-rest-maturity-v2.svg)
+
+> **图解**：成熟度从单一 RPC 端点逐步增加资源标识、HTTP 方法语义和超媒体控制。它是分析 API 设计的一种模型，不是所有业务都必须机械达到最高级别。
 
 - **Level 0**：RPC 风格（一个 URL，一个方法）
   ```

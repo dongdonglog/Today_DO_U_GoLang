@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant Client
+    participant Server
+    participant Database
+
+    Client->>Server: HTTP Request
+    Server->>Database: SELECT query
+    Note over Database: 慢查询 10s...
+
+    Client--xServer: 客户端断开
+    Note over Server: 服务端不知道<br/>还在傻等
+
+    Note over Database: 查询完成
+    Database-->>Server: 返回结果
+    Note over Server: 结果已无用<br/>但 goroutine 已卡住 10s

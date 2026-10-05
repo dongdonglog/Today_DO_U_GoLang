@@ -1,0 +1,21 @@
+# Service:一组 Pod 的稳定虚拟 IP + 负载均衡。
+#
+# Pod 会死会重建(IP 变),Service 用 label selector 圈住"当前活着的 Pod 集合",
+# 提供一个不变的访问入口。
+#
+# kubectl apply -f service.yaml
+# kubectl get svc order-svc
+# kubectl get endpoints order-svc    # 看 Service 背后实际圈住的 Pod IP
+#
+# ClusterIP:集群内访问(默认);NodePort/LoadBalancer 见 35.4
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: order # 与 Deployment 的 Pod 标签匹配
+  ports:
+    - port: 80       # Service 自己的端口
+      targetPort: 8080 # 转发到 Pod 容器的端口

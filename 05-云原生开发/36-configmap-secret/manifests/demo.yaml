@@ -1,0 +1,62 @@
+# ConfigMap:非敏感配置的两条注入路径。
+#   1. envFrom/env   → 注入为环境变量(改了要重启 Pod)
+#   2. volumes 挂载  → 挂为文件(可热更新,Kubelet 周期同步,约 1 分钟内)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  # 环境变量形态(逐个注入用 envFrom 引用)
+  GREETING: "hello-from-configmap"
+  DB_HOST: "mysql.data.svc.cluster.local"
+  LOG_LEVEL: "info"
+  # 文件形态(整体挂载用 volumes 引用)
+  config.yaml: |
+    server:
+      port: 8080
+      timeout: 3s
+    features:
+      newCheckout: true
+---
+# Secret:敏感配置。data 的值是 base64(编码≠加密!),etcd 层面可配静态加密。
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secret
+type: Opaque
+stringData: # 明文直接写,K8s 自动 base64(比 data+手写 base64 可读)
+  DB_PASSWORD: "s3creT-p4ss"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cm-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: cm-demo}
+  template:
+    metadata:
+      labels: {app: cm-demo}
+    spec:
+      containers:
+        - name: app
+          image: go-book-docker:cmsecret
+          imagePullPolicy: IfNotPresent
+          ports: [{containerPort: 8080}]
+          envFrom:                       # 方式1:ConfigMap 整批注入环境变量
+            - configMapRef: {name: app-config}
+          env:                           # Secret 单独注入一个变量
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: app-secret, key: DB_PASSWORD}
+          volumeMounts:                  # 方式2:ConfigMap 挂为文件
+            - name: config-file
+              mountPath: /etc/app
+              readOnly: true
+          resources:
+            requests: {cpu: 50m, memory: 32Mi}
+            limits:   {cpu: 200m, memory: 64Mi}
+      volumes:
+        - name: config-file
+          configMap: {name: app-config, items: [{key: config.yaml, path: config.yaml}]}

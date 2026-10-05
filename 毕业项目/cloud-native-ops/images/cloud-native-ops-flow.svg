@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1220" height="650" viewBox="0 0 1220 650" role="img" aria-labelledby="title desc">
+  <title id="title">云原生运维平台的发布、观测与故障处置闭环</title>
+  <desc id="desc">图中展示代码提交后经过 GitLab CI 验证、镜像构建、扫描、Helm 渲染和 Kubernetes 发布，再由 Prometheus、Grafana、Tempo 与 OpenTelemetry 形成观测闭环，告警触发故障处置和回滚。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#526873"/>
+    </marker>
+    <marker id="alert-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#b7644d"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="135%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#18363d" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .title { font: 700 26px Arial, 'Microsoft YaHei', sans-serif; fill: #203a40; }
+      .subtitle { font: 14px Arial, 'Microsoft YaHei', sans-serif; fill: #5b7075; }
+      .label { font: 700 17px Arial, 'Microsoft YaHei', sans-serif; fill: #213c42; }
+      .body { font: 14px Arial, 'Microsoft YaHei', sans-serif; fill: #4f666b; }
+      .small { font: 12px Arial, 'Microsoft YaHei', sans-serif; fill: #72858a; }
+      .card { stroke-width: 1.8; rx: 9; filter: url(#shadow); }
+      .arrow { fill: none; stroke: #526873; stroke-width: 2.5; marker-end: url(#arrow); }
+      .alert { fill: none; stroke: #b7644d; stroke-width: 2.6; marker-end: url(#alert-arrow); stroke-dasharray: 8 6; }
+    </style>
+  </defs>
+
+  <rect width="1220" height="650" rx="8" fill="#f5f8f8"/>
+  <text x="610" y="48" text-anchor="middle" class="title">云原生运维不是只会写 YAML，而是让发布和排障形成闭环</text>
+  <text x="610" y="78" text-anchor="middle" class="subtitle">同一套服务同时提供容器镜像、Helm Chart、CI 流水线、指标、链路和看板</text>
+
+  <rect x="54" y="128" width="176" height="118" class="card" fill="#ffffff" stroke="#89a2a8"/>
+  <text x="142" y="164" text-anchor="middle" class="label">代码提交</text>
+  <text x="142" y="194" text-anchor="middle" class="body">Go 服务与 Chart</text>
+  <text x="142" y="219" text-anchor="middle" class="small">一次变更进入同一流水线</text>
+
+  <path d="M230 187 H292" class="arrow"/>
+
+  <rect x="298" y="110" width="244" height="154" class="card" fill="#eaf0f8" stroke="#5277a5"/>
+  <text x="420" y="146" text-anchor="middle" class="label">GitLab CI</text>
+  <text x="420" y="178" text-anchor="middle" class="body">gofmt · go vet · go test</text>
+  <text x="420" y="206" text-anchor="middle" class="body">helm lint · template</text>
+  <text x="420" y="234" text-anchor="middle" class="small">镜像扫描后才能部署</text>
+
+  <path d="M542 187 H604" class="arrow"/>
+
+  <rect x="610" y="110" width="244" height="154" class="card" fill="#fff2df" stroke="#bf8134"/>
+  <text x="732" y="146" text-anchor="middle" class="label">镜像与 Helm</text>
+  <text x="732" y="178" text-anchor="middle" class="body">非 root 多阶段镜像</text>
+  <text x="732" y="206" text-anchor="middle" class="body">values 分环境覆盖</text>
+  <text x="732" y="234" text-anchor="middle" class="small">发布使用不可变 tag 或 digest</text>
+
+  <path d="M854 187 H916" class="arrow"/>
+
+  <rect x="922" y="110" width="244" height="154" class="card" fill="#e7f3f1" stroke="#2d8579"/>
+  <text x="1044" y="146" text-anchor="middle" class="label">Kubernetes</text>
+  <text x="1044" y="178" text-anchor="middle" class="body">Deployment · Service</text>
+  <text x="1044" y="206" text-anchor="middle" class="body">readiness · liveness</text>
+  <text x="1044" y="234" text-anchor="middle" class="small">--atomic 失败自动回滚</text>
+
+  <line x1="54" y1="310" x2="1166" y2="310" stroke="#cbd7d5" stroke-width="1.5"/>
+  <text x="54" y="348" class="label">运行期观测</text>
+
+  <rect x="54" y="374" width="218" height="132" class="card" fill="#ffffff" stroke="#89a2a8"/>
+  <text x="163" y="410" text-anchor="middle" class="label">order-api</text>
+  <text x="163" y="440" text-anchor="middle" class="body">/healthz /readyz /metrics</text>
+  <text x="163" y="466" text-anchor="middle" class="body">JSON 日志与 TraceID</text>
+  <text x="163" y="489" text-anchor="middle" class="small">优雅关闭避免中断请求</text>
+
+  <path d="M272 440 H334" class="arrow"/>
+
+  <rect x="340" y="374" width="206" height="132" class="card" fill="#f7eee0" stroke="#9e7941"/>
+  <text x="443" y="410" text-anchor="middle" class="label">Prometheus</text>
+  <text x="443" y="440" text-anchor="middle" class="body">抓取请求量、延迟、错误率</text>
+  <text x="443" y="466" text-anchor="middle" class="body">评估告警规则</text>
+  <text x="443" y="489" text-anchor="middle" class="small">先看趋势，再看单点</text>
+
+  <path d="M546 440 H608" class="arrow"/>
+
+  <rect x="614" y="374" width="206" height="132" class="card" fill="#f1eaf2" stroke="#86658c"/>
+  <text x="717" y="410" text-anchor="middle" class="label">Grafana</text>
+  <text x="717" y="440" text-anchor="middle" class="body">延迟、吞吐、错误率</text>
+  <text x="717" y="466" text-anchor="middle" class="body">关联 Tempo Trace</text>
+  <text x="717" y="489" text-anchor="middle" class="small">面向值班排障</text>
+
+  <path d="M820 440 H882" class="arrow"/>
+
+  <rect x="888" y="374" width="278" height="132" class="card" fill="#f9ece7" stroke="#b7644d"/>
+  <text x="1027" y="410" text-anchor="middle" class="label">告警与处置</text>
+  <text x="1027" y="440" text-anchor="middle" class="body">5xx、P95、Target Down</text>
+  <text x="1027" y="466" text-anchor="middle" class="body">查看最近发布和 Trace</text>
+  <text x="1027" y="489" text-anchor="middle" class="small">必要时回滚或扩容</text>
+
+  <path d="M1027 374 C1027 318 1052 296 1044 264" class="alert"/>
+  <text x="998" y="330" class="small">故障处置反向影响发布策略</text>
+
+  <text x="610" y="586" text-anchor="middle" class="subtitle">核心结论：CI 保证变更可发布，Kubernetes 负责收敛，观测系统告诉你发布后是否真的健康。</text>
+</svg>

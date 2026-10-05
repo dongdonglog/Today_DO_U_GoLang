@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">AI 知识库系统的请求、授权与检索链路</title>
+  <desc id="desc">管理员上传审核文档后，系统解析和分块、生成 embedding，再以租户、集合、版本和来源信息写入 PostgreSQL pgvector。用户 HTTP 请求经 JWT 验证取得租户范围，检索后由 Eino ChatModel 生成候选答案，服务端返回实际命中来源。MCP Host 通过独立 stdio Server 调用相同只读检索能力。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#347d76"/></marker>
+    <marker id="arrow-amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#bd7a32"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#193b40" flood-opacity=".10"/></filter>
+  </defs>
+  <rect width="1200" height="600" rx="8" fill="#f4f8f7"/>
+  <text x="52" y="52" font-size="27" font-weight="700" fill="#203a40">身份和证据贯穿整条问答链路</text>
+
+  <rect x="48" y="96" width="220" height="176" rx="9" fill="#fff" stroke="#718f98" stroke-width="2" filter="url(#shadow)"/>
+  <text x="158" y="131" text-anchor="middle" font-size="18" font-weight="700" fill="#344f57">知识管理员</text>
+  <text x="158" y="165" text-anchor="middle" font-size="14" fill="#586f74">JWT role=knowledge_admin</text>
+  <text x="158" y="195" text-anchor="middle" font-size="14" fill="#586f74">提交审核后的版本</text>
+  <text x="158" y="236" text-anchor="middle" font-size="13" fill="#718185">文档来源与版本可审计</text>
+
+  <path d="M268 182h54" fill="none" stroke="#347d76" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="330" y="96" width="274" height="176" rx="9" fill="#e8f3f0" stroke="#4b887f" stroke-width="2" filter="url(#shadow)"/>
+  <text x="467" y="131" text-anchor="middle" font-size="18" font-weight="700" fill="#285d56">文档处理服务</text>
+  <text x="467" y="165" text-anchor="middle" font-size="14" fill="#58736e">验证 → 分块 → Embedding</text>
+  <text x="467" y="195" text-anchor="middle" font-size="14" fill="#58736e">旧版本失效与新版本切换</text>
+  <text x="467" y="236" text-anchor="middle" font-size="13" fill="#657b79">模型计算在短事务之外</text>
+
+  <path d="M604 182h54" fill="none" stroke="#347d76" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="666" y="96" width="482" height="176" rx="9" fill="#fff4e4" stroke="#c48a45" stroke-width="2" filter="url(#shadow)"/>
+  <text x="907" y="131" text-anchor="middle" font-size="18" font-weight="700" fill="#80501e">PostgreSQL + pgvector</text>
+  <text x="907" y="165" text-anchor="middle" font-size="14" fill="#776447">tenant_id · collection_id · active</text>
+  <text x="907" y="195" text-anchor="middle" font-size="14" fill="#776447">document_version · source_uri · vector</text>
+  <text x="907" y="236" text-anchor="middle" font-size="13" fill="#7a6b50">RLS 由非超级用户运行账号执行</text>
+
+  <line x1="48" y1="308" x2="1150" y2="308" stroke="#cbd7d5" stroke-width="1.5"/>
+  <text x="56" y="346" font-size="17" font-weight="700" fill="#285d56">用户查询：JWT 确定租户，服务端检索并返回证据</text>
+
+  <rect x="48" y="376" width="182" height="96" rx="8" fill="#fff" stroke="#718f98" stroke-width="2"/>
+  <text x="139" y="412" text-anchor="middle" font-size="16" font-weight="700" fill="#344f57">Gin API</text>
+  <text x="139" y="439" text-anchor="middle" font-size="13" fill="#61777b">JWT → principal</text>
+  <text x="139" y="459" text-anchor="middle" font-size="12" fill="#718185">请求体与并发受限</text>
+
+  <path d="M230 424h42" fill="none" stroke="#347d76" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="280" y="376" width="212" height="96" rx="8" fill="#e8f3f0" stroke="#4b887f" stroke-width="2"/>
+  <text x="386" y="412" text-anchor="middle" font-size="16" font-weight="700" fill="#285d56">授权检索</text>
+  <text x="386" y="439" text-anchor="middle" font-size="13" fill="#58736e">tenant + collection</text>
+  <text x="386" y="459" text-anchor="middle" font-size="12" fill="#657b79">RLS + Top-K + 阈值</text>
+
+  <path d="M492 424h42" fill="none" stroke="#347d76" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="542" y="376" width="235" height="96" rx="8" fill="#fff4e4" stroke="#c48a45" stroke-width="2"/>
+  <text x="659" y="412" text-anchor="middle" font-size="16" font-weight="700" fill="#80501e">Eino ChatModel</text>
+  <text x="659" y="439" text-anchor="middle" font-size="13" fill="#776447">只接收命中证据</text>
+  <text x="659" y="459" text-anchor="middle" font-size="12" fill="#7a6b50">候选文本，不负责授权</text>
+
+  <path d="M777 424h42" fill="none" stroke="#bd7a32" stroke-width="3" marker-end="url(#arrow-amber)"/>
+
+  <rect x="827" y="376" width="184" height="96" rx="8" fill="#fff" stroke="#b3747d" stroke-width="2"/>
+  <text x="919" y="412" text-anchor="middle" font-size="16" font-weight="700" fill="#78474e">Answer + Sources</text>
+  <text x="919" y="439" text-anchor="middle" font-size="13" fill="#665356">来源由服务端组装</text>
+  <text x="919" y="459" text-anchor="middle" font-size="12" fill="#806b6e">无证据则拒答</text>
+
+  <rect x="1027" y="366" width="121" height="118" rx="8" fill="#edf2f5" stroke="#788f9d" stroke-width="2"/>
+  <text x="1087" y="400" text-anchor="middle" font-size="15" font-weight="700" fill="#354e58">MCP Host</text>
+  <text x="1087" y="426" text-anchor="middle" font-size="12" fill="#60767d">stdio client</text>
+  <text x="1087" y="450" text-anchor="middle" font-size="12" fill="#60767d">只读搜索工具</text>
+  <text x="1087" y="472" text-anchor="middle" font-size="11" fill="#74858a">进程租户固定</text>
+
+  <path d="M1087 485v47H386v-57" fill="none" stroke="#667f8d" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+  <text x="735" y="526" text-anchor="middle" font-size="13" fill="#596e75">MCP 与 HTTP 共用检索实现，但有各自明确的认证边界</text>
+  <text x="600" y="574" text-anchor="middle" font-size="14" fill="#536b6d">模型生成候选答案；身份、数据库范围、引用列表和操作权限由应用控制。</text>
+</svg>

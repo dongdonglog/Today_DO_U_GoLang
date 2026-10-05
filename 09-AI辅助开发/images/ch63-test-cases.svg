@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">从行为契约生成测试用例</title>
+  <desc id="desc">将业务规则拆成条件和结果，围绕阈值、角色和异常提出用例；开发者核对预期后执行测试，失败时判断实现或契约是否错误。</desc>
+  <rect width="1200" height="420" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">测试先问“应该发生什么”，再写断言</text>
+  <rect x="55" y="145" width="215" height="95" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="162" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">业务规则</text><text x="162" y="211" text-anchor="middle" font-size="14" fill="#58717b">会员 · 实付金额</text>
+  <path d="M270 192h65" stroke="#427c8a" stroke-width="3"/><path d="m335 192-12-8v16z" fill="#427c8a"/>
+  <rect x="342" y="125" width="260" height="135" rx="8" fill="#fff" stroke="#d28b42" stroke-width="2"/>
+  <text x="472" y="159" text-anchor="middle" font-size="19" font-weight="700" fill="#61431f">候选边界</text>
+  <rect x="366" y="181" width="64" height="43" rx="5" fill="#fff4df"/><text x="398" y="208" text-anchor="middle" font-size="14" fill="#61431f">29999</text>
+  <rect x="440" y="181" width="64" height="43" rx="5" fill="#e2f3ef"/><text x="472" y="208" text-anchor="middle" font-size="14" fill="#126d64">30000</text>
+  <rect x="514" y="181" width="64" height="43" rx="5" fill="#e2f3ef"/><text x="546" y="208" text-anchor="middle" font-size="14" fill="#126d64">30001</text>
+  <path d="M602 192h65" stroke="#427c8a" stroke-width="3"/><path d="m667 192-12-8v16z" fill="#427c8a"/>
+  <rect x="674" y="145" width="215" height="95" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="781" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#126d64">人核对预期</text><text x="781" y="211" text-anchor="middle" font-size="14" fill="#58717b">确认单位与口径</text>
+  <path d="M889 192h65" stroke="#427c8a" stroke-width="3"/><path d="m954 192-12-8v16z" fill="#427c8a"/>
+  <rect x="961" y="145" width="190" height="95" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="1056" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">运行与复核</text><text x="1056" y="211" text-anchor="middle" font-size="14" fill="#58717b">失败形成回归</text>
+  <text x="52" y="331" font-size="15" fill="#58717b">AI 能扩展候选输入；需求和预期结果仍由业务负责人确认。</text>
+</svg>

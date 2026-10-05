@@ -1,0 +1,40 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph TB
+    subgraph Normal Execution
+        START["Function Start"]
+        EXEC["Execute Code"]
+        END["Function End"]
+    end
+
+    subgraph Panic Occurs
+        PANIC["panic() called"]
+        STOP["Stop Execution"]
+        DEFER["Execute Defers LIFO"]
+    end
+
+    subgraph Recovery
+        RECOVER{"recover() in defer?"}
+        CAUGHT["Panic Caught"]
+        CRASH["Program Crashes"]
+    end
+
+    START --> EXEC
+    EXEC --> END
+
+    EXEC --> PANIC
+    PANIC --> STOP
+    STOP --> DEFER
+    DEFER --> RECOVER
+
+    RECOVER -->|Yes| CAUGHT
+    RECOVER -->|No| CRASH
+
+    CAUGHT --> END
+
+    style START fill:#2ECC71,stroke:#27AE60,color:#fff
+    style END fill:#2ECC71,stroke:#27AE60,color:#fff
+    style PANIC fill:#E74C3C,stroke:#C0392B,color:#fff
+    style STOP fill:#E74C3C,stroke:#C0392B,color:#fff
+    style CRASH fill:#E74C3C,stroke:#C0392B,color:#fff
+    style CAUGHT fill:#3498DB,stroke:#2980B9,color:#fff
+    style RECOVER fill:#F39C12,stroke:#E67E22,color:#fff

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">有行为边界的 AI 辅助重构</title>
+  <desc id="desc">先记录接口和错误等行为基线，再对局部重复逻辑做结构调整，每一步检查 diff 并运行验证，发现行为变化就停止并修正。</desc>
+  <rect width="1200" height="420" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">保持行为不变，让结构更容易维护</text>
+  <rect x="56" y="145" width="220" height="98" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="166" y="182" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">行为基线</text><text x="166" y="214" text-anchor="middle" font-size="14" fill="#58717b">响应 · 错误 · 时序</text>
+  <path d="M276 194h65" stroke="#427c8a" stroke-width="3"/><path d="m341 194-12-8v16z" fill="#427c8a"/>
+  <rect x="348" y="145" width="220" height="98" rx="8" fill="#fff4df" stroke="#d28b42" stroke-width="2"/>
+  <text x="458" y="182" text-anchor="middle" font-size="19" font-weight="700" fill="#61431f">窄范围修改</text><text x="458" y="214" text-anchor="middle" font-size="14" fill="#675541">单一重构目标</text>
+  <path d="M568 194h65" stroke="#427c8a" stroke-width="3"/><path d="m633 194-12-8v16z" fill="#427c8a"/>
+  <rect x="640" y="145" width="220" height="98" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="750" y="182" text-anchor="middle" font-size="19" font-weight="700" fill="#126d64">检查 diff</text><text x="750" y="214" text-anchor="middle" font-size="14" fill="#58717b">确认无顺带改动</text>
+  <path d="M860 194h65" stroke="#427c8a" stroke-width="3"/><path d="m925 194-12-8v16z" fill="#427c8a"/>
+  <rect x="932" y="145" width="220" height="98" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="1042" y="182" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">验证行为</text><text x="1042" y="214" text-anchor="middle" font-size="14" fill="#58717b">测试与调用方</text>
+  <path d="M1042 243v74H166v-74" fill="none" stroke="#ad6672" stroke-width="2.5" stroke-dasharray="8 7"/><path d="m166 243 7 12h-14z" fill="#ad6672"/>
+  <text x="607" y="350" text-anchor="middle" font-size="16" fill="#793d47">不符就停止当前步骤，先找差异原因，再决定是否继续</text>
+</svg>

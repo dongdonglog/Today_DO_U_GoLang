@@ -156,6 +156,8 @@ fmt.Println(animal == nil) // false！
 
 ![Interface 底层结构](./images/ch06-interface-structure.svg)
 
+> **图解**：接口值同时携带动态类型信息与对应数据；只有二者都为空才是 nil interface。接口把调用方依赖的行为与具体实现分开，但不意味着所有类型都应抽象成接口。
+
 Go 有两种接口：
 
 **空接口 `interface{}`（eface）**：
@@ -538,6 +540,8 @@ func NewUserService(store UserStore) *UserService {
 ### 6.4.4 方法集决定谁实现接口
 
 ![接口方法集规则](./images/ch06-method-set.svg)
+
+> **图解**：编译器按类型的方法集判断接口实现关系：值接收者方法进入 `T` 和 `*T` 的方法集，指针接收者方法只进入 `*T`。这条规则与普通调用时是否能自动取地址不同。
 
 **方法集规则**：
 
@@ -1294,6 +1298,8 @@ var h http.Handler = handler
 ### 一张图：Handler 调用链
 
 ![Handler 依赖链](./images/ch06-handler-chain.svg)
+
+> **图解**：Handler 依赖 Service 接口，Service 再依赖 Store 接口；生产环境与测试环境分别注入不同实现。依赖方向由业务定义的接口控制，测试因此不必连真实数据库。
 
 ```
 HTTP Request

@@ -1,0 +1,32 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph TB
+    subgraph Go Zero Values
+        INT["int: 0"]
+        STRING["string: \"\""]
+        BOOL["bool: false"]
+        POINTER["pointer: nil"]
+        SLICE["slice: nil"]
+        MAP["map: nil"]
+        CHANNEL["channel: nil"]
+        INTERFACE["interface: nil"]
+    end
+
+    subgraph Comparison
+        C["C: undefined behavior"]
+        JAVA["Java: null / 0"]
+        GO["Go: zero value"]
+    end
+
+    C -->|"dangerous"| UNDEFINED["undefined"]
+    JAVA -->|"explicit"| NULL["null"]
+    GO -->|"safe"| ZERO["zero value"]
+
+    style INT fill:#00ADD8,stroke:#007D9C,color:#fff
+    style STRING fill:#00ADD8,stroke:#007D9C,color:#fff
+    style BOOL fill:#00ADD8,stroke:#007D9C,color:#fff
+    style POINTER fill:#00ADD8,stroke:#007D9C,color:#fff
+    style SLICE fill:#00ADD8,stroke:#007D9C,color:#fff
+    style MAP fill:#00ADD8,stroke:#007D9C,color:#fff
+    style CHANNEL fill:#00ADD8,stroke:#007D9C,color:#fff
+    style INTERFACE fill:#00ADD8,stroke:#007D9C,color:#fff
+    style GO fill:#2ECC71,stroke:#27AE60,color:#fff

@@ -1,0 +1,39 @@
+# Deployment:声明"我要 N 个副本",控制器负责一切。
+#
+# kubectl apply -f deployment.yaml
+# kubectl get deploy,pods -l app=order
+# 观察自愈:kubectl delete pod <某个>  → 自动补一个新 Pod
+# 观察扩缩容:kubectl scale deploy order --replicas=5
+#
+# 与裸 Pod 的本质区别:Deployment 控制器持续对比"期望副本数 vs 实际",
+# 任何偏离(误删/节点故障)都会被自动纠正——这就是自愈的第二层。
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order
+  labels:
+    app: order
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: order # 必须与 template.labels 匹配,否则控制器不认领 Pod
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      containers:
+        - name: app
+          image: go-book-docker:multistage # 第33章镜像(已 load 进 minikube)
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            periodSeconds: 3
+          resources:
+            requests: { cpu: 50m, memory: 32Mi }
+            limits: { cpu: 200m, memory: 64Mi }

@@ -1,0 +1,19 @@
+graph TD
+    A[Background] --> B[WithTimeout<br/>5s]
+    B --> C[WithValue<br/>requestID=req-123]
+    C --> D[WithCancel]
+    B --> E[WithValue<br/>userID=123]
+
+    style A fill:#E0E0E0,stroke:#333
+    style B fill:#FFE0B2,stroke:#F57C00
+    style C fill:#C8E6C9,stroke:#388E3C
+    style D fill:#FFCDD2,stroke:#D32F2F
+    style E fill:#C8E6C9,stroke:#388E3C
+
+    note1[父节点取消<br/>子节点全部取消]
+    note1 -.-> B
+
+    note2[取消传播方向]
+    note2 -.-> C
+    note2 -.-> D
+    note2 -.-> E

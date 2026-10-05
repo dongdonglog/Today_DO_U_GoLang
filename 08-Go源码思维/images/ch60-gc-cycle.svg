@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430" role="img" aria-labelledby="title desc">
+  <title id="title">Go GC 标记与分配目标</title>
+  <desc id="desc">分配达到堆目标后触发回收，运行时从根集合并发标记可达对象，写屏障维持标记正确性，再清扫不可达对象并计算下一轮目标。</desc>
+  <rect width="1200" height="430" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">GC 回收不可达对象，参数决定运行时取舍</text>
+  <rect x="58" y="140" width="216" height="97" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="166" y="177" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">业务分配对象</text><text x="166" y="208" text-anchor="middle" font-size="14" fill="#58717b">速率影响 GC 负担</text>
+  <path d="M274 188h55" stroke="#427c8a" stroke-width="3"/><path d="m329 188-12-8v16z" fill="#427c8a"/>
+  <rect x="336" y="140" width="205" height="97" rx="8" fill="#fff4df" stroke="#d28b42" stroke-width="2"/>
+  <text x="438" y="177" text-anchor="middle" font-size="19" font-weight="700" fill="#61431f">达到堆目标</text><text x="438" y="208" text-anchor="middle" font-size="14" fill="#675541">GOGC / 内存限制</text>
+  <path d="M541 188h55" stroke="#427c8a" stroke-width="3"/><path d="m596 188-12-8v16z" fill="#427c8a"/>
+  <rect x="603" y="119" width="265" height="139" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="735" y="155" text-anchor="middle" font-size="19" font-weight="700" fill="#126d64">并发标记可达对象</text>
+  <circle cx="685" cy="204" r="20" fill="#dceef2" stroke="#427c8a"/><text x="685" y="210" text-anchor="middle" font-size="13" fill="#203d48">root</text>
+  <circle cx="758" cy="204" r="20" fill="#e2f3ef" stroke="#18877c"/><text x="758" y="210" text-anchor="middle" font-size="13" fill="#126d64">live</text>
+  <circle cx="823" cy="204" r="20" fill="#eef1f4" stroke="#aab8c1"/><text x="823" y="210" text-anchor="middle" font-size="13" fill="#58717b">dead</text>
+  <path d="M705 204h33" stroke="#18877c" stroke-width="2.5"/><path d="m738 204-9-6v12z" fill="#18877c"/>
+  <path d="M868 188h55" stroke="#427c8a" stroke-width="3"/><path d="m923 188-12-8v16z" fill="#427c8a"/>
+  <rect x="930" y="140" width="208" height="97" rx="8" fill="#fff" stroke="#627b8b" stroke-width="2"/>
+  <text x="1034" y="177" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">清扫不可达对象</text><text x="1034" y="208" text-anchor="middle" font-size="14" fill="#58717b">仍被引用的对象保留</text>
+  <path d="M1034 237v76H166v-76" fill="none" stroke="#ad6672" stroke-width="2.5" stroke-dasharray="8 7"/><path d="m166 237 7 12h-14z" fill="#ad6672"/>
+  <text x="601" y="350" text-anchor="middle" font-size="16" fill="#793d47">根据新堆和软内存限制计算下一轮目标；GC 不能释放仍可达对象</text>
+  <text x="52" y="405" font-size="14" fill="#58717b">标记流程用于解释设计目标，实际阶段和实现会随 Go 版本演进。</text>
+</svg>

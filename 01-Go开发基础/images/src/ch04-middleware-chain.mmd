@@ -1,0 +1,35 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph LR
+    REQ["HTTP Request"]
+
+    subgraph Middleware
+        MW1["Recovery<br/>defer recover"]
+        MW2["Logging<br/>record latency"]
+        MW3["RequestID<br/>inject ID"]
+        MW4["CORS<br/>cross origin"]
+    end
+
+    subgraph Router
+        MUX["ServeMux<br/>tree match"]
+    end
+
+    subgraph Handler
+        H["UserHandler<br/>ServeHTTP"]
+    end
+
+    RES["HTTP Response"]
+
+    REQ --> MW1
+    MW1 -->|next| MW2
+    MW2 -->|next| MW3
+    MW3 -->|next| MW4
+    MW4 -->|next| MUX
+    MUX -->|match| H
+    H --> RES
+
+    style MW1 fill:#E74C3C,stroke:#C0392B,color:#fff
+    style MW2 fill:#3498DB,stroke:#2980B9,color:#fff
+    style MW3 fill:#2ECC71,stroke:#27AE60,color:#fff
+    style MW4 fill:#F39C12,stroke:#E67E22,color:#fff
+    style MUX fill:#00ADD8,stroke:#007D9C,color:#fff
+    style H fill:#9B59B6,stroke:#8E44AD,color:#fff

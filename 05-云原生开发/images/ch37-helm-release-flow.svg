@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
+  <title id="title">Helm 发布、升级与回滚流程</title>
+  <desc id="desc">Chart 模板、环境 values 和镜像版本经过 Helm 渲染后提交给 Kubernetes API。Helm 保存 release revision，Kubernetes 控制器维护 Pod；升级创建新 revision，回滚恢复旧清单并生成新的 revision。</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#263238" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#52616b"/>
+    </marker>
+    <style>
+      .title { font: 700 25px sans-serif; fill: #263238; }
+      .label { font: 700 16px sans-serif; fill: #263238; }
+      .body { font: 14px sans-serif; fill: #455a64; }
+      .small { font: 12px sans-serif; fill: #607d8b; }
+      .box { stroke: #90a4ae; stroke-width: 1.4; rx: 8; filter: url(#shadow); }
+      .arrow { stroke: #52616b; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1200" height="650" fill="#f7fafb"/>
+  <text x="48" y="52" class="title">Helm 如何发布、升级与回滚</text>
+  <text x="48" y="80" class="body">Helm 负责渲染并提交版本化清单，Kubernetes 控制器负责让工作负载收敛。</text>
+
+  <rect x="48" y="132" width="250" height="170" fill="#e8f4f7" class="box"/>
+  <text x="72" y="166" class="label">发布输入</text>
+  <text x="72" y="200" class="body">Chart.yaml + templates/</text>
+  <text x="72" y="226" class="body">环境 values 文件</text>
+  <text x="72" y="252" class="body">镜像 tag 或 digest</text>
+  <text x="72" y="280" class="small">敏感值由外部 Secret 系统提供</text>
+
+  <path d="M298 217 H365" class="arrow"/>
+
+  <rect x="370" y="132" width="215" height="170" fill="#fff3d9" class="box"/>
+  <text x="394" y="166" class="label">Helm 渲染</text>
+  <text x="394" y="200" class="body">helm lint</text>
+  <text x="394" y="226" class="body">helm template</text>
+  <text x="394" y="252" class="body">values 覆盖模板</text>
+  <text x="394" y="280" class="small">输出 Kubernetes manifest</text>
+
+  <path d="M585 217 H650" class="arrow"/>
+
+  <rect x="655" y="132" width="220" height="170" fill="#e7f4e8" class="box"/>
+  <text x="679" y="166" class="label">Kubernetes API</text>
+  <text x="679" y="200" class="body">创建或更新资源对象</text>
+  <text x="679" y="226" class="body">Deployment / Service</text>
+  <text x="679" y="252" class="body">ConfigMap / Secret 引用</text>
+  <text x="679" y="280" class="small">apiserver 校验并持久化</text>
+
+  <path d="M875 217 H940" class="arrow"/>
+
+  <rect x="945" y="132" width="210" height="170" fill="#fce9e7" class="box"/>
+  <text x="969" y="166" class="label">工作负载收敛</text>
+  <text x="969" y="200" class="body">Deployment controller</text>
+  <text x="969" y="226" class="body">滚动更新 Pod</text>
+  <text x="969" y="252" class="body">readiness 决定接流量</text>
+  <text x="969" y="280" class="small">kubectl rollout 检查结果</text>
+
+  <rect x="230" y="382" width="300" height="150" fill="#edf0fa" class="box"/>
+  <text x="258" y="418" class="label">Release revision 历史</text>
+  <text x="258" y="454" class="body">revision 1：首次安装</text>
+  <text x="258" y="480" class="body">revision 2：升级后的清单</text>
+  <text x="258" y="506" class="body">revision 3：回滚产生的新记录</text>
+
+  <path d="M477 302 V355 H380 V378" class="arrow"/>
+  <text x="391" y="345" class="small">默认保存在 namespace Secret</text>
+
+  <rect x="700" y="382" width="300" height="150" fill="#e7f4e8" class="box"/>
+  <text x="728" y="418" class="label">Upgrade 与 rollback</text>
+  <text x="728" y="454" class="body">upgrade：提交新的目标清单</text>
+  <text x="728" y="480" class="body">rollback：恢复旧清单内容</text>
+  <text x="728" y="506" class="body">不会撤销数据库和外部副作用</text>
+
+  <path d="M700 454 H535" class="arrow"/>
+  <text x="565" y="440" class="small">读取历史 revision</text>
+
+  <line x1="48" y1="590" x2="1152" y2="590" stroke="#cfd8dc" stroke-width="1"/>
+  <text x="48" y="620" class="small">边界：Helm 管发布历史；Deployment controller 管运行期副本和滚动过程。</text>
+</svg>

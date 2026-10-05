@@ -1,0 +1,101 @@
+openapi: 3.0.3
+info:
+  title: 企业级用户中心 API
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8080
+paths:
+  /healthz:
+    get:
+      summary: 健康检查
+      responses:
+        "200":
+          description: 依赖可用
+        "503":
+          description: 依赖不可用
+  /v1/auth/register:
+    post:
+      summary: 注册普通用户
+      responses:
+        "201":
+          description: 用户已创建
+        "409":
+          description: 邮箱已存在
+  /v1/auth/login:
+    post:
+      summary: 登录并签发访问令牌与刷新令牌
+      responses:
+        "200":
+          description: 登录成功
+        "401":
+          description: 邮箱或密码错误
+        "429":
+          description: 登录失败次数过多
+  /v1/auth/refresh:
+    post:
+      summary: 轮换刷新令牌并签发新的访问令牌
+      responses:
+        "200":
+          description: 刷新成功
+        "401":
+          description: 刷新令牌无效、过期或已被轮换
+  /v1/auth/logout:
+    post:
+      security:
+        - bearerAuth: []
+      summary: 退出登录并撤销当前访问令牌
+      responses:
+        "204":
+          description: 已退出
+  /v1/me:
+    get:
+      security:
+        - bearerAuth: []
+      summary: 查看当前用户
+      responses:
+        "200":
+          description: 当前用户
+  /v1/admin/users:
+    get:
+      security:
+        - bearerAuth: []
+      summary: 管理员查看用户列表
+      responses:
+        "200":
+          description: 用户列表
+        "403":
+          description: 当前用户不是管理员
+  /v1/admin/users/{id}/disable:
+    post:
+      security:
+        - bearerAuth: []
+      summary: 禁用用户
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 用户已禁用
+  /v1/admin/users/{id}/enable:
+    post:
+      security:
+        - bearerAuth: []
+      summary: 启用用户
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 用户已启用
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

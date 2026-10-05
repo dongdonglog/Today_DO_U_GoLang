@@ -1,0 +1,44 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph LR
+    subgraph G - Goroutines
+        G1["G1"]
+        G2["G2"]
+        G3["G3"]
+        G4["G4"]
+        G5["G5"]
+        G6["G6"]
+    end
+
+    subgraph P1 - Processor 1
+        LR1["Local Run Queue"]
+        G1 --> LR1
+        G2 --> LR1
+        G3 --> LR1
+    end
+
+    subgraph P2 - Processor 2
+        LR2["Local Run Queue"]
+        G4 --> LR2
+        G5 --> LR2
+        G6 --> LR2
+    end
+
+    subgraph GR - Global Run Queue
+        GRQ["Global Run Queue"]
+    end
+
+    subgraph M - OS Threads
+        M1["M1<br/>OS Thread"]
+        M2["M2<br/>OS Thread"]
+    end
+
+    LR1 --> M1
+    LR2 --> M2
+    GRQ --> LR1
+    GRQ --> LR2
+
+    style P1 fill:#00ADD8,stroke:#007D9C,color:#fff
+    style P2 fill:#00ADD8,stroke:#007D9C,color:#fff
+    style M1 fill:#5A6376,stroke:#3D4555,color:#fff
+    style M2 fill:#5A6376,stroke:#3D4555,color:#fff
+    style GR fill:#E0EBF5,stroke:#00ADD8,color:#333

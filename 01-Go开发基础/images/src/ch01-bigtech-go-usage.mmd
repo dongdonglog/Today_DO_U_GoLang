@@ -1,0 +1,25 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '16px'}}}%%
+graph TB
+    subgraph 国际大厂
+        G["Google<br/>Go 诞生地"]
+        N["Netflix<br/>缓存服务"]
+        U["Uber<br/>数据分析引擎"]
+        T["Twitch<br/>直播服务"]
+        P["PayPal<br/>支付系统"]
+        D["Dropbox<br/>存储后端"]
+        M["Microsoft<br/>云基础设施"]
+    end
+
+    subgraph 国内大厂
+        BD["字节跳动<br/>70% 微服务用 Go"]
+        TX["腾讯<br/>微信后台"]
+        AL["阿里<br/>钉钉 / 容器"]
+        MT["美团<br/>配送系统"]
+        BL["哔哩哔哩<br/>视频服务"]
+    end
+
+    G --> BD
+    N --> TX
+    U --> AL
+    T --> MT
+    P --> BL

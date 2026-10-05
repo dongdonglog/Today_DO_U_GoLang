@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">互斥锁保护共享状态</title>
+  <desc id="desc">多个读者通过读锁并发读取缓存快照，写者需要独占写锁替换快照；新数据在锁外准备，缩短临界区。</desc>
+  <rect width="1200" height="420" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">锁保护状态边界，临界区只做内存操作</text>
+  <rect x="80" y="116" width="220" height="64" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/><text x="190" y="156" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">读请求 A</text>
+  <rect x="80" y="204" width="220" height="64" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/><text x="190" y="244" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">读请求 B</text>
+  <path d="M300 148h95M300 236h95" stroke="#427c8a" stroke-width="3"/><path d="m395 148-12-8v16zM395 236l-12-8v16z" fill="#427c8a"/>
+  <rect x="402" y="113" width="208" height="160" rx="8" fill="#e6f3f3" stroke="#427c8a" stroke-width="2"/>
+  <text x="506" y="150" text-anchor="middle" font-size="20" font-weight="700" fill="#203d48">RLock</text><text x="506" y="185" text-anchor="middle" font-size="15" fill="#58717b">共享读取</text><text x="506" y="215" text-anchor="middle" font-size="15" fill="#58717b">多个读者并行</text><text x="506" y="246" text-anchor="middle" font-size="14" fill="#58717b">只读快照</text>
+  <path d="M610 193h95" stroke="#427c8a" stroke-width="3"/><path d="m705 193-12-8v16z" fill="#427c8a"/>
+  <rect x="712" y="128" width="205" height="132" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="814" y="166" text-anchor="middle" font-size="20" font-weight="700" fill="#126d64">缓存快照</text><text x="814" y="198" text-anchor="middle" font-size="15" fill="#58717b">map：SKU → price</text><text x="814" y="228" text-anchor="middle" font-size="14" fill="#58717b">解锁后不可被外部改写</text>
+  <rect x="80" y="314" width="250" height="54" rx="8" fill="#fff" stroke="#d28b42" stroke-width="2"/><text x="205" y="348" text-anchor="middle" font-size="17" font-weight="700" fill="#61431f">锁外构造新快照</text>
+  <path d="M330 341h284v-68" fill="none" stroke="#d28b42" stroke-width="2.5"/><path d="m614 273-7 12h14z" fill="#d28b42"/>
+  <rect x="944" y="143" width="205" height="100" rx="8" fill="#fff" stroke="#ad6672" stroke-width="2"/>
+  <text x="1046" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#793d47">Lock 独占替换</text><text x="1046" y="212" text-anchor="middle" font-size="14" fill="#793d47">短暂阻塞读者</text>
+  <path d="M917 193h27" stroke="#ad6672" stroke-width="3"/><path d="m944 193-12-8v16z" fill="#ad6672"/>
+  <text x="52" y="399" font-size="15" fill="#58717b">共享状态与锁一起定义所有权；外部 IO 不进入临界区。</text>
+</svg>

@@ -1,0 +1,36 @@
+# Docker Compose 编排:app + redis 两个容器组成一个可互通的网络。
+#
+# 常用命令:
+#   docker compose up -d --build     构建并后台启动
+#   docker compose ps                查看状态(healthy 与否)
+#   curl localhost:8081/count        自增计数
+#   docker compose logs -f app       看应用日志
+#   docker compose down              停止并删除
+
+services:
+  app:
+    build: . # 用当前目录的 Dockerfile 构建
+    ports:
+      - "8081:8080" # 宿主机 8081 -> 容器 8080
+    environment:
+      REDIS_ADDR: redis:6379 # 服务名做主机名,compose 内置 DNS 解析
+      LISTEN_ADDR: ":8080"
+    depends_on:
+      redis:
+        condition: service_healthy # 等依赖健康才启动(不是"容器起来了"就启动)
+    restart: unless-stopped
+    healthcheck:
+      # scratch 里没有 wget/curl,让应用自己当探针(-healthcheck 子命令)
+      test: ["CMD", "/app", "-healthcheck"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  redis:
+    image: redis:8-alpine
+    # 生产环境应挂载持久化卷;这里演示侧重编排,数据可丢
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 5

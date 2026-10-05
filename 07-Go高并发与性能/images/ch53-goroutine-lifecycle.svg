@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">Goroutine 取消与退出路径</title>
+  <desc id="desc">调用方消费结果或主动取消；生成器在 channel 发送和等待处检查 Context，退出时关闭输出并释放运行资源。</desc>
+  <rect width="1200" height="420" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">每个启动点都需要可到达的退出路径</text>
+  <rect x="75" y="143" width="235" height="96" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="192" y="180" text-anchor="middle" font-size="20" font-weight="700" fill="#203d48">调用方</text><text x="192" y="211" text-anchor="middle" font-size="15" fill="#58717b">接收结果 / cancel</text>
+  <path d="M310 169h160" stroke="#18877c" stroke-width="3"/><path d="m470 169-12-8v16z" fill="#18877c"/>
+  <text x="390" y="151" text-anchor="middle" font-size="14" fill="#126d64">正常消费</text>
+  <rect x="477" y="125" width="260" height="132" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="607" y="165" text-anchor="middle" font-size="20" font-weight="700" fill="#126d64">生成器 goroutine</text><text x="607" y="197" text-anchor="middle" font-size="15" fill="#58717b">select: out &lt;- value</text><text x="607" y="228" text-anchor="middle" font-size="15" fill="#58717b">select: &lt;-ctx.Done()</text>
+  <path d="M737 191h130" stroke="#427c8a" stroke-width="3"/><path d="m867 191-12-8v16z" fill="#427c8a"/>
+  <rect x="874" y="143" width="235" height="96" rx="8" fill="#fff" stroke="#627b8b" stroke-width="2"/>
+  <text x="991" y="180" text-anchor="middle" font-size="20" font-weight="700" fill="#203d48">输出 channel</text><text x="991" y="211" text-anchor="middle" font-size="15" fill="#58717b">退出时关闭</text>
+  <path d="M192 239v83h415v-65" fill="none" stroke="#ad6672" stroke-width="2.5" stroke-dasharray="8 7"/><path d="m607 257-7 12h14z" fill="#ad6672"/>
+  <text x="398" y="351" text-anchor="middle" font-size="16" fill="#793d47">消费者提前退出：cancel 让阻塞发送被唤醒，生成器 return</text>
+</svg>

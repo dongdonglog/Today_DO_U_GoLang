@@ -1,0 +1,24 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+sequenceDiagram
+    participant Client
+    participant Handler as HTTP Handler
+    participant Service as Service Layer
+    participant DB as Database Layer
+
+    Client->>Handler: Request
+    Handler->>Service: Call service method
+
+    alt Success
+        Service->>DB: Query database
+        DB-->>Service: Return data
+        Service-->>Handler: Return result
+        Handler-->>Client: 200 OK + JSON
+    else Error
+        Service->>DB: Query database
+        DB-->>Service: Return error
+        Service->>Service: Wrap error with context
+        Service-->>Handler: Return wrapped error
+        Handler->>Handler: Check error type
+        Handler->>Handler: Map to HTTP status
+        Handler-->>Client: Error status + JSON
+    end

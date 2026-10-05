@@ -1,0 +1,26 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph TB
+    SIG["收到信号<br/>SIGINT / SIGTERM"] --> MARK["inShutdown = true<br/>标记关闭状态"]
+
+    MARK --> CLOSE_LN["closeListenersLocked()<br/>关闭 Listener<br/>不再接受新连接"]
+
+    CLOSE_LN --> CALLBACK["执行 onShutdown 回调<br/>通知 HTTP/2 等子协议"]
+
+    CALLBACK --> WAIT["listenerGroup.Wait()<br/>等待 Accept 循环退出"]
+
+    WAIT --> POLL{"轮询循环<br/>指数退避"}
+
+    POLL -->|"closeIdleConns()"| CHECK{"所有连接<br/>都关闭了?"}
+
+    CHECK -->|"是"| DONE["关闭完成<br/>返回 nil"]
+
+    CHECK -->|"否，有活跃连接"| TIMEOUT{"ctx 超时?"}
+
+    TIMEOUT -->|"否"| POLL
+
+    TIMEOUT -->|"是"| FORCE["返回 ctx.Err()<br/>强制退出"]
+
+    style SIG fill:#E74C3C,stroke:#C0392B,color:#fff
+    style DONE fill:#2ECC71,stroke:#27AE60,color:#fff
+    style FORCE fill:#E74C3C,stroke:#C0392B,color:#fff
+    style POLL fill:#F39C12,stroke:#E67E22,color:#fff

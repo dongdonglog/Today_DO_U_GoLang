@@ -1,0 +1,48 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph LR
+    subgraph 开发阶段
+        CODE["编写代码"]
+        FMT["gofmt + goimports<br/>自动格式化"]
+        LINT["golangci-lint<br/>代码检查"]
+        TEST["go test<br/>单元测试"]
+    end
+
+    subgraph 提交阶段
+        HOOK["Git Hooks<br/>lefthook"]
+        VET["go vet<br/>静态分析"]
+        SEC["gosec<br/>安全扫描"]
+    end
+
+    subgraph CI/CD
+        PUSH["git push"]
+        CI_LINT["CI: golangci-lint"]
+        CI_TEST["CI: go test -race"]
+        CI_BUILD["CI: go build"]
+        CI_IMAGE["Docker Build"]
+    end
+
+    subgraph 发布阶段
+        RELEASE["GoReleaser<br/>交叉编译"]
+        BIN_LINUX["Linux amd64"]
+        BIN_ARM["Linux arm64"]
+        BIN_MAC["macOS arm64"]
+        IMAGE["Docker Image<br/>推送到 Harbor"]
+    end
+
+    CODE --> FMT --> LINT --> TEST
+    TEST --> HOOK
+    HOOK --> VET
+    HOOK --> SEC
+    SEC --> PUSH
+    PUSH --> CI_LINT --> CI_TEST --> CI_BUILD --> CI_IMAGE
+    CI_IMAGE --> RELEASE
+    RELEASE --> BIN_LINUX
+    RELEASE --> BIN_ARM
+    RELEASE --> BIN_MAC
+    RELEASE --> IMAGE
+
+    style CODE fill:#00ADD8,stroke:#007D9C,color:#fff
+    style RELEASE fill:#00ADD8,stroke:#007D9C,color:#fff
+    style CI_LINT fill:#E0EBF5,stroke:#00ADD8,color:#333
+    style CI_TEST fill:#E0EBF5,stroke:#00ADD8,color:#333
+    style CI_BUILD fill:#E0EBF5,stroke:#00ADD8,color:#333

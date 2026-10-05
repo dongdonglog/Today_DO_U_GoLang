@@ -81,6 +81,8 @@ func main() {
 
 ![没有取消机制的请求处理](./images/ch07-no-cancel.svg)
 
+> **图解**：客户端已经超时，但服务端下游任务仍运行并占用连接、goroutine 等资源。把请求 Context 传到数据库和 RPC 调用处，才能让取消沿调用链传播。
+
 客户端断开连接后，服务端不知道，还在傻等数据库返回。
 
 ### 7.1.3 如果用 channel 手动实现取消
@@ -187,6 +189,8 @@ func handleRequest(ctx context.Context, userID int) {
 
 ![WithTimeout 取消流程](./images/ch07-cancel-flow.svg)
 
+> **图解**：超时或主动调用 cancel 会关闭 `Done`，通知整条调用链停止等待；正常提前完成时也要 `defer cancel()`，及时释放 timer 和父子引用。
+
 **关键**：`defer cancel()` 必须调用。即使超时最终会释放资源，请求提前完成时主动调用 `cancel`，可以更早停止 timer，并解除父子 Context 之间的引用。
 
 ---
@@ -200,6 +204,8 @@ func handleRequest(ctx context.Context, userID int) {
 Context 之间是父子关系，父节点取消，子节点全部取消。
 
 ![Context 树结构](./images/ch07-context-tree.svg)
+
+> **图解**：父 Context 的取消会向所有子 Context 传播，子 Context 可以设置更短 deadline 或额外值，但取消一个子节点不会反向取消父节点。
 
 ```go
 // 创建 Context 树
@@ -284,6 +290,8 @@ func main() {
 ```
 
 ![errgroup 并发取消](./images/ch07-errgroup.svg)
+
+> **图解**：多个子任务共享同一个派生 Context；首个错误取消其他任务，`Wait` 仍会等所有任务返回后再汇报错误。任务必须检查 Context 才能及时结束。
 
 **结果**：权限查询返回错误，`errgroup` 会取消派生出来的 `ctx`。已经完成的任务不会被“撤销”，仍在执行且监听 `ctx.Done()` 的任务会尽快退出。
 
@@ -383,6 +391,8 @@ func (c *valueCtx) Value(key any) any {
 ```
 
 ![Context Value 查找链](./images/ch07-value-chain.svg)
+
+> **图解**：`Value` 从当前节点沿父链向上查找，先命中的值生效。它适合 request ID 等请求范围元数据，不适合传业务参数或可选配置。
 
 `Value` 沿着 Context 链向上查找，找到第一个匹配的 key 就返回。
 

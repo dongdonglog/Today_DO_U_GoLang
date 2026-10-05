@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="430" viewBox="0 0 1120 430" role="img" aria-labelledby="title desc">
+  <title id="title">生产故障响应闭环</title>
+  <desc id="desc">告警触发后确认用户影响并指定指挥者、操作员和记录员；团队统一采集指标、Trace、日志和变更证据，安全止血并持续验证 SLI，恢复后进入无责复盘和改进行动。</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1 1 L8 5 L1 9 Z" fill="#53666d"/></marker></defs>
+  <rect width="1120" height="430" rx="8" fill="#f5f8f8"/>
+  <text x="560" y="40" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="23" font-weight="700" fill="#25373d">先恢复用户路径，再把教训变成工程改进</text>
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif">
+    <rect x="38" y="118" width="190" height="100" rx="7" fill="#f9ece7" stroke="#b7644d" stroke-width="1.5"/><text x="133" y="156" text-anchor="middle" font-size="17" font-weight="700" fill="#934c39">确认影响</text><text x="133" y="186" text-anchor="middle" font-size="13" fill="#42575e">用户 · SLI · 范围</text>
+    <rect x="270" y="118" width="190" height="100" rx="7" fill="#eaf0f8" stroke="#557ba7" stroke-width="1.5"/><text x="365" y="156" text-anchor="middle" font-size="17" font-weight="700" fill="#2d5684">分配角色</text><text x="365" y="186" text-anchor="middle" font-size="13" fill="#42575e">指挥 · 操作 · 记录</text>
+    <rect x="502" y="118" width="215" height="100" rx="7" fill="#fff2df" stroke="#be8130" stroke-width="1.5"/><text x="609" y="156" text-anchor="middle" font-size="17" font-weight="700" fill="#94601c">汇集证据</text><text x="609" y="186" text-anchor="middle" font-size="13" fill="#42575e">指标 · Trace · 日志 · 变更</text>
+    <rect x="759" y="118" width="180" height="100" rx="7" fill="#e7f3f1" stroke="#288477" stroke-width="1.5"/><text x="849" y="156" text-anchor="middle" font-size="17" font-weight="700" fill="#176c63">止血恢复</text><text x="849" y="186" text-anchor="middle" font-size="13" fill="#42575e">单一操作入口</text>
+    <rect x="981" y="118" width="105" height="100" rx="7" fill="#edf2df" stroke="#758c3c" stroke-width="1.5"/><text x="1033" y="156" text-anchor="middle" font-size="16" font-weight="700" fill="#596e2a">复盘</text><text x="1033" y="186" text-anchor="middle" font-size="12" fill="#42575e">行动项</text>
+  </g>
+  <g fill="none" stroke="#53666d" stroke-width="2" marker-end="url(#arrow)"><path d="M228 168 H262"/><path d="M460 168 H494"/><path d="M717 168 H751"/><path d="M939 168 H973"/></g>
+  <path d="M1033 218 V282 H132 V227" fill="none" stroke="#288477" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+  <rect x="270" y="300" width="670" height="50" rx="6" fill="#ffffff" stroke="#c8d4d7"/>
+  <text x="605" y="331" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" fill="#344b52">恢复后继续观察错误率、延迟和业务成功率，确认服务回到 SLO</text>
+  <text x="560" y="390" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="13" fill="#53666d">时间线记录事实与决策；复盘面向系统改进，不追究个人</text>
+</svg>

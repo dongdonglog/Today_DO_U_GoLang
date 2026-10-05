@@ -1,0 +1,29 @@
+replicaCount: 1
+
+image:
+  repository: cloud-native-ops
+  tag: local
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+config:
+  serviceName: order-api
+  otelEndpoint: otel-collector:4318
+  logLevel: debug
+  environment: dev
+
+secret:
+  existingName: ""
+  alertWebhookToken: local-demo-only # 仅为本地演示占位值,不要复用到生产
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 32Mi
+  limits:
+    cpu: 200m
+    memory: 64Mi

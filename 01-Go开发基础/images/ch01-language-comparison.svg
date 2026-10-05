@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="620" viewBox="0 0 1080 620" role="img" aria-labelledby="title desc">
   <title id="title">语言特性对比</title>
-  <desc id="desc">从性能和开发效率两个维度对比 C/C++、Java、Python 和 Go。</desc>
+  <desc id="desc">以定性示意比较 C/C++、Java、Python 和 Go 在运行性能与开发效率上的倾向；位置不是基准测试成绩。</desc>
   <defs>
     <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
       <path d="M2 2 L10 6 L2 10 Z" fill="#64748b"/>
@@ -43,4 +43,5 @@
     <rect x="190" y="535" width="700" height="34" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
     <text x="540" y="557" text-anchor="middle">Go 特别适合云原生、微服务、高并发 API 和 AI 应用工程</text>
   </g>
+  <text x="540" y="585" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="12" fill="#64748b">定性选型示意，位置不代表基准测试结果</text>
 </svg>

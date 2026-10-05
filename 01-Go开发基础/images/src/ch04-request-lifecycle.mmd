@@ -1,0 +1,22 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+sequenceDiagram
+    participant Client
+    participant Listener as TCP Listener
+    participant Server as http.Server
+    participant Conn as conn (goroutine)
+    participant Handler as User Handler
+
+    Client->>Listener: TCP 连接
+    Listener->>Server: Accept()
+    Server->>Conn: go c.serve(ctx)
+
+    loop Keep-Alive 循环
+        Conn->>Conn: readRequest()
+        Conn->>Handler: ServeHTTP(w, r)
+        Handler->>Handler: 解析请求
+        Handler->>Handler: 业务逻辑
+        Handler->>Conn: 写入响应
+        Conn->>Client: HTTP Response
+    end
+
+    Note over Conn: 连接关闭或超时

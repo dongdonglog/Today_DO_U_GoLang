@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">Map 从键到值的查找路径</title>
+  <desc id="desc">键经过哈希后定位到候选存储组，运行时检查控制信息并比较键，命中后返回值；冲突与扩容由运行时实现处理。</desc>
+  <rect width="1200" height="420" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">Map 查找：定位候选项，再确认键相等</text>
+  <rect x="58" y="145" width="188" height="88" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="152" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">租户名称</text><text x="152" y="210" text-anchor="middle" font-size="14" fill="#58717b">string key</text>
+  <path d="M246 189h80" stroke="#427c8a" stroke-width="3"/><path d="m326 189-12-8v16z" fill="#427c8a"/>
+  <rect x="333" y="145" width="198" height="88" rx="8" fill="#fff" stroke="#d28b42" stroke-width="2"/>
+  <text x="432" y="181" text-anchor="middle" font-size="19" font-weight="700" fill="#61431f">哈希计算</text><text x="432" y="210" text-anchor="middle" font-size="14" fill="#675541">由 key 类型决定成本</text>
+  <path d="M531 189h72" stroke="#427c8a" stroke-width="3"/><path d="m603 189-12-8v16z" fill="#427c8a"/>
+  <rect x="610" y="116" width="260" height="146" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="740" y="151" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">候选存储组</text>
+  <rect x="640" y="173" width="54" height="49" fill="#e5f3f3" stroke="#427c8a"/><text x="667" y="203" text-anchor="middle" font-size="14" fill="#203d48">tag</text>
+  <rect x="694" y="173" width="78" height="49" fill="#fff" stroke="#aab8c1"/><text x="733" y="203" text-anchor="middle" font-size="14" fill="#58717b">key</text>
+  <rect x="772" y="173" width="68" height="49" fill="#fff" stroke="#aab8c1"/><text x="806" y="203" text-anchor="middle" font-size="14" fill="#58717b">value</text>
+  <path d="M870 189h72" stroke="#427c8a" stroke-width="3"/><path d="m942 189-12-8v16z" fill="#427c8a"/>
+  <path d="M1000 128 1080 189 1000 250 920 189z" fill="#fff4df" stroke="#d28b42" stroke-width="2"/>
+  <text x="1000" y="183" text-anchor="middle" font-size="16" font-weight="700" fill="#61431f">key 相等？</text><text x="1000" y="207" text-anchor="middle" font-size="13" fill="#675541">处理哈希冲突</text>
+  <path d="M1080 189h54" stroke="#18877c" stroke-width="3"/><path d="m1134 189-12-8v16z" fill="#18877c"/>
+  <text x="1098" y="225" text-anchor="middle" font-size="15" fill="#126d64">返回值</text>
+  <text x="52" y="338" font-size="15" fill="#58717b">组布局和扩容策略会随 Go 版本演进；程序应只依赖 Map 的语言行为。</text>
+</svg>

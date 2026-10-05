@@ -1,0 +1,25 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#007d9c', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8'}}}%%
+graph LR
+    subgraph "Type T"
+        A["Value Receiver Methods"]
+    end
+
+    subgraph "Type *T"
+        B["Value Receiver Methods"]
+        C["Pointer Receiver Methods"]
+    end
+
+    subgraph "Method Set"
+        D["T's Method Set"]
+        E["*T's Method Set"]
+    end
+
+    A --> D
+    B --> E
+    C --> E
+
+    style A fill:#00ADD8,stroke:#007d9c
+    style B fill:#00ADD8,stroke:#007d9c
+    style C fill:#E0EBF5,stroke:#5A6376
+    style D fill:#E0EBF5,stroke:#5A6376
+    style E fill:#E0EBF5,stroke:#5A6376

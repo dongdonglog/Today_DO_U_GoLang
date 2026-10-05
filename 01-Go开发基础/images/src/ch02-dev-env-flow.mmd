@@ -1,0 +1,28 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#00ADD8', 'primaryTextColor': '#fff', 'primaryBorderColor': '#007D9C', 'lineColor': '#5A6376', 'secondaryColor': '#E0EBF5', 'tertiaryColor': '#F0F4F8', 'fontSize': '14px'}}}%%
+graph TB
+    START["开始搭建环境"] --> OS{操作系统?}
+
+    OS -->|macOS| MAC["Homebrew<br/>brew install go"]
+    OS -->|Windows| WIN{开发方式?}
+    OS -->|Linux| LIN["tar 包安装<br/>/usr/local/go"]
+
+    MAC --> ENV["配置环境变量<br/>GOPATH / GOPROXY"]
+    LIN --> ENV
+
+    WIN -->|原生安装| WIN_INSTALL["安装包安装<br/>系统环境变量"]
+    WIN -->|WSL2 推荐| WSL["WSL2 Ubuntu<br/>按 Linux 方式"]
+
+    WIN_INSTALL --> ENV
+    WSL --> ENV
+
+    ENV --> VERIFY["验证安装<br/>go version"]
+    VERIFY --> TOOLS["安装工具链<br/>golangci-lint / Air"]
+    TOOLS --> IDE["配置编辑器<br/>VS Code / GoLand"]
+    IDE --> DOCKER{需要统一环境?}
+    DOCKER -->|是| DEV_CONTAINER["Docker Dev Container<br/>团队统一方案"]
+    DOCKER -->|否| DONE["环境搭建完成 ✓"]
+    DEV_CONTAINER --> DONE
+
+    style START fill:#00ADD8,stroke:#007D9C,color:#fff
+    style DONE fill:#2ECC71,stroke:#27AE60,color:#fff
+    style WSL fill:#76E0F7,stroke:#00ADD8,color:#333

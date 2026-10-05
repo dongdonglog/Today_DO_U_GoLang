@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">AI 代码审查中的证据链</title>
+  <desc id="desc">从当前变更开始，审查发现关联到代码位置、触发条件和实际影响；开发者核验后决定修复、记录或关闭。</desc>
+  <rect width="1200" height="420" rx="8" fill="#f4f8fa"/>
+  <text x="52" y="54" font-size="27" font-weight="700" fill="#1b3440">一条发现需要位置、条件和影响</text>
+  <rect x="65" y="145" width="200" height="95" rx="8" fill="#fff" stroke="#427c8a" stroke-width="2"/>
+  <text x="165" y="182" text-anchor="middle" font-size="19" font-weight="700" fill="#203d48">当前 diff</text><text x="165" y="212" text-anchor="middle" font-size="14" fill="#58717b">本次改动范围</text>
+  <path d="M265 192h67" stroke="#427c8a" stroke-width="3"/><path d="m332 192-12-8v16z" fill="#427c8a"/>
+  <rect x="339" y="145" width="200" height="95" rx="8" fill="#fff4df" stroke="#d28b42" stroke-width="2"/>
+  <text x="439" y="182" text-anchor="middle" font-size="19" font-weight="700" fill="#61431f">候选风险</text><text x="439" y="212" text-anchor="middle" font-size="14" fill="#675541">AI 提出线索</text>
+  <path d="M539 192h67" stroke="#427c8a" stroke-width="3"/><path d="m606 192-12-8v16z" fill="#427c8a"/>
+  <rect x="613" y="121" width="238" height="142" rx="8" fill="#fff" stroke="#ad6672" stroke-width="2"/>
+  <text x="732" y="155" text-anchor="middle" font-size="18" font-weight="700" fill="#793d47">可核验证据</text>
+  <text x="732" y="187" text-anchor="middle" font-size="14" fill="#58717b">文件位置 · 触发条件</text>
+  <text x="732" y="216" text-anchor="middle" font-size="14" fill="#58717b">影响范围 · 验证方法</text>
+  <path d="M851 192h67" stroke="#427c8a" stroke-width="3"/><path d="m918 192-12-8v16z" fill="#427c8a"/>
+  <rect x="925" y="145" width="200" height="95" rx="8" fill="#fff" stroke="#18877c" stroke-width="2"/>
+  <text x="1025" y="182" text-anchor="middle" font-size="19" font-weight="700" fill="#126d64">开发者核验</text><text x="1025" y="212" text-anchor="middle" font-size="14" fill="#58717b">修复 · 记录 · 关闭</text>
+  <text x="52" y="331" font-size="15" fill="#58717b">没有可复核证据的意见是线索，不是合并结论。</text>
+</svg>

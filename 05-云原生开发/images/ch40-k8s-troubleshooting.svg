@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="590" viewBox="0 0 1200 590" role="img" aria-labelledby="title desc">
+  <title id="title">Kubernetes 故障排查路径</title>
+  <desc id="desc">先确认集群和影响范围并保存只读证据，再按未调度、容器未启动、容器反复退出、就绪但无流量四类症状排查。修复后从 Helm 或 GitOps 配置源发布，并同时确认 rollout 和业务指标。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M1 1 L8 5 L1 9 Z" fill="#53666d"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="590" rx="8" fill="#f5f8f8"/>
+  <text x="600" y="42" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="24" font-weight="700" fill="#25373d">从证据到修复：按故障阶段缩小范围</text>
+  <text x="600" y="69" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="14" fill="#53666d">先记录现场，再沿调度、容器、就绪和流量路径检查</text>
+
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif">
+    <rect x="70" y="100" width="250" height="74" rx="7" fill="#eaf0f8" stroke="#557ba7" stroke-width="1.5"/>
+    <text x="195" y="132" text-anchor="middle" font-size="17" font-weight="700" fill="#2d5684">确认上下文与影响范围</text>
+    <text x="195" y="155" text-anchor="middle" font-size="13" fill="#42575e">cluster · namespace · rollout</text>
+
+    <rect x="475" y="100" width="250" height="74" rx="7" fill="#e7f3f1" stroke="#288477" stroke-width="1.5"/>
+    <text x="600" y="132" text-anchor="middle" font-size="17" font-weight="700" fill="#176c63">保存只读证据</text>
+    <text x="600" y="155" text-anchor="middle" font-size="13" fill="#42575e">describe · Events · logs --previous</text>
+
+    <rect x="880" y="100" width="250" height="74" rx="7" fill="#fff2df" stroke="#be8130" stroke-width="1.5"/>
+    <text x="1005" y="132" text-anchor="middle" font-size="17" font-weight="700" fill="#94601c">按症状阶段分流</text>
+    <text x="1005" y="155" text-anchor="middle" font-size="13" fill="#42575e">Events 和状态给出下一步</text>
+  </g>
+  <path d="M320 137 H467 M725 137 H872" fill="none" stroke="#53666d" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M1005 174 V210 H180 M1005 210 H1020" fill="none" stroke="#53666d" stroke-width="2"/>
+  <path d="M180 210 V228 M460 210 V228 M740 210 V228 M1020 210 V228" fill="none" stroke="#53666d" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif">
+    <g transform="translate(40 236)">
+      <rect width="270" height="190" rx="7" fill="#ffffff" stroke="#557ba7" stroke-width="1.5"/>
+      <rect width="270" height="44" rx="7" fill="#eaf0f8"/>
+      <text x="135" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#2d5684">01 · Pending</text>
+      <text x="18" y="78" font-size="14" fill="#344b52">describe pod → Events</text>
+      <text x="18" y="108" font-size="13" fill="#53666d">requests / 节点可分配量</text>
+      <text x="18" y="134" font-size="13" fill="#53666d">taint / affinity / 配额</text>
+      <text x="18" y="160" font-size="13" fill="#53666d">PVC / StorageClass</text>
+    </g>
+
+    <g transform="translate(320 236)">
+      <rect width="270" height="190" rx="7" fill="#ffffff" stroke="#be8130" stroke-width="1.5"/>
+      <rect width="270" height="44" rx="7" fill="#fff2df"/>
+      <text x="135" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#94601c">02 · 容器无法启动</text>
+      <text x="18" y="78" font-size="14" fill="#344b52">describe pod → Events</text>
+      <text x="18" y="108" font-size="13" fill="#53666d">image tag / digest</text>
+      <text x="18" y="134" font-size="13" fill="#53666d">registry / imagePullSecret</text>
+      <text x="18" y="160" font-size="13" fill="#53666d">volume / Secret / ConfigMap</text>
+    </g>
+
+    <g transform="translate(600 236)">
+      <rect width="270" height="190" rx="7" fill="#ffffff" stroke="#b7644d" stroke-width="1.5"/>
+      <rect width="270" height="44" rx="7" fill="#f9ece7"/>
+      <text x="135" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#934c39">03 · CrashLoopBackOff</text>
+      <text x="18" y="78" font-size="14" fill="#344b52">logs --previous</text>
+      <text x="18" y="108" font-size="13" fill="#53666d">exit reason / restart count</text>
+      <text x="18" y="134" font-size="13" fill="#53666d">OOMKilled / memory limit</text>
+      <text x="18" y="160" font-size="13" fill="#53666d">startup / liveness probe</text>
+    </g>
+
+    <g transform="translate(880 236)">
+      <rect width="270" height="190" rx="7" fill="#ffffff" stroke="#758c3c" stroke-width="1.5"/>
+      <rect width="270" height="44" rx="7" fill="#edf2df"/>
+      <text x="135" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#596e2a">04 · Ready 但无流量</text>
+      <text x="18" y="78" font-size="14" fill="#344b52">Service selector / Pod labels</text>
+      <text x="18" y="108" font-size="13" fill="#53666d">EndpointSlice 地址</text>
+      <text x="18" y="134" font-size="13" fill="#53666d">port / targetPort</text>
+      <text x="18" y="160" font-size="13" fill="#53666d">NetworkPolicy / Ingress</text>
+    </g>
+  </g>
+
+  <path d="M180 426 V452 M460 426 V452 M740 426 V452 M1020 426 V452 M180 452 H1020" fill="none" stroke="#53666d" stroke-width="2"/>
+  <path d="M600 452 V466" fill="none" stroke="#53666d" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="40" y="474" width="1110" height="72" rx="7" fill="#ffffff" stroke="#288477" stroke-width="1.5"/>
+  <text x="595" y="504" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="17" font-weight="700" fill="#176c63">从 Helm / GitOps 配置源修复，再验证 rollout 与业务指标</text>
+  <text x="595" y="530" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="13" fill="#42575e">Pod Ready ≠ 业务恢复；保留现场证据，避免先删 Pod 或在线改配置</text>
+</svg>

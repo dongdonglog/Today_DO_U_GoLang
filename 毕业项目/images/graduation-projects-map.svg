@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="620" viewBox="0 0 1180 620" role="img" aria-labelledby="title desc">
+  <title id="title">四个毕业项目的能力递进关系</title>
+  <desc id="desc">图中展示四个毕业项目如何从用户中心、电商微服务、云原生运维平台递进到 AI 知识库平台。每个项目都复用前面项目沉淀的身份、数据、服务协作、部署和可观测性能力。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#526873"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="135%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#1c3540" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .bg { fill: #f5f8f8; }
+      .card { stroke-width: 1.8; rx: 9; filter: url(#shadow); }
+      .title { font: 700 26px Arial, 'Microsoft YaHei', sans-serif; fill: #203a40; }
+      .subtitle { font: 14px Arial, 'Microsoft YaHei', sans-serif; fill: #5a7076; }
+      .label { font: 700 18px Arial, 'Microsoft YaHei', sans-serif; fill: #203a40; }
+      .body { font: 14px Arial, 'Microsoft YaHei', sans-serif; fill: #50666c; }
+      .small { font: 12px Arial, 'Microsoft YaHei', sans-serif; fill: #6f8388; }
+      .arrow { fill: none; stroke: #526873; stroke-width: 2.4; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1180" height="620" rx="8" class="bg"/>
+  <text x="590" y="48" text-anchor="middle" class="title">毕业项目不是四个孤岛，而是一条工程成长路线</text>
+  <text x="590" y="78" text-anchor="middle" class="subtitle">身份与权限先落地，再进入服务协作、发布运维，最后复用这些边界构建 AI 应用</text>
+
+  <g>
+    <rect x="54" y="132" width="238" height="178" class="card" fill="#e7f3f1" stroke="#2d8579"/>
+    <text x="82" y="168" class="small">项目一</text>
+    <text x="82" y="198" class="label">企业级用户中心</text>
+    <text x="82" y="232" class="body">Gin · MySQL · Redis · JWT</text>
+    <text x="82" y="262" class="body">注册、登录、刷新令牌</text>
+    <text x="82" y="287" class="body">RBAC 与账号状态控制</text>
+  </g>
+
+  <path d="M292 221 H380" class="arrow"/>
+
+  <g>
+    <rect x="384" y="132" width="252" height="178" class="card" fill="#fff2df" stroke="#bf8134"/>
+    <text x="412" y="168" class="small">项目二</text>
+    <text x="412" y="198" class="label">电商微服务平台</text>
+    <text x="412" y="232" class="body">gRPC · Kafka · Outbox</text>
+    <text x="412" y="262" class="body">下单、库存、支付幂等</text>
+    <text x="412" y="287" class="body">本地事务与事件最终一致</text>
+  </g>
+
+  <path d="M636 221 H724" class="arrow"/>
+
+  <g>
+    <rect x="728" y="132" width="398" height="178" class="card" fill="#eaf0f8" stroke="#5277a5"/>
+    <text x="756" y="168" class="small">项目三</text>
+    <text x="756" y="198" class="label">云原生运维平台</text>
+    <text x="756" y="232" class="body">Docker · Kubernetes · Helm · GitLab CI/CD</text>
+    <text x="756" y="262" class="body">不可变镜像、滚动发布、回滚和配置分层</text>
+    <text x="756" y="287" class="body">Prometheus、Grafana、Trace 与故障演练</text>
+  </g>
+
+  <path d="M927 310 V390" class="arrow"/>
+
+  <g>
+    <rect x="728" y="396" width="398" height="154" class="card" fill="#f1eaf2" stroke="#86658c"/>
+    <text x="756" y="432" class="small">项目四</text>
+    <text x="756" y="462" class="label">AI 知识库平台</text>
+    <text x="756" y="496" class="body">Gin · pgvector · Ollama · Eino · MCP</text>
+    <text x="756" y="526" class="body">租户隔离、证据检索、引用返回与无证据拒答</text>
+  </g>
+
+  <path d="M728 474 H636" class="arrow"/>
+
+  <g>
+    <rect x="54" y="394" width="582" height="156" rx="9" fill="#ffffff" stroke="#b6c7cb" stroke-width="1.8" filter="url(#shadow)"/>
+    <text x="82" y="430" class="label">贯穿所有项目的验收线</text>
+    <text x="82" y="466" class="body">1. 代码可以本地启动，有迁移、配置样例和接口验证步骤。</text>
+    <text x="82" y="496" class="body">2. 关键状态变化有幂等、权限、超时、回滚或补偿边界。</text>
+    <text x="82" y="526" class="body">3. 出问题时能通过日志、指标、Trace 或数据库记录定位。</text>
+  </g>
+
+  <text x="590" y="592" text-anchor="middle" class="subtitle">完成顺序建议按箭头推进；每个项目都要沉淀可运行工程、运维说明和故障演练。</text>
+</svg>

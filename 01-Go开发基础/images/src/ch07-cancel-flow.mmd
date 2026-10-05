@@ -1,0 +1,21 @@
+sequenceDiagram
+    participant Client
+    participant Server
+    participant Database
+
+    Client->>Server: HTTP Request
+    Server->>Server: 创建 WithTimeout(3s)
+    Server->>Database: QueryRowContext(ctx)
+
+    par 并行等待
+        Database-->>Server: 查询中...
+    and
+        Note over Server: 3s 超时
+    end
+
+    Server->>Server: ctx.Done() 触发
+    Server->>Database: 取消查询
+    Database--xServer: 查询取消
+    Server-->>Client: 返回超时错误
+
+    Note over Server: goroutine 立即释放

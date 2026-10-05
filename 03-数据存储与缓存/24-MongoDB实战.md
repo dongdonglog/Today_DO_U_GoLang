@@ -24,6 +24,8 @@
 
 ![文档模型 vs 关系模型](./images/ch24-doc-vs-relational.svg)
 
+> **图解**：嵌入把经常一起读取的订单明细放进同一文档，减少关联查询；规范化则让独立实体更容易共享和更新。边界取决于访问模式、数据增长和一致性要求。
+
 > 本章所有示例在 `03-数据存储与缓存/24-mongodb/` 下,基于 MongoDB 8.0 和 Go 官方驱动 v2 (`go.mongodb.org/mongo-driver/v2`)。前 4 个 example 用普通单机 Mongo 即可运行;example5 事务需要副本集,启动命令见 example5 文件头。
 >
 > 本地启动(前 4 个 example):
@@ -34,7 +36,7 @@
 >
 > 事务演示需要副本集模式,见 example5。
 
-## 24.1 CRUD 基础
+## 24.1 实现：CRUD 基础
 
 MongoDB 的概念对照:
 

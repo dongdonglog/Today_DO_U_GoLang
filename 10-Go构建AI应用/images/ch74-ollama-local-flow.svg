@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="title desc">
+  <title id="title">Go 服务访问本地 Ollama 模型的链路</title>
+  <desc id="desc">Go 服务对输入、超时和输出长度设置边界，通过本机 HTTP 调用 Ollama 的 api/chat。Ollama 加载已下载的模型权重并执行推理，以非流式 JSON 返回消息和运行信息。配置远端 Base URL 时，请求也会发送到远端主机。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#347d76"/></marker>
+    <marker id="arrow-amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#bd7a32"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#193b40" flood-opacity=".10"/></filter>
+  </defs>
+  <rect width="1200" height="500" rx="8" fill="#f4f8f7"/>
+  <text x="52" y="55" font-size="27" font-weight="700" fill="#203a40">本地模型也需要按服务调用来管理</text>
+  <rect x="54" y="146" width="224" height="144" rx="8" fill="#e8f3f0" stroke="#4b887f" stroke-width="2" filter="url(#shadow)"/>
+  <text x="166" y="184" text-anchor="middle" font-size="18" font-weight="700" fill="#285d56">Go 客服服务</text>
+  <text x="166" y="216" text-anchor="middle" font-size="14" fill="#58736e">Context deadline</text>
+  <text x="166" y="242" text-anchor="middle" font-size="14" fill="#58736e">输入 / 输出上限</text>
+  <text x="166" y="270" text-anchor="middle" font-size="13" fill="#657b79">记录延迟与状态</text>
+
+  <path d="M278 218h110" fill="none" stroke="#347d76" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="333" y="194" text-anchor="middle" font-size="13" fill="#4f706b">HTTP JSON</text>
+
+  <rect x="396" y="122" width="345" height="192" rx="10" fill="#fff" stroke="#6f9299" stroke-width="2" filter="url(#shadow)"/>
+  <text x="568" y="158" text-anchor="middle" font-size="19" font-weight="700" fill="#334f5a">Ollama 服务</text>
+  <rect x="432" y="179" width="273" height="48" rx="6" fill="#f1f6f6" stroke="#a7bec0"/>
+  <text x="568" y="209" text-anchor="middle" font-size="14" font-weight="600" fill="#405d62">POST /api/chat · stream=false</text>
+  <text x="568" y="258" text-anchor="middle" font-size="14" fill="#536b6d">模型加载 · 排队 · 推理</text>
+  <text x="568" y="286" text-anchor="middle" font-size="13" fill="#718185">keep_alive 会影响内存驻留</text>
+
+  <path d="M741 218h110" fill="none" stroke="#bd7a32" stroke-width="3" marker-end="url(#arrow-amber)"/>
+  <text x="795" y="194" text-anchor="middle" font-size="13" fill="#85602f">本机生成结果</text>
+
+  <rect x="859" y="146" width="285" height="144" rx="8" fill="#fff4e4" stroke="#c48a45" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1001" y="184" text-anchor="middle" font-size="18" font-weight="700" fill="#80501e">模型权重与硬件</text>
+  <text x="1001" y="216" text-anchor="middle" font-size="14" fill="#776447">磁盘 · RAM · GPU 显存</text>
+  <text x="1001" y="242" text-anchor="middle" font-size="14" fill="#776447">首次加载与热请求不同</text>
+  <text x="1001" y="270" text-anchor="middle" font-size="13" fill="#7a6b50">并发与驻留共同影响吞吐</text>
+
+  <path d="M568 315v75H166v-98" fill="none" stroke="#b66f3d" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrow-amber)"/>
+  <text x="365" y="378" text-anchor="middle" font-size="14" fill="#805a36">Base URL 若改为远端，请重新核对数据路径、认证和网络边界</text>
+  <text x="600" y="446" text-anchor="middle" font-size="15" fill="#536b6d">本地推理不自动解决模型质量、日志治理、资源隔离和服务可用性。</text>
+</svg>

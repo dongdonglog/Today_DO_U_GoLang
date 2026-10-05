@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1220" height="640" viewBox="0 0 1220 640" role="img" aria-labelledby="title desc">
+  <title id="title">电商微服务平台的下单、库存、Outbox 与支付事件流</title>
+  <desc id="desc">图中展示 order-api 接收幂等下单请求，调用 inventory gRPC 快速查询库存，在 MySQL 事务内条件扣减库存、写订单和 Outbox，再由 outbox-relay 发布 Kafka 事件，payment-worker 幂等消费并更新订单状态。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#526873"/>
+    </marker>
+    <marker id="event-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#bf8134"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="135%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#1a3440" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .title { font: 700 26px Arial, 'Microsoft YaHei', sans-serif; fill: #203a40; }
+      .subtitle { font: 14px Arial, 'Microsoft YaHei', sans-serif; fill: #5a7076; }
+      .label { font: 700 17px Arial, 'Microsoft YaHei', sans-serif; fill: #203a40; }
+      .body { font: 14px Arial, 'Microsoft YaHei', sans-serif; fill: #4f666d; }
+      .small { font: 12px Arial, 'Microsoft YaHei', sans-serif; fill: #71858a; }
+      .card { stroke-width: 1.8; rx: 9; filter: url(#shadow); }
+      .arrow { fill: none; stroke: #526873; stroke-width: 2.5; marker-end: url(#arrow); }
+      .event { fill: none; stroke: #bf8134; stroke-width: 2.6; marker-end: url(#event-arrow); stroke-dasharray: 8 6; }
+    </style>
+  </defs>
+
+  <rect width="1220" height="640" rx="8" fill="#f5f8f8"/>
+  <text x="610" y="48" text-anchor="middle" class="title">下单主路径用同步校验保护体验，用事件流保证最终处理</text>
+  <text x="610" y="78" text-anchor="middle" class="subtitle">库存扣减和 Outbox 写入在同一个 MySQL 事务内完成；Kafka 消费端必须按 event_id 幂等</text>
+
+  <rect x="52" y="132" width="178" height="126" class="card" fill="#ffffff" stroke="#89a2a8"/>
+  <text x="141" y="170" text-anchor="middle" class="label">客户端</text>
+  <text x="141" y="202" text-anchor="middle" class="body">POST /v1/orders</text>
+  <text x="141" y="229" text-anchor="middle" class="small">Idempotency-Key</text>
+
+  <path d="M230 195 H294" class="arrow"/>
+
+  <rect x="300" y="116" width="220" height="158" class="card" fill="#e7f3f1" stroke="#2d8579"/>
+  <text x="410" y="152" text-anchor="middle" class="label">order-api</text>
+  <text x="410" y="184" text-anchor="middle" class="body">校验请求与幂等键</text>
+  <text x="410" y="212" text-anchor="middle" class="body">300ms deadline 调库存</text>
+  <text x="410" y="240" text-anchor="middle" class="body">提交订单事务</text>
+
+  <path d="M520 164 H590" class="arrow"/>
+
+  <rect x="596" y="116" width="212" height="116" class="card" fill="#eaf0f8" stroke="#5277a5"/>
+  <text x="702" y="152" text-anchor="middle" class="label">inventory gRPC</text>
+  <text x="702" y="184" text-anchor="middle" class="body">查询商品与库存</text>
+  <text x="702" y="211" text-anchor="middle" class="small">快速失败，不作为最终防线</text>
+
+  <path d="M410 274 V348" class="arrow"/>
+
+  <rect x="244" y="354" width="330" height="160" class="card" fill="#fff2df" stroke="#bf8134"/>
+  <text x="409" y="390" text-anchor="middle" class="label">MySQL 本地事务</text>
+  <text x="409" y="422" text-anchor="middle" class="body">products 条件扣减：stock &gt;= quantity</text>
+  <text x="409" y="450" text-anchor="middle" class="body">orders 写入业务状态</text>
+  <text x="409" y="478" text-anchor="middle" class="body">outbox_events 写入待发送事件</text>
+
+  <path d="M574 434 H648" class="event"/>
+
+  <rect x="654" y="354" width="190" height="160" class="card" fill="#f7eee0" stroke="#9e7941"/>
+  <text x="749" y="390" text-anchor="middle" class="label">outbox-relay</text>
+  <text x="749" y="422" text-anchor="middle" class="body">扫描未发送事件</text>
+  <text x="749" y="450" text-anchor="middle" class="body">发布 Kafka</text>
+  <text x="749" y="478" text-anchor="middle" class="small">可重启，可重复发送</text>
+
+  <path d="M844 434 H918" class="event"/>
+
+  <rect x="924" y="354" width="204" height="160" class="card" fill="#f1eaf2" stroke="#86658c"/>
+  <text x="1026" y="390" text-anchor="middle" class="label">payment-worker</text>
+  <text x="1026" y="422" text-anchor="middle" class="body">消费 order.created</text>
+  <text x="1026" y="450" text-anchor="middle" class="body">processed_events 去重</text>
+  <text x="1026" y="478" text-anchor="middle" class="body">订单状态改为 paid</text>
+
+  <path d="M1026 354 C1026 288 1000 254 928 238" class="event"/>
+  <rect x="878" y="116" width="250" height="126" class="card" fill="#ffffff" stroke="#89a2a8"/>
+  <text x="1003" y="152" text-anchor="middle" class="label">Kafka</text>
+  <text x="1003" y="184" text-anchor="middle" class="body">order.created / order.paid</text>
+  <text x="1003" y="212" text-anchor="middle" class="small">至少一次投递，靠消费者幂等兜底</text>
+
+  <rect x="52" y="354" width="154" height="160" class="card" fill="#f9ece7" stroke="#b7644d"/>
+  <text x="129" y="390" text-anchor="middle" class="label">Redis</text>
+  <text x="129" y="422" text-anchor="middle" class="body">缓存幂等结果</text>
+  <text x="129" y="450" text-anchor="middle" class="body">24 小时过期</text>
+  <text x="129" y="478" text-anchor="middle" class="small">数据库唯一索引才是最终保护</text>
+
+  <path d="M336 274 C240 310 146 306 129 348" class="arrow"/>
+
+  <text x="610" y="586" text-anchor="middle" class="subtitle">核心结论：订单状态、库存和待发送事件必须一起提交；事件重复是常态，消费者幂等是设计的一部分。</text>
+</svg>
