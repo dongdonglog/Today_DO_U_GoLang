@@ -2,6 +2,7 @@
 .env
 .book-docs/
 site/
+dist/
 __pycache__/
 .DS_Store
 /opencode.json

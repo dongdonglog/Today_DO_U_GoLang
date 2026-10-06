@@ -260,6 +260,16 @@ uv run --with-requirements requirements-book.txt python scripts/read_book.py
 
 然后打开 <http://127.0.0.1:8000>。每张技术图下方都有加粗的“图解”段落，说明图中的节点、箭头和阅读结论；较宽的 SVG 会按屏幕宽度缩放。阅读站运行期间会自动同步书稿改动，新章节和配图说明会进入目录与搜索。
 
+### iPhone 离线阅读
+
+在仓库根目录运行下面的命令，生成适合 iPhone“图书”App 的 EPUB 文件：
+
+```bash
+uv run --with-requirements requirements-book.txt python scripts/build_epub.py
+```
+
+生成文件位于 `dist/Go服务器开发工程师实战.epub`。通过 AirDrop 或 iCloud Drive 发送到 iPhone，点开文件并选择“图书”即可离线阅读；章节、技术图解和代码示例会随书打包。
+
 ## 每章结构
 
 每章遵循统一的写作模板，确保学习体验一致：
